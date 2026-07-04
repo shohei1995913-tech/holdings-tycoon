@@ -276,6 +276,48 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
 @keyframes tin{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
 .gainfx{position:fixed;z-index:90;font-weight:900;color:var(--gold);font-size:14px;pointer-events:none;animation:gup 1s ease-out forwards;}
 @keyframes gup{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-36px)}}
+/* ===== v5.0: 全国タブ（エリア・シェア・四半期） ===== */
+.qtr-panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:0 1px 3px rgba(27,42,74,.06);}
+.qtr-title{font-size:16px;font-weight:900;color:var(--navy);}
+.qtr-sub{font-size:11px;color:var(--sub);font-weight:700;margin-top:2px;}
+.qtr-ev{font-size:11px;font-weight:800;color:var(--navy2);background:#FFF7E0;border:1px solid #EFDFAC;border-radius:10px;padding:7px 10px;margin-bottom:8px;}
+.area{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;box-shadow:0 1px 3px rgba(27,42,74,.06);}
+.area:active{background:#F7F9FD;}
+.area-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px;}
+.area-name{font-weight:900;font-size:14px;color:var(--navy);}
+.area-dem{font-size:10px;font-weight:800;background:#EEF2FA;color:var(--navy2);border-radius:6px;padding:1px 6px;}
+.area-size{font-size:10px;font-weight:800;color:var(--sub);}
+.area-share{margin-left:auto;font-weight:900;font-size:15px;color:var(--gold);font-variant-numeric:tabular-nums;}
+.abadge{font-size:9px;font-weight:900;border-radius:6px;padding:1px 5px;color:#fff;background:var(--navy2);}
+.abadge.acq{background:linear-gradient(135deg,var(--gold),var(--gold2));}
+.abadge.aev{background:#B03030;}
+.sbar{display:flex;height:9px;border-radius:5px;overflow:hidden;background:var(--line);}
+.sbar i{display:block;height:100%;}
+.shrow{display:flex;align-items:center;gap:8px;padding:6px 4px;font-size:12px;font-weight:700;border-bottom:1px solid var(--line);}
+.shrow .dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.shrow .pct{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:800;}
+.rep-row{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;padding:3px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;}
+.rep-row .rr-name{width:52px;text-align:left;flex-shrink:0;}
+.rep-row .rr-delta{margin-left:auto;font-weight:900;}
+.rep-up{color:#2E8B57;}.rep-down{color:#B03030;}
+/* ===== v5.0: 拠点タブ（部署・役職） ===== */
+.dept-lv{font-size:10px;font-weight:900;color:#fff;background:var(--navy2);border-radius:6px;padding:1px 6px;}
+.post-chip{font-size:10.5px;font-weight:800;border-radius:8px;padding:3px 8px;background:#F6F2FC;color:#8B3FD8;border:1px solid #E4D9F5;display:inline-flex;align-items:center;gap:4px;}
+.post-chip.empty{background:#F5F6FA;color:var(--sub);border-color:var(--line);}
+.pbadge{font-size:8.5px;font-weight:900;color:#fff;border-radius:4px;padding:0 4px;background:linear-gradient(135deg,var(--gold),var(--gold2));white-space:nowrap;}
+.build-card{border:1.5px dashed var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#FAFBFE;}
+.build-name{font-weight:800;font-size:14px;color:var(--sub);}
+.mgr-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:10px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(27,42,74,.06);}
+.sitepow{font-size:11px;font-weight:800;color:var(--navy2);background:#EEF2FA;border-radius:8px;padding:6px 10px;margin-bottom:10px;}
+/* ===== v5.1: ドラマ層（忠誠・給与・役員会・オファー） ===== */
+.loybar{height:7px;background:var(--line);border-radius:4px;overflow:hidden;}
+.loybar i{display:block;height:100%;border-radius:4px;}
+.chair{flex:1;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;min-height:118px;justify-content:center;}
+.chair.empty-seat{border-style:dashed;background:#FAFBFE;}
+.chair-name{font-size:11px;font-weight:800;line-height:1.3;}
+.sal-chip{font-size:11px;font-weight:800;border-radius:20px;padding:5px 10px;background:#fff;border:1.5px solid var(--line);color:var(--sub);cursor:pointer;}
+.sal-chip.on{background:var(--navy);border-color:var(--navy);color:#fff;}
+.offer-ev{border-color:#E5B9B9!important;background:#FDF1F1!important;color:#8A2A2A!important;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
 </style>
 </head>
 <body>
@@ -284,23 +326,35 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
     <div class="h-row1"><span id="money">¥0</span><span id="income">売上/秒 <b>¥0</b></span></div>
     <div class="h-row2">
       <span id="stageName">個人事業</span><span id="stageMult">×1</span>
+      <span id="quarterInd" style="font-size:11px;font-weight:800;color:var(--sub);white-space:nowrap;">創業1期目</span>
       <span id="buffInd" class="hidden"></span>
       <div class="stagebar"><div id="stageFill"></div></div>
     </div>
   </header>
   <main id="main">
-    <section id="tab-office" class="tabpane active">
-      <h2 class="sec">🏢 オフィス — 部署と配属</h2>
-      <div class="hint">空きスロットをタップして社員を配属。職種と部署が一致すると <b class="match">⭐一致ボーナス ×1.5</b>！</div>
-      <div id="deptList"></div>
+    <section id="tab-nation" class="tabpane active">
+      <div id="qtrPanel"></div>
+      <div id="activeProjBox"></div>
+      <h2 class="sec">🗾 全国マップ — 12エリアのシェア争奪</h2>
+      <div class="hint">エリアをタップで詳細（シェア内訳・競合・エリア案件・拠点開設）。<b>「四半期を締める」</b>とシェアが変動し収益が入ります。</div>
+      <div id="areaList"></div>
     </section>
-    <section id="tab-packs" class="tabpane">
-      <h2 class="sec">🎴 社員パック</h2>
-      <div class="hint">パックを開封して社員100名の中から採用しよう。<b>未所持なら入社（NEW!）、所持済みなら覚醒（全ステUP＋生産力アップ・最大+10）</b>。覚醒上限後の重複は資金還元。人事部が強いとパックが割引されます。</div>
+    <section id="tab-sites" class="tabpane">
+      <h2 class="sec">🏢 拠点 — 部署設置と配属・役職</h2>
+      <div class="hint">拠点に部署を設置して社員を配属（枠数＝部署Lv1〜3）。<b class="match">⭐適正一致×1.5</b>、エリア需要と一致する部署はさらに×1.5。課長・部長・支社長の任命で戦力アップ！</div>
+      <div class="filters" id="siteChips"></div>
+      <div id="siteBody"></div>
+    </section>
+    <section id="tab-scout" class="tabpane">
+      <h2 class="sec">🎴 人材紹介（スカウト）</h2>
+      <div class="hint">未採用の社員は<b>競合5社で働いている</b>。紹介パックで引き抜くと競合の戦力が実際に下がる。<b>未所持なら入社（NEW!）、所持済みなら覚醒（最大+10）</b>。覚醒上限後の重複は資金還元。人事部が強いと割引されます。</div>
       <div id="packList"></div>
       <h2 class="sec">🛒 アイテムショップ</h2>
-      <div class="hint">N〜R級の消費アイテムを購入できます。SR以上はクエストでのみ入手可能。</div>
+      <div class="hint">N〜R級の消費アイテムを購入できます。SR以上はエリア案件でのみ入手可能。</div>
       <div id="shopList"></div>
+      <h2 class="sec">🎒 かばん（所持アイテム）</h2>
+      <div class="hint">タップで使用。研修系・強化系は対象社員を選択します。バフは重複不可。</div>
+      <div id="invList"></div>
     </section>
     <section id="tab-emps" class="tabpane">
       <h2 class="sec">👥 社員 <span id="empCount" style="font-size:12px;color:var(--sub)"></span></h2>
@@ -312,16 +366,13 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
       </div>
       <div id="empDexBox" class="hidden"></div>
     </section>
-    <section id="tab-quest" class="tabpane">
-      <h2 class="sec">⚔️ クエスト</h2>
-      <div class="hint">社員3人を派遣してクエストに挑戦！成功すると資金・XP・アイテムを獲得（同時進行は1件まで・失敗でもXP半分）。</div>
-      <div id="activeQuestBox"></div>
-      <div id="questList"></div>
-      <h2 class="sec">🎒 かばん（所持アイテム）</h2>
-      <div class="hint">タップで使用。研修系・強化系は対象社員を選択します。バフは重複不可。</div>
-      <div id="invList"></div>
-    </section>
     <section id="tab-misc" class="tabpane">
+      <h2 class="sec">🏛️ 役員会</h2>
+      <div class="hint">取締役は<b>LEGEND限定・3席</b>（適正不問・1人につき全社戦力+8%）。エリア統括は<b>UR以上・拠点3箇所ごとに1枠</b>（担当拠点戦力+10%・任命は拠点タブから）。</div>
+      <div id="boardBox"></div>
+      <h2 class="sec">💰 給与一括設定</h2>
+      <div class="hint">全社員の給与水準を一括変更します。渋い90%（忠誠-4/期）／相場100%（±0）／厚遇120%（忠誠+3/期）。個別設定は社員詳細から。</div>
+      <div class="set-card" id="salaryAllBox"></div>
       <h2 class="sec">🏆 実績</h2>
       <div id="achList"></div>
       <h2 class="sec">📚 アイテム図鑑 <span id="dexCnt" style="font-size:12px;color:var(--sub)"></span></h2>
@@ -358,15 +409,15 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
         <div class="hint" style="margin:0 0 8px;">全ての進行状況を消して最初からはじめます。取り消せません。</div>
         <button class="btn small danger" id="btnReset">ニューゲーム（はじめから）</button>
       </div>
-      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v4.1<br>リバースモール Game Studio</div>
+      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.0「群雄割拠」<br>リバースモール Game Studio</div>
     </section>
   </main>
   <nav id="tabbar">
-    <button data-tab="office" class="on"><span class="ti">🏢</span>オフィス</button>
-    <button data-tab="packs"><span class="ti">🎴</span>パック</button>
+    <button data-tab="nation" class="on"><span class="ti">🗾</span>全国</button>
+    <button data-tab="sites"><span class="ti">🏢</span>拠点</button>
+    <button data-tab="scout"><span class="ti">🎴</span>スカウト</button>
     <button data-tab="emps"><span class="ti">👥</span>社員</button>
-    <button data-tab="quest"><span class="ti">⚔️</span>クエスト</button>
-    <button data-tab="misc"><span class="ti">📚</span>実績・図鑑</button>
+    <button data-tab="misc"><span class="ti">⚙️</span>その他</button>
   </nav>
 </div>
 
@@ -391,28 +442,33 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
    node での検証テストから直接呼び出せる構造にしている。
 ===================================================================== */
 var SAVE_KEY = 'hd_tycoon_save';
-var SAVE_VERSION = 4;
+var SAVE_VERSION = 5;
 var RARS = ['N','R','SR','SSR','UR','LEGEND'];
 var RARITY = {
   N:{base:10, color:'var(--n)'}, R:{base:30, color:'var(--r)'}, SR:{base:100, color:'var(--sr)'},
   SSR:{base:400, color:'var(--ssr)'}, UR:{base:2000, color:'#8b3fd8'}, LEGEND:{base:5000, color:'#f0abfc'}
 };
 var JOBS = ['sales','eng','mkt','hr','acc'];
+/* v5: 「職種」→「部署適正」再定義。内部キーは流用し、表示名を部署名に統一 */
 var JOB_DEFS = {
-  sales:{name:'営業',       emoji:'💼'},
-  eng:  {name:'エンジニア', emoji:'💻'},
-  mkt:  {name:'マーケター', emoji:'📣'},
-  hr:   {name:'人事',       emoji:'🧑‍💼'},
-  acc:  {name:'経理',       emoji:'📊'}
+  sales:{name:'営業部',           emoji:'💼'},
+  eng:  {name:'開発部',           emoji:'💻'},
+  mkt:  {name:'マーケティング部', emoji:'📣'},
+  hr:   {name:'人事部',           emoji:'🧑‍💼'},
+  acc:  {name:'経理部',           emoji:'📊'}
 };
+function aptName(j){ return JOB_DEFS[j] ? JOB_DEFS[j].name : String(j); }
+function aptLabel(j){ return '適正：' + aptName(j); }
+/* v5: 部署は「拠点の中」に設置する（拠点＞部署＞社員の3層）。部署キー＝適正キー */
 var DEPTS = {
-  sales:{name:'営業部', emoji:'💼', job:'sales', desc:'配属社員の営業力⚔️が売上/秒になる、会社の稼ぎ頭。'},
-  dev:  {name:'開発部', emoji:'💻', job:'eng',  desc:'技術力🔧で「プロダクト力」を蓄積。営業売上に ×(1+補正) がかかる（最大×10）。'},
-  mkt:  {name:'マーケ部', emoji:'📣', job:'mkt', desc:'企画力💡で全社売上倍率アップ ×(1+0.05×係数)。上限 ×3。'},
-  hr:   {name:'人事部', emoji:'🧑‍💼', job:'hr',  desc:'体力❤️でパック価格を割引（最大30%）。'},
-  acc:  {name:'経理部', emoji:'📊', job:'acc',  desc:'運🍀でオフライン収益率アップ（基本50%→最大90%）。'}
+  sales:{name:'営業部', emoji:'💼', desc:'配属社員の営業力⚔️が売上/秒になる（全拠点合算）、会社の稼ぎ頭。'},
+  eng:  {name:'開発部', emoji:'💻', desc:'技術力🔧で「プロダクト力」を蓄積。全社売上に ×(1+補正) がかかる（最大×10）。'},
+  mkt:  {name:'マーケティング部', emoji:'📣', desc:'企画力💡で全社売上倍率アップ ×(1+0.05×係数)。上限 ×3。'},
+  hr:   {name:'人事部', emoji:'🧑‍💼', desc:'体力❤️で人材紹介（パック）割引（最大30%）＋引き抜き防衛（被オファー率最大-30%）＋指名スカウト成功率UP。'},
+  acc:  {name:'経理部', emoji:'📊', desc:'運🍀でオフライン収益率アップ（基本50%→最大90%）。'}
 };
-var DEPT_IDS = ['sales','dev','mkt','hr','acc'];
+var DEPT_IDS = ['sales','eng','mkt','hr','acc'];
+var OLD_DEPT_TO_V5 = {sales:'sales', dev:'eng', mkt:'mkt', hr:'hr', acc:'acc'}; /* v4旧部署キー→v5部署キー */
 var STAGES = [
   {name:'個人事業',               mult:1,   req:0},
   {name:'スタートアップ',         mult:1.5, req:2e5},
@@ -424,13 +480,13 @@ var STAGES = [
   {name:'世界的コングロマリット', mult:20,  req:5e13}
 ];
 var PACKS = {
-  normal: {id:'normal', name:'ノーマルパック', cls:'p-normal', price:30000, cards:3,
-    rates:{N:60,R:25,SR:10,SSR:4,UR:0.9,LEGEND:0.1}, desc:'基本の採用パック。まずはここから。'},
-  gold:   {id:'gold', name:'ゴールドパック', cls:'p-gold', price:300000, cards:3,
-    rates:{N:0,R:74.5,SR:20,SSR:4,UR:1.3,LEGEND:0.2}, desc:'R以上確定・SR排出率2倍のワンランク上の採用。'},
-  premium:{id:'premium', name:'プレミアパック', cls:'p-premium', price:3000000, cards:3,
+  normal: {id:'normal', name:'ノーマル紹介', cls:'p-normal', price:30000, cards:3,
+    rates:{N:60,R:25,SR:10,SSR:4,UR:0.9,LEGEND:0.1}, desc:'基本の人材紹介。競合5社の若手から引き抜こう。'},
+  gold:   {id:'gold', name:'ゴールド紹介', cls:'p-gold', price:300000, cards:3,
+    rates:{N:0,R:74.5,SR:20,SSR:4,UR:1.3,LEGEND:0.2}, desc:'R以上確定・SR排出率2倍のワンランク上の人材紹介。'},
+  premium:{id:'premium', name:'ヘッドハンティング', cls:'p-premium', price:3000000, cards:3,
     rates:{N:39,R:29,SR:20,SSR:8,UR:3.4,LEGEND:0.6}, guarantee:true,
-    desc:'SR以上が1枚確定・UR/LEGEND排出率アップ。伝説の経営者を狙え。'}
+    desc:'SR以上が1枚確定・UR/LEGEND排出率アップ。競合の経営幹部を狙え。'}
 };
 var GUARANTEE_RATES = {N:0,R:0,SR:65,SSR:25,UR:8.5,LEGEND:1.5};
 var OFFLINE_CAP_SEC = 8*3600;
@@ -450,7 +506,7 @@ var STAT_DEFS = {
   luk:{name:'運',     ico:'🍀'}
 };
 var JOB_MAIN_STAT  = {sales:'atk', eng:'tec', mkt:'pln', hr:'vit', acc:'luk'};
-var DEPT_MAIN_STAT = {sales:'atk', dev:'tec', mkt:'pln', hr:'vit', acc:'luk'};
+var DEPT_MAIN_STAT = {sales:'atk', eng:'tec', mkt:'pln', hr:'vit', acc:'luk'}; /* v5: 部署キー＝適正キー */
 /* v4: レアリティごとのLv1合計予算（従来のN/R/SR/SSR/UR期待合計値を踏襲・LEGENDはURの1.4倍） */
 var RAR_STAT_BUDGET = {N:43, R:76, SR:130, SSR:216, UR:378, LEGEND:529};
 var LV_CAP = {N:50, R:60, SR:70, SSR:85, UR:99, LEGEND:99};
@@ -870,7 +926,8 @@ function createFromMaster(state, m){
   var e = {
     id: state.nextId, mid: m.mid,
     ln: m.ln, fn: m.fn, g: m.g, seed: m.seed, nick: m.nick,
-    job: m.job, rar: m.rar, lv: 1, xp: 0, dept: null, awaken: 0
+    job: m.job, rar: m.rar, lv: 1, xp: 0, assign: null, awaken: 0,
+    loyalty: 70, salaryLv: 1, stagnant: 0, wavered: false /* v5.1: 給与/ロイヤルティ/揺れフラグ */
   };
   e.stats = genStatsLv1(e);
   return e;
@@ -879,10 +936,11 @@ function findByMid(state, mid){
   for (var i=0;i<state.employees.length;i++) if (state.employees[i].mid === mid) return state.employees[i];
   return null;
 }
-function awakenEmployee(e){ /* 覚醒+1: 全ステータス+（才能値×2）を即時付与 */
+function awakenEmployee(e){ /* 覚醒+1: 全ステータス+（才能値×2）を即時付与＋忠誠+10（v5.1） */
   var t = genTalents(e), s = empStats(e);
   e.awaken = (e.awaken||0) + 1;
   for (var i=0;i<STAT_KEYS.length;i++) s[STAT_KEYS[i]] += t[STAT_KEYS[i]] * 2;
+  bumpLoyalty(e, 10);
   return e.awaken;
 }
 function awakenMult(e){ return 1 + AWAKEN_PROD_STEP * (e && e.awaken ? e.awaken : 0); }
@@ -890,6 +948,8 @@ function acquireMaster(state, mid, packPrice){
   /* 未所持→採用 / 所持→覚醒+1 / 覚醒上限→資金還元（パック価格の20%） */
   var m = ROSTER_MAP[mid];
   if (!m) return null;
+  if (!state.empSeen) state.empSeen = {};
+  state.empSeen[mid] = true; /* v5.1: 図鑑は退職後も残る（獲得履歴） */
   var e = findByMid(state, mid);
   if (!e){
     e = createFromMaster(state, m);
@@ -918,6 +978,9 @@ function empDexCount(state){
     var mid = state.employees[i].mid;
     if (mid && !seen[mid]){ seen[mid] = 1; n++; }
   }
+  /* v5.1: 退職（手放す）しても図鑑には残る */
+  var hist = state.empSeen || {};
+  for (var k in hist){ if (hist[k] && !seen[k] && ROSTER_MAP[k]){ seen[k] = 1; n++; } }
   return n;
 }
 function empDexMult(state){
@@ -1016,6 +1079,8 @@ function migrateToLatest(st){
   if (!st.v || st.v < 2) migrateV1toV2(st);
   if (st.v < 3) migrateV2toV3(st);
   if (st.v < 4) migrateV3toV4(st);
+  if (st.v < 5) migrateV4toV5(st); /* v5: 群雄割拠移行 */
+  ensureV5Fields(st);
   if (!st.empDexAwarded) st.empDexAwarded = {};
   st.employees.forEach(function(e){ if (typeof e.awaken !== 'number') e.awaken = 0; });
   refreshFromRoster(st);
@@ -1043,17 +1108,17 @@ function empProdIn(e, deptId, statBonus){
     if (k !== main) sub += s[k] + b;
   }
   var p = ((s[main] + b) + sub * 0.15) * PROD_CONV;
-  if (deptId && DEPTS[deptId].job === e.job) p *= 1.5;
+  if (deptId && deptId === e.job) p *= 1.5; /* v5: 適正一致×1.5（部署キー＝適正キー） */
   p *= awakenMult(e); /* v3: 覚醒 ×(1+0.05×awaken) */
   return p;
 }
 function empBaseProd(e){ return empProdIn(e, null); }
-function empProd(e, statBonus){ return empProdIn(e, e.dept, statBonus); }
-function deptSum(state, d){
+function empProd(e, statBonus){ return empProdIn(e, e.assign ? e.assign.dept : null, statBonus); }
+function deptSum(state, d){ /* v5: 全拠点合算（同名部署の効果は全社で合算） */
   var b = dexStatBonus(state), s = 0;
   for (var i=0;i<state.employees.length;i++){
     var e = state.employees[i];
-    if (e.dept === d) s += empProdIn(e, d, b);
+    if (e.assign && e.assign.dept === d) s += empProdIn(e, d, b);
   }
   return s;
 }
@@ -1061,7 +1126,7 @@ function deptSum(state, d){
 function calcDerived(state, now){
   now = now || Date.now();
   var salesSum = deptSum(state,'sales');
-  var devSum   = deptSum(state,'dev');
+  var devSum   = deptSum(state,'eng');
   var mktSum   = deptSum(state,'mkt');
   var hrSum    = deptSum(state,'hr');
   var accSum   = deptSum(state,'acc');
@@ -1080,7 +1145,6 @@ function calcDerived(state, now){
           stageMult:stage.mult, buffInc:buffInc, edexInc:edexInc, income:income};
 }
 /* ---------- pure: costs ---------- */
-function slotCost(slots){ return Math.round(80000 * Math.pow(2.5, slots - 2)); }
 function packPrice(packId, hrDisc){ return Math.round(PACKS[packId].price * (1 - (hrDisc||0))); }
 /* ---------- pure: offline ---------- */
 function calcOffline(elapsedMs, incomePerSec, offRate){
@@ -1288,12 +1352,23 @@ function newState(){
   var st = {
     v: SAVE_VERSION, money: 50000, totalEarned: 0, productPower: 0,
     stageIdx: 0, nextId: 0, employees: [],
-    depts: {}, ach: {}, lastSeen: 0,
+    ach: {}, lastSeen: 0,
     items: {}, itemsSeen: {}, questCd: {}, buff: null, activeQuest: null, dexAwarded: {},
     empDexAwarded: {},
-    stats: {packs:0, ssr:0, ur:0, fuses:0, expands:0, quests:0, questWins:0, itemsUsed:0}
+    stats: {packs:0, ssr:0, ur:0, fuses:0, expands:0, quests:0, questWins:0, itemsUsed:0},
+    /* v5: 群雄割拠 */
+    sites: {}, share: initShares(), rivals: initRivals(),
+    quarter: 1, conquered: {}, qevents: [], nationalAt: 0,
+    execs: {directors:[], areaChiefs:{}}, /* v5.1: 取締役3席・エリア統括 */
+    wars: {},                             /* v5.1: シェアを奪った相手（引き抜き敵意2倍） */
+    pendingOffer: null,                   /* v5.1: 対応待ちの逆引き抜きオファー */
+    scoutCd: {},                          /* v5.1: 指名スカウトのクールダウン（mid→再交渉可能期） */
+    empSeen: {},                          /* v5.1: 図鑑履歴（退職しても残る） */
+    hrLog: []                             /* v5.1: 次回決算レポートに載せる人事出来事 */
   };
-  DEPT_IDS.forEach(function(d){ st.depts[d] = {slots:2}; });
+  /* 丸の内本社（1拠点目無料・営業部1つ設置済み） */
+  st.sites.marunouchi = {depts:{sales:{lv:1, kacho:null, bucho:null}}, siteMgr:null};
+  st.share.marunouchi = initAreaShareWithPlayer();
   return st;
 }
 var ACHS = [
@@ -1315,13 +1390,820 @@ var ACHS = [
   {id:'edex100',    ico:'🏛️', name:'図鑑コンプ',    desc:'社員図鑑100名を全員登録する', chk:function(s){return empDexCount(s)>=100;}},
   {id:'lv10',       ico:'🎓', name:'エリート育成',   desc:'社員をLv10まで育成する',     chk:function(s){return s.employees.some(function(e){return e.lv>=10;});}},
   {id:'lv50',       ico:'🦾', name:'匠の域',         desc:'社員をLv50まで育成する',     chk:function(s){return s.employees.some(function(e){return e.lv>=50;});}},
-  {id:'expand5',    ico:'🏗️', name:'拡張主義',      desc:'スロット拡張を5回行う',      chk:function(s){return s.stats.expands>=5;}},
-  {id:'first_quest',ico:'⚔️', name:'いざ、クエストへ', desc:'クエストに1回挑戦する',    chk:function(s){return s.stats.quests>=1;}},
-  {id:'quest10',    ico:'🛡️', name:'歴戦の派遣団',   desc:'クエストに10回成功する',    chk:function(s){return s.stats.questWins>=10;}},
+  {id:'expand5',    ico:'🏗️', name:'拡張主義',      desc:'部署の設置・Lvアップを5回行う', chk:function(s){return s.stats.expands>=5;}},
+  {id:'first_quest',ico:'⚔️', name:'いざ、案件へ',   desc:'エリア案件に1回挑戦する',    chk:function(s){return s.stats.quests>=1;}},
+  {id:'quest10',    ico:'🛡️', name:'歴戦の派遣団',   desc:'エリア案件に10回成功する',   chk:function(s){return s.stats.questWins>=10;}},
+  {id:'site2',      ico:'🗾', name:'全国展開の一歩', desc:'2拠点目を開設する',          chk:function(s){return Object.keys(s.sites||{}).length>=2;}},
+  {id:'conquer1',   ico:'🚩', name:'初のエリア制覇', desc:'エリアシェア50%超を達成する', chk:function(s){return Object.keys(s.conquered||{}).length>=1;}},
+  {id:'conquer12',  ico:'🏯', name:'称号：列島の覇者', desc:'12エリア全てを制覇する（全国制覇）', chk:function(s){return Object.keys(s.conquered||{}).length>=12;}},
+  {id:'q10',        ico:'🗓️', name:'創業10期',       desc:'創業10期目に到達する',       chk:function(s){return (s.quarter||1)>=10;}},
   {id:'item_first', ico:'🎒', name:'はじめてのおつかい', desc:'アイテムを1回使用する',  chk:function(s){return s.stats.itemsUsed>=1;}},
   {id:'dex_half',   ico:'📖', name:'コレクター',     desc:'図鑑を18種類埋める',         chk:function(s){return dexCount(s)>=18;}},
   {id:'dex_all',    ico:'📚', name:'伝説の蒐集家',   desc:'図鑑を全て埋める',           chk:function(s){return dexCount(s)>=ITEMS.length;}}
 ];
+
+/* =====================================================================
+   v5.0 pure: 群雄割拠 — 12エリア・競合5社・拠点3層・役職・四半期決算
+===================================================================== */
+var SHARE_K = 0.35;            /* シェア変動係数 K */
+var CONQUER_LINE = 50;         /* 制覇ライン（シェア%超） */
+var CONQUER_REV_MULT = 1.2;    /* 制覇エリアの収益倍率（恒久） */
+var RIVAL_POWER_COEF = 0.35;   /* 競合戦力の換算係数（バランス調整用） */
+var SITE_BASE_COST = 500000;   /* 2拠点目の開設費（以降×2.5） */
+var DEPT_SETUP_UNIT = 200000;  /* 部署設置費 = 20万×全社の既設部署数 */
+var DEPT_LV_UNIT = 300000;     /* 部署Lvアップ費 = 30万×現Lv×拠点数 */
+var DEPT_LV_MAX = 3;           /* 部署Lv上限（配属枠数=Lv） */
+var KACHO_MULT = 1.10;         /* 課長: 部署戦力×1.10（R以上・部署Lv1から） */
+var BUCHO_MULT = 1.25;         /* 部長: 部署戦力×1.25（SR以上・部署Lv2解禁・課長と重複乗算） */
+var AREA_SIZE_VALUE = {S:5000000, A:2000000, B:1000000, C:500000}; /* 四半期市場価値（×ステージ倍率） */
+var AREAS = [
+  {id:'marunouchi', name:'丸の内', demand:'acc',   size:'S'},
+  {id:'shibuya',    name:'渋谷',   demand:'eng',   size:'S'},
+  {id:'shinjuku',   name:'新宿',   demand:'sales', size:'A'},
+  {id:'yokohama',   name:'横浜',   demand:'mkt',   size:'A'},
+  {id:'osaka',      name:'大阪',   demand:'sales', size:'S'},
+  {id:'nagoya',     name:'名古屋', demand:'eng',   size:'A'},
+  {id:'kyoto',      name:'京都',   demand:'mkt',   size:'B'},
+  {id:'kobe',       name:'神戸',   demand:'mkt',   size:'B'},
+  {id:'fukuoka',    name:'福岡',   demand:'eng',   size:'A'},
+  {id:'sapporo',    name:'札幌',   demand:'hr',    size:'B'},
+  {id:'sendai',     name:'仙台',   demand:'sales', size:'B'},
+  {id:'naha',       name:'那覇',   demand:'mkt',   size:'C'}
+];
+var AREA_MAP = {};
+AREAS.forEach(function(a){ AREA_MAP[a.id] = a; });
+var RIVALS = [
+  {id:'orochi',  name:'オロチ商事',           ind:'総合商社', fav:['sales'],    home:'osaka',      growth:0.05, ai:'aggressive', color:'#C0504D'},
+  {id:'zenith',  name:'ゼニス銀行HD',         ind:'金融',     fav:['acc'],      home:'marunouchi', growth:0.03, ai:'defensive',  color:'#4472C4'},
+  {id:'musashi', name:'テクノ武蔵',           ind:'メーカー', fav:['eng'],      home:'nagoya',     growth:0.04, ai:'hoard',      color:'#57A05A'},
+  {id:'teito',   name:'帝都マーケティング',   ind:'広告',     fav:['mkt'],      home:'shibuya',    growth:0.05, ai:'reactive',   color:'#9B59B6'},
+  {id:'gojo',    name:'五常コンサルティング', ind:'人材',     fav:['hr','acc'], home:'shinjuku',   growth:0.04, ai:'poacher',    color:'#767F8B'}
+];
+var RIVAL_MAP = {};
+RIVALS.forEach(function(rv){ RIVAL_MAP[rv.id] = rv; });
+var COMPANIES = ['player','orochi','zenith','musashi','teito','gojo'];
+/* ---------- v5 pure: 未採用マスター100名の競合5社への決定論分配 ----------
+   midハッシュ順×適正優先×レアリティ均等按分。RNG不使用のため全端末で同一。 */
+var RIVAL_PREF = {
+  sales:['orochi','teito','gojo','zenith','musashi'],
+  acc:  ['zenith','gojo','orochi','musashi','teito'],
+  eng:  ['musashi','zenith','teito','orochi','gojo'],
+  mkt:  ['teito','orochi','gojo','musashi','zenith'],
+  hr:   ['gojo','musashi','zenith','teito','orochi']
+};
+function buildRivalAssignment(){
+  var out = {};
+  RARS.forEach(function(rar){
+    var pool = ROSTER_BY_RAR[rar].slice().sort(function(a,b){
+      var ha = midSeed(a.mid), hb = midSeed(b.mid);
+      if (ha !== hb) return ha - hb;
+      return a.mid < b.mid ? -1 : 1;
+    });
+    var n = pool.length, base = Math.floor(n/5), rem = n%5;
+    var quota = {};
+    RIVALS.forEach(function(rv,i){ quota[rv.id] = base + (i < rem ? 1 : 0); });
+    pool.forEach(function(m){
+      var prefs = RIVAL_PREF[m.job] || RIVALS.map(function(rv){ return rv.id; });
+      for (var i=0;i<prefs.length;i++){
+        if (quota[prefs[i]] > 0){ quota[prefs[i]]--; out[m.mid] = prefs[i]; return; }
+      }
+      out[m.mid] = RIVALS[0].id; /* 理論上到達しない */
+    });
+  });
+  return out;
+}
+var RIVAL_OF_MID = buildRivalAssignment();
+var RIVAL_MIDS = {};
+RIVALS.forEach(function(rv){ RIVAL_MIDS[rv.id] = []; });
+ROSTER.forEach(function(m){ RIVAL_MIDS[RIVAL_OF_MID[m.mid]].push(m.mid); });
+function rivalOf(mid){ return RIVAL_MAP[RIVAL_OF_MID[mid]] || null; }
+function rivalBelongLabel(mid){ /* 「テクノ武蔵 名古屋支社」 */
+  var rv = rivalOf(mid);
+  return rv ? rv.name + ' ' + AREA_MAP[rv.home].name + '支社' : '';
+}
+/* ---------- v5 pure: 初期シェア・競合状態 ---------- */
+function initAreaShare(){ var o = {player:0}; RIVALS.forEach(function(rv){ o[rv.id] = 20; }); return o; }
+function initAreaShareWithPlayer(){ var o = {player:5}; RIVALS.forEach(function(rv){ o[rv.id] = 19; }); return o; }
+function initShares(){ var o = {}; AREAS.forEach(function(a){ o[a.id] = initAreaShare(); }); return o; }
+function initRivals(){ var o = {}; RIVALS.forEach(function(rv){ o[rv.id] = {mult:1, areas:[rv.home]}; }); return o; }
+/* ---------- v5 pure: 拠点・部署・配属（3層構造） ---------- */
+function siteCount(state){ return Object.keys(state.sites || {}).length; }
+function siteCost(state){ /* 次の拠点の開設費: ¥50万×2.5^(n-2)（1拠点目=丸の内本社は無料） */
+  var n = siteCount(state);
+  return n < 1 ? 0 : Math.round(SITE_BASE_COST * Math.pow(2.5, n - 1));
+}
+function countDepts(state){
+  var n = 0;
+  Object.keys(state.sites || {}).forEach(function(a){ n += Object.keys(state.sites[a].depts || {}).length; });
+  return n;
+}
+function deptSetupCost(state){ return DEPT_SETUP_UNIT * Math.max(1, countDepts(state)); }
+function deptLvUpCost(state, lv){ return DEPT_LV_UNIT * lv * Math.max(1, siteCount(state)); }
+function siteLabel(areaId){ return areaId === 'marunouchi' ? '丸の内本社' : (AREA_MAP[areaId] ? AREA_MAP[areaId].name + '支社' : areaId); }
+function openSite(state, areaId){
+  if (!AREA_MAP[areaId]) return {ok:false, err:'不明なエリアです'};
+  if (state.sites[areaId]) return {ok:false, err:'既に拠点があります'};
+  var cost = siteCost(state);
+  if (state.money < cost) return {ok:false, err:'資金が足りません'};
+  state.money -= cost;
+  state.sites[areaId] = {depts:{}, siteMgr:null};
+  return {ok:true, cost:cost};
+}
+function buildDept(state, areaId, dk){
+  var site = state.sites[areaId];
+  if (!site) return {ok:false, err:'拠点がありません'};
+  if (DEPT_IDS.indexOf(dk) < 0) return {ok:false, err:'不明な部署です'};
+  if (site.depts[dk]) return {ok:false, err:'設置済みです'};
+  var cost = deptSetupCost(state);
+  if (state.money < cost) return {ok:false, err:'資金が足りません'};
+  state.money -= cost;
+  site.depts[dk] = {lv:1, kacho:null, bucho:null};
+  return {ok:true, cost:cost};
+}
+function lvUpDept(state, areaId, dk){
+  var site = state.sites[areaId], dep = site && site.depts[dk];
+  if (!dep) return {ok:false, err:'部署がありません'};
+  if (dep.lv >= DEPT_LV_MAX) return {ok:false, err:'部署Lvは最大です'};
+  var cost = deptLvUpCost(state, dep.lv);
+  if (state.money < cost) return {ok:false, err:'資金が足りません'};
+  state.money -= cost;
+  dep.lv++;
+  return {ok:true, cost:cost, lv:dep.lv};
+}
+function deptMembers(state, areaId, dk){
+  return state.employees.filter(function(e){ return e.assign && e.assign.area === areaId && e.assign.dept === dk; });
+}
+function siteMembers(state, areaId){
+  return state.employees.filter(function(e){ return e.assign && e.assign.area === areaId; });
+}
+function assignEmp(state, e, areaId, dk){
+  var site = state.sites[areaId], dep = site && site.depts[dk];
+  if (!dep) return {ok:false, err:'部署がありません'};
+  if (e.assign) return {ok:false, err:'既に配属済みです'};
+  if (deptMembers(state, areaId, dk).length >= dep.lv) return {ok:false, err:'配属枠が満員です（枠数=部署Lv）'};
+  e.assign = {area:areaId, dept:dk};
+  return {ok:true};
+}
+function unassignEmp(state, e){ /* 配属解除時は保持ポストも解任（整合性） */
+  clearPostsOf(state, e.id);
+  e.assign = null;
+}
+/* ---------- v5 pure: 役職5段（課長／部長／支社長／エリア統括／取締役） ---------- */
+var POST_DEFS = {
+  kacho:     {name:'課長',       ico:'🎖️', minRar:'R',      mult:'×1.10'},
+  bucho:     {name:'部長',       ico:'🏅', minRar:'SR',     mult:'×1.25'},
+  shishacho: {name:'支社長',     ico:'👑', minRar:'SSR',    mult:'×(1+(企画+体力)/400)'},
+  areaChief: {name:'エリア統括', ico:'🌐', minRar:'UR',     mult:'担当拠点×1.10'},
+  director:  {name:'取締役',     ico:'🏛️', minRar:'LEGEND', mult:'全社+8%/人'}
+};
+function canBePost(e, kind){
+  var d = POST_DEFS[kind];
+  return !!d && RARS.indexOf(e.rar) >= RARS.indexOf(d.minRar);
+}
+function findEmpById(state, empId){
+  for (var i=0;i<state.employees.length;i++) if (state.employees[i].id === empId) return state.employees[i];
+  return null;
+}
+function findPost(state, empId){ /* 社員が保持する役職（1人1枠） */
+  var res = null;
+  Object.keys(state.sites || {}).forEach(function(a){
+    var site = state.sites[a];
+    if (site.siteMgr === empId) res = {kind:'shishacho', area:a, dept:null};
+    Object.keys(site.depts || {}).forEach(function(dk){
+      if (site.depts[dk].kacho === empId) res = {kind:'kacho', area:a, dept:dk};
+      if (site.depts[dk].bucho === empId) res = {kind:'bucho', area:a, dept:dk};
+    });
+  });
+  return res;
+}
+function clearPostsOf(state, empId){
+  Object.keys(state.sites || {}).forEach(function(a){
+    var site = state.sites[a];
+    if (site.siteMgr === empId) site.siteMgr = null;
+    Object.keys(site.depts || {}).forEach(function(dk){
+      if (site.depts[dk].kacho === empId) site.depts[dk].kacho = null;
+      if (site.depts[dk].bucho === empId) site.depts[dk].bucho = null;
+    });
+  });
+}
+function setPost(state, empId, kind, areaId, dk){
+  if (kind === 'director') return setDirector(state, empId);       /* v5.1: 役員ポストへ委譲 */
+  if (kind === 'areaChief') return setAreaChief(state, empId, areaId);
+  var e = findEmpById(state, empId);
+  if (!e) return {ok:false, err:'社員が見つかりません'};
+  if (!canBePost(e, kind)) return {ok:false, err:POST_DEFS[kind].name + 'は' + POST_DEFS[kind].minRar + '以上のみ就任できます'};
+  var site = state.sites[areaId];
+  if (!site) return {ok:false, err:'拠点がありません'};
+  if (kind === 'shishacho'){
+    if (!e.assign || e.assign.area !== areaId) return {ok:false, err:'この拠点に配置中の社員のみ就任できます'};
+    clearPostsOf(state, empId); /* 1人1枠: 旧ポストは自動解任 */
+    clearExecPostsOf(state, empId);
+    site.siteMgr = empId;
+    bumpLoyalty(e, 20); /* v5.1: 就任+20 */
+    return {ok:true};
+  }
+  var dep = site.depts[dk];
+  if (!dep) return {ok:false, err:'部署がありません'};
+  if (kind === 'bucho' && dep.lv < 2) return {ok:false, err:'部長は部署Lv2で解禁されます'};
+  if (!e.assign || e.assign.area !== areaId || e.assign.dept !== dk) return {ok:false, err:'この部署に配属中の社員のみ就任できます'};
+  clearPostsOf(state, empId);
+  clearExecPostsOf(state, empId);
+  dep[kind === 'kacho' ? 'kacho' : 'bucho'] = empId;
+  bumpLoyalty(e, 20); /* v5.1: 就任+20 */
+  return {ok:true};
+}
+function siteMgrMult(e){ /* 支社長: ×(1+(pln+vit)/400)・最大×1.5 */
+  var s = empStats(e);
+  return Math.min(1.5, 1 + (s.pln + s.vit) / 400);
+}
+/* ---------- v5 pure: エリアシェア戦の戦力 ---------- */
+function empAreaPower(e, dk, statBonus){ /* 主要ステ×適正一致1.5×覚醒 */
+  var s = empStats(e), b = statBonus || 0;
+  var p = s[DEPT_MAIN_STAT[dk]] + b;
+  if (e.job === dk) p *= 1.5;
+  p *= awakenMult(e);
+  return p;
+}
+function deptPower(state, areaId, dk, statBonus){
+  var site = state.sites[areaId], dep = site && site.depts[dk];
+  if (!dep) return 0;
+  var p = 0, members = deptMembers(state, areaId, dk);
+  for (var i=0;i<members.length;i++) p += empAreaPower(members[i], dk, statBonus);
+  if (dep.kacho) p *= KACHO_MULT;
+  if (dep.bucho) p *= BUCHO_MULT; /* 課長と重複乗算 */
+  return p;
+}
+function sitePower(state, areaId, statBonus){
+  var site = state.sites[areaId];
+  if (!site) return 0;
+  var area = AREA_MAP[areaId], p = 0;
+  Object.keys(site.depts).forEach(function(dk){
+    var dp = deptPower(state, areaId, dk, statBonus);
+    if (dk === area.demand) dp *= 1.5; /* エリア需要一致×1.5 */
+    p += dp;
+  });
+  if (site.siteMgr){
+    var mgr = findEmpById(state, site.siteMgr);
+    if (mgr) p *= siteMgrMult(mgr);
+    else site.siteMgr = null; /* 整合: 不在の支社長は解任 */
+  }
+  /* v5.1: エリア統括（担当拠点+10%）・取締役（全社+8%/人） */
+  if (state.execs && state.execs.areaChiefs && state.execs.areaChiefs[areaId]){
+    var chief = findEmpById(state, state.execs.areaChiefs[areaId]);
+    if (chief) p *= AREA_CHIEF_MULT;
+    else delete state.execs.areaChiefs[areaId]; /* 整合: 不在の統括は解任 */
+  }
+  p *= directorMult(state);
+  return p;
+}
+function rivalBasePower(state, rid){ /* プレイヤーが引き抜いた社員は競合戦力から実際に消える（ゼロサム） */
+  var mids = RIVAL_MIDS[rid], sum = 0;
+  for (var i=0;i<mids.length;i++){
+    if (findByMid(state, mids[i])) continue;
+    sum += RAR_STAT_BUDGET[ROSTER_MAP[mids[i]].rar];
+  }
+  var rv = (state.rivals && state.rivals[rid]) || {mult:1};
+  return sum * RIVAL_POWER_COEF * (rv.mult || 1);
+}
+function rivalAreaPowers(state, rid){ /* 簡易モデル: 本拠(重み2)＋進出エリア(重み1)に戦力按分 */
+  var def = RIVAL_MAP[rid];
+  var rv = (state.rivals && state.rivals[rid]) || {areas:[def.home]};
+  var areas = (rv.areas && rv.areas.length) ? rv.areas : [def.home];
+  var base = rivalBasePower(state, rid);
+  var wsum = 0, w = {};
+  areas.forEach(function(a){ w[a] = (a === def.home) ? 2 : 1; wsum += w[a]; });
+  var out = {};
+  areas.forEach(function(a){
+    var p = base * w[a] / wsum;
+    if (def.fav.indexOf(AREA_MAP[a].demand) >= 0) p *= 1.5; /* 得意部署×エリア需要の噛み合い */
+    out[a] = p;
+  });
+  return out;
+}
+/* ---------- v5 pure: シェア演算 ---------- */
+function normalizeShare(sh){ /* 各エリア合計を厳密に100へ */
+  var sum = 0;
+  COMPANIES.forEach(function(c){ if (!(sh[c] >= 0)) sh[c] = 0; sum += sh[c]; });
+  if (sum <= 0){ sh.player = 0; RIVALS.forEach(function(rv){ sh[rv.id] = 20; }); return sh; }
+  COMPANIES.forEach(function(c){ sh[c] = sh[c] * 100 / sum; });
+  return sh;
+}
+function updateAreaShare(sh, powers, K){ /* newShare = share×(1−K) + K×(power÷Σpower)×100 */
+  var tot = 0;
+  COMPANIES.forEach(function(c){ tot += (powers[c] || 0); });
+  if (tot <= 0) return sh; /* 全社戦力ゼロ→変動なし */
+  COMPANIES.forEach(function(c){ sh[c] = sh[c] * (1 - K) + K * 100 * ((powers[c] || 0) / tot); });
+  return normalizeShare(sh);
+}
+function addPlayerShare(state, areaId, pts){ /* 案件報酬: 即時シェア加算（競合から比例で奪う・合計100不変） */
+  var sh = state.share[areaId];
+  if (!sh) return 0;
+  var add = Math.min(pts, 100 - sh.player);
+  if (add <= 0) return 0;
+  var rsum = 0;
+  RIVALS.forEach(function(rv){ rsum += sh[rv.id]; });
+  if (rsum > 0) RIVALS.forEach(function(rv){ sh[rv.id] -= add * (sh[rv.id] / rsum); });
+  sh.player += add;
+  normalizeShare(sh);
+  return add;
+}
+function areaValue(areaId, stageIdx){ /* 四半期市場価値（会社ステージ倍率に比例して成長） */
+  return AREA_SIZE_VALUE[AREA_MAP[areaId].size] * STAGES[stageIdx].mult;
+}
+function boomActive(state, areaId){
+  return (state.qevents || []).some(function(ev){ return ev.type === 'boom' && ev.area === areaId; });
+}
+/* ---------- v5 pure: エリア案件（12案件×12エリア紐付け） ---------- */
+var QUEST_AREA = {b1:'sendai', b2:'sapporo', b3:'naha', s1:'kobe', s2:'yokohama', s3:'kyoto',
+                  g1:'shinjuku', g2:'nagoya', g3:'fukuoka', l1:'marunouchi', l2:'shibuya', l3:'osaka'};
+var AREA_QUEST = {};
+Object.keys(QUEST_AREA).forEach(function(q){ AREA_QUEST[QUEST_AREA[q]] = q; });
+var QUEST_SHARE_PTS = {bronze:1.5, silver:2, gold:2.5, legend:3}; /* 成功時のエリアシェア+pt */
+/* ---------- v5 pure: 四半期決算（ターン処理） ---------- */
+function closeQuarter(state, rng){
+  rng = rng || Math.random;
+  var b = dexStatBonus(state);
+  var prevEvents = state.qevents || [];
+  if (!state.wars) state.wars = {};
+  if (!Array.isArray(state.hrLog)) state.hrLog = [];
+  var report = {quarter:state.quarter, areas:[], revenue:0, events:[], conquests:[], expansions:[], national:false};
+  /* 1-2) 戦力集計 → シェア更新（K=0.35・拠点なし=power0で漸減） */
+  var rivalPow = {};
+  RIVALS.forEach(function(rv){ rivalPow[rv.id] = rivalAreaPowers(state, rv.id); });
+  AREAS.forEach(function(a){
+    var sh = state.share[a.id];
+    var powers = {player: sitePower(state, a.id, b)};
+    RIVALS.forEach(function(rv){ powers[rv.id] = rivalPow[rv.id][a.id] || 0; });
+    var evNote = '';
+    prevEvents.forEach(function(ev){
+      if (ev.type === 'assault' && ev.area === a.id && powers[ev.rival] !== undefined){
+        powers[ev.rival] *= 1.2;
+        evNote = RIVAL_MAP[ev.rival].name + 'の攻勢';
+      }
+      if (ev.type === 'boom' && ev.area === a.id && !evNote) evNote = '特需';
+    });
+    var before = sh.player;
+    var beforeRiv = {};
+    RIVALS.forEach(function(rv){ beforeRiv[rv.id] = sh[rv.id]; });
+    updateAreaShare(sh, powers, SHARE_K);
+    /* v5.1: シェアを奪った相手を記録（逆引き抜きの敵意が2倍になる） */
+    if (sh.player > before + 1e-9){
+      RIVALS.forEach(function(rv){ if (sh[rv.id] < beforeRiv[rv.id] - 1e-9) state.wars[rv.id] = state.quarter; });
+    }
+    var top = RIVALS[0].id;
+    RIVALS.forEach(function(rv){ if (sh[rv.id] > sh[top]) top = rv.id; });
+    report.areas.push({id:a.id, name:a.name, before:before, after:sh.player, delta:sh.player - before,
+      power:powers.player, hasSite:!!state.sites[a.id], top:top, topShare:sh[top], ev:evNote,
+      conquered:!!state.conquered[a.id]});
+  });
+  /* 3) 四半期収益 = Σ(市場価値×自社シェア)（制覇エリアは×1.2恒久） */
+  var rev = 0;
+  AREAS.forEach(function(a, i){
+    var r = areaValue(a.id, state.stageIdx) * (state.share[a.id].player / 100);
+    if (state.conquered[a.id]) r *= CONQUER_REV_MULT;
+    r = Math.round(r);
+    report.areas[i].rev = r;
+    rev += r;
+  });
+  report.revenue = rev;
+  state.money += rev;
+  state.totalEarned += rev;
+  /* 3b) v5.1: 総人件費控除（給与=レア基準額×1.05^Lv×水準×役職手当1.3）。資金不足=未払い */
+  var payroll = totalPayroll(state);
+  report.payroll = payroll;
+  report.net = rev - payroll;
+  report.unpaid = false;
+  if (payroll > 0){
+    if (state.money >= payroll) state.money -= payroll;
+    else { state.money = 0; report.unpaid = true; }
+  }
+  /* 4b) v5.1: ロイヤルティ精算（給与水準/未払い/未配置/昇進停滞/在任/制覇エリア所属） */
+  settleLoyalty(state, report.unpaid);
+  report.hrEvents = state.hrLog.slice();
+  state.hrLog = [];
+  report.loyaltyWarns = [];
+  state.employees.forEach(function(le){
+    if (le.loyalty < 60) report.loyaltyWarns.push({name:le.ln + ' ' + le.fn, loyalty:Math.round(le.loyalty), danger:le.loyalty < 40});
+  });
+  report.loyaltyWarns.sort(function(x, y){ return x.loyalty - y.loyalty; });
+  /* 5) イベント抽選（v5.0は2種・効果は翌四半期1ターン） */
+  var evs = [];
+  var roll = rng();
+  if (roll < 0.25){
+    var rv1 = RIVALS[Math.floor(rng() * RIVALS.length)];
+    var st1 = state.rivals[rv1.id];
+    var aid = st1.areas[Math.floor(rng() * st1.areas.length)] || rv1.home;
+    evs.push({type:'assault', rival:rv1.id, area:aid});
+    report.events.push('⚔️ ' + rv1.name + 'が' + AREA_MAP[aid].name + 'で攻勢（来期 戦力+20%）');
+  } else if (roll < 0.45){
+    var a2 = AREAS[Math.floor(rng() * AREAS.length)];
+    evs.push({type:'boom', area:a2.id});
+    report.events.push('🎉 ' + a2.name + 'に特需発生（来期 案件のシェア効果2倍）');
+  }
+  state.qevents = evs;
+  /* 6) 競合成長・進出（成長率3〜5%/ターン・進出10%、攻勢AIは15%） */
+  RIVALS.forEach(function(rv){
+    var st2 = state.rivals[rv.id];
+    st2.mult = (st2.mult || 1) * (1 + rv.growth);
+    var prob = rv.ai === 'aggressive' ? 0.15 : 0.10;
+    if (rng() < prob){
+      var cand = AREAS.filter(function(a){ return st2.areas.indexOf(a.id) < 0; });
+      if (cand.length){
+        var na = cand[Math.floor(rng() * cand.length)];
+        st2.areas.push(na.id);
+        report.expansions.push(rv.name + 'が' + na.name + 'に進出');
+      }
+    }
+  });
+  /* 7) 制覇判定（シェア50%超→恒久バッジ／12エリアで全国制覇） */
+  AREAS.forEach(function(a){
+    if (!state.conquered[a.id] && state.share[a.id].player > CONQUER_LINE){
+      state.conquered[a.id] = state.quarter;
+      report.conquests.push(a.name);
+    }
+  });
+  if (Object.keys(state.conquered).length >= AREAS.length && !state.nationalAt){
+    state.nationalAt = state.quarter;
+    report.national = true;
+  }
+  /* 7b) v5.1: 逆引き抜き判定（最大1名/期・loyalty<60優先×高レア優先・3択はモーダルで） */
+  report.offer = null;
+  var poach = rollPoach(state, rng);
+  if (poach){
+    state.pendingOffer = poach;
+    report.offer = {empId:poach.empId, rival:poach.rival, counterCost:poach.counterCost};
+  }
+  state.quarter++;
+  return report;
+}
+/* ---------- v5 pure: セーブ移行 v4→v5 ---------- */
+function migrateV4toV5(st){
+  if (!st) return st;
+  if (st.v >= 5) return st; /* 冪等 */
+  /* 丸の内本社を自動開設し、旧・全社部署の配置→本社に同名部署(Lv1)を再現。先頭1名を配属・溢れは未配置 */
+  st.sites = {marunouchi:{depts:{}, siteMgr:null}};
+  var emps = Array.isArray(st.employees) ? st.employees : (st.employees = []);
+  ['sales','dev','mkt','hr','acc'].forEach(function(od){
+    var nk = OLD_DEPT_TO_V5[od];
+    var members = emps.filter(function(e){ return e.dept === od; });
+    if (members.length){
+      st.sites.marunouchi.depts[nk] = {lv:1, kacho:null, bucho:null};
+      members.forEach(function(e, i){ e.assign = (i === 0) ? {area:'marunouchi', dept:nk} : null; });
+    }
+  });
+  if (!st.sites.marunouchi.depts.sales) st.sites.marunouchi.depts.sales = {lv:1, kacho:null, bucho:null}; /* 本社は営業部設置済み保証 */
+  emps.forEach(function(e){
+    if (e.assign === undefined) e.assign = null;
+    delete e.dept;
+  });
+  delete st.depts; /* 旧・全社部署システムは廃止（効果は拠点内部署が継承） */
+  st.share = initShares();
+  st.share.marunouchi = initAreaShareWithPlayer(); /* 本社開設で丸の内のみプレイヤー5%（競合19%×5） */
+  st.rivals = initRivals();
+  st.quarter = 1;
+  st.conquered = {};
+  st.qevents = [];
+  st.nationalAt = 0;
+  st.v = 5;
+  return ensureV5Fields(st);
+}
+function ensureV5Fields(st){ /* v5必須フィールドの欠損補完（冪等・次フェーズ用フィールド含む） */
+  if (!st.sites) st.sites = {marunouchi:{depts:{sales:{lv:1, kacho:null, bucho:null}}, siteMgr:null}};
+  if (!st.share){ st.share = initShares(); st.share.marunouchi = initAreaShareWithPlayer(); }
+  AREAS.forEach(function(a){ if (!st.share[a.id]) st.share[a.id] = initAreaShare(); });
+  if (!st.rivals) st.rivals = initRivals();
+  RIVALS.forEach(function(rv){
+    if (!st.rivals[rv.id]) st.rivals[rv.id] = {mult:1, areas:[rv.home]};
+    if (!Array.isArray(st.rivals[rv.id].areas) || !st.rivals[rv.id].areas.length) st.rivals[rv.id].areas = [rv.home];
+  });
+  if (typeof st.quarter !== 'number' || st.quarter < 1) st.quarter = 1;
+  if (!st.conquered) st.conquered = {};
+  if (!Array.isArray(st.qevents)) st.qevents = [];
+  if (typeof st.nationalAt !== 'number') st.nationalAt = 0;
+  if (!st.execs) st.execs = {directors:[], areaChiefs:{}};       /* v5.1: 取締役3席/エリア統括 */
+  if (!Array.isArray(st.execs.directors)) st.execs.directors = [];
+  if (!st.execs.areaChiefs) st.execs.areaChiefs = {};
+  if (!st.wars) st.wars = {};                                    /* v5.1: 引き抜き戦 */
+  if (st.pendingOffer === undefined) st.pendingOffer = null;     /* v5.1: 対応待ちオファー */
+  if (!st.scoutCd) st.scoutCd = {};                              /* v5.1: 指名スカウトCD */
+  if (!st.empSeen) st.empSeen = {};                              /* v5.1: 図鑑履歴 */
+  if (!Array.isArray(st.hrLog)) st.hrLog = [];                   /* v5.1: 人事出来事ログ */
+  (st.employees || []).forEach(function(e){
+    if (e.assign === undefined) e.assign = null;
+    if (typeof e.loyalty !== 'number') e.loyalty = 70;   /* v5.1: ロイヤルティ（獲得時70） */
+    if (typeof e.salaryLv !== 'number') e.salaryLv = 1;  /* v5.1: 給与 0=渋い/1=相場/2=厚遇 */
+    if (typeof e.stagnant !== 'number') e.stagnant = 0;  /* v5.1: 昇進停滞カウンタ */
+    if (typeof e.wavered !== 'boolean') e.wavered = false; /* v5.1: 対抗提示で残留した揺れフラグ（被オファー率2倍） */
+    if (e.mid) st.empSeen[e.mid] = true;
+  });
+  return st;
+}
+
+/* =====================================================================
+   v5.1 pure: ドラマ層 — 給与・役員ポスト・ロイヤルティ・逆引き抜き・指名スカウト
+===================================================================== */
+var SALARY_BASE = {N:20000, R:50000, SR:120000, SSR:320000, UR:800000, LEGEND:2000000};
+/* ↑仕様書§11-1初期値(N5万/R12万/SR30万/SSR80万/UR200万/LEGEND500万)を80期通し経済シムで実測し
+   人件費/四半期収益が40〜60%に収まるよう約0.4倍に調整（調整レポート: test_v5_drama.js [I]） */
+var SALARY_LV_GROWTH = 1.05;   /* 四半期給与の市場相場 = レア基準額×1.05^Lv */
+var POST_ALLOWANCE = 1.3;      /* 役職手当（全役職共通×1.3） */
+var SALARY_POLICY = [
+  {key:0, name:'渋い',  pct:'90%',  mult:0.9, loy:-4},
+  {key:1, name:'相場',  pct:'100%', mult:1.0, loy:0},
+  {key:2, name:'厚遇',  pct:'120%', mult:1.2, loy:3}
+];
+var UNPAID_LOYALTY = -15;      /* 給与未払い: 全社員ロイヤルティ-15 */
+var DIRECTOR_SEATS = 3;        /* 取締役: LEGEND限定・3席・適正不問 */
+var DIRECTOR_POWER = 0.08;     /* 取締役1人につき全社戦力+8% */
+var AREA_CHIEF_MULT = 1.10;    /* エリア統括: 担当拠点戦力+10%（UR以上・拠点3箇所毎に1枠） */
+var STAGNANT_QUARTERS = 8;     /* 昇進停滞: SR以上が8期連続無役職で-3/期（N/Rは対象外） */
+var POACH_BASE = 0.02;         /* 逆引き抜き基礎発生率 2% */
+var POACH_GOJO = 0.02;         /* 五常コンサル常時活性ボーナス +2% */
+var POACH_ASSAULT = 0.02;      /* 競合係数: 他社は攻勢イベント時のみ活性 +2% */
+var POACH_WAR_TERM = 4;        /* シェアを奪った相手の敵意が続く期間（期） */
+var POACH_CAP = 0.60;          /* 1人あたり被オファー率の上限 */
+var COUNTER_OFFER_MULT = 1.5;  /* 対抗提示の一時金 = 四半期相場×1.5 */
+var SCOUT_MULTS = [1.0, 1.5, 2.0];
+var SCOUT_CD_QUARTERS = 4;     /* 指名スカウト失敗時のクールダウン */
+
+function bumpLoyalty(e, d){ /* 0〜100クランプ（loyalty未付与の旧データは無視） */
+  if (!e || typeof e.loyalty !== 'number') return;
+  e.loyalty = Math.max(0, Math.min(100, e.loyalty + d));
+}
+/* ---------- 給与 ---------- */
+function salaryPolicyOf(e){ return SALARY_POLICY[e.salaryLv === 0 ? 0 : e.salaryLv === 2 ? 2 : 1]; }
+function marketSalary(rar, lv){ return Math.round((SALARY_BASE[rar] || 0) * Math.pow(SALARY_LV_GROWTH, lv || 1)); }
+function empSalary(state, e){
+  var s = marketSalary(e.rar, e.lv) * salaryPolicyOf(e).mult;
+  if (findAnyPost(state, e.id)) s *= POST_ALLOWANCE; /* 役職手当×1.3 */
+  return Math.round(s);
+}
+function totalPayroll(state){
+  var sum = 0;
+  for (var i=0;i<state.employees.length;i++) sum += empSalary(state, state.employees[i]);
+  return sum;
+}
+function setSalaryLv(state, empId, lv){
+  var e = findEmpById(state, empId);
+  if (!e) return {ok:false, err:'社員が見つかりません'};
+  if (lv !== 0 && lv !== 1 && lv !== 2) return {ok:false, err:'不正な給与水準です'};
+  e.salaryLv = lv;
+  return {ok:true, emp:e};
+}
+function setSalaryLvAll(state, lv){
+  if (lv !== 0 && lv !== 1 && lv !== 2) return {ok:false, err:'不正な給与水準です'};
+  state.employees.forEach(function(e){ e.salaryLv = lv; });
+  return {ok:true, n:state.employees.length};
+}
+/* ---------- 役員ポスト（エリア統括・取締役） ---------- */
+function findAnyPost(state, empId){ /* 現場役職＋役員ポストを横断検索（1人1役職） */
+  var p = findPost(state, empId);
+  if (p) return p;
+  var ex = state.execs;
+  if (!ex) return null;
+  if ((ex.directors || []).indexOf(empId) >= 0) return {kind:'director', area:null, dept:null};
+  var res = null;
+  Object.keys(ex.areaChiefs || {}).forEach(function(a){
+    if (ex.areaChiefs[a] === empId) res = {kind:'areaChief', area:a, dept:null};
+  });
+  return res;
+}
+function clearExecPostsOf(state, empId){
+  var ex = state.execs;
+  if (!ex) return;
+  var i = (ex.directors || []).indexOf(empId);
+  if (i >= 0) ex.directors.splice(i, 1);
+  Object.keys(ex.areaChiefs || {}).forEach(function(a){
+    if (ex.areaChiefs[a] === empId) delete ex.areaChiefs[a];
+  });
+}
+function clearAllPostsOf(state, empId){ clearPostsOf(state, empId); clearExecPostsOf(state, empId); }
+function directorMult(state){ /* 取締役1人につき全社戦力+8%（在籍者のみ有効） */
+  var ex = state.execs;
+  if (!ex || !Array.isArray(ex.directors)) return 1;
+  var n = 0;
+  ex.directors.forEach(function(id){ if (findEmpById(state, id)) n++; });
+  return 1 + DIRECTOR_POWER * n;
+}
+function setDirector(state, empId){
+  var e = findEmpById(state, empId);
+  if (!e) return {ok:false, err:'社員が見つかりません'};
+  if (e.rar !== 'LEGEND') return {ok:false, err:'取締役はLEGENDのみ就任できます'};
+  if (state.execs.directors.indexOf(empId) >= 0) return {ok:false, err:'既に取締役です'};
+  if (state.execs.directors.length >= DIRECTOR_SEATS) return {ok:false, err:'取締役は' + DIRECTOR_SEATS + '席までです'};
+  clearAllPostsOf(state, empId); /* 1人1役職 */
+  state.execs.directors.push(empId);
+  bumpLoyalty(e, 20); /* 就任+20 */
+  return {ok:true, emp:e};
+}
+function unsetDirector(state, empId){
+  var i = state.execs.directors.indexOf(empId);
+  if (i >= 0) state.execs.directors.splice(i, 1);
+  return {ok:true};
+}
+function areaChiefSlots(state){ return Math.floor(siteCount(state) / 3); } /* 拠点3箇所ごとに1枠 */
+function areaChiefCount(state){
+  var n = 0, ac = state.execs.areaChiefs || {};
+  Object.keys(ac).forEach(function(a){ if (findEmpById(state, ac[a])) n++; });
+  return n;
+}
+function setAreaChief(state, empId, areaId){
+  var e = findEmpById(state, empId);
+  if (!e) return {ok:false, err:'社員が見つかりません'};
+  if (RARS.indexOf(e.rar) < RARS.indexOf('UR')) return {ok:false, err:'エリア統括はUR以上のみ就任できます'};
+  if (!state.sites[areaId]) return {ok:false, err:'担当エリアに拠点がありません'};
+  var cur = state.execs.areaChiefs[areaId];
+  if (cur === empId) return {ok:false, err:'既にこのエリアの統括です'};
+  if (!findEmpById(state, cur)) cur = null;
+  if (!cur && areaChiefCount(state) >= areaChiefSlots(state)){
+    return {ok:false, err:'エリア統括の枠がありません（拠点3箇所ごとに1枠）'};
+  }
+  clearAllPostsOf(state, empId); /* 1人1役職 */
+  state.execs.areaChiefs[areaId] = empId;
+  bumpLoyalty(e, 20); /* 就任+20 */
+  return {ok:true, emp:e};
+}
+function unsetAreaChief(state, areaId){
+  delete state.execs.areaChiefs[areaId];
+  return {ok:true};
+}
+/* ---------- ロイヤルティ精算（四半期・全要因） ---------- */
+function settleLoyalty(state, unpaid){
+  state.employees.forEach(function(e){
+    bumpLoyalty(e, salaryPolicyOf(e).loy);                    /* 給与水準 -4/±0/+3 */
+    if (unpaid) bumpLoyalty(e, UNPAID_LOYALTY);               /* 未払い -15 */
+    var post = findAnyPost(state, e.id);
+    if (!e.assign && !post) bumpLoyalty(e, (e.rar === 'N' || e.rar === 'R') ? -1 : -2); /* 未配置（ベンチ） */
+    if (!post && RARS.indexOf(e.rar) >= RARS.indexOf('SR')){  /* 昇進停滞: SR以上が8期連続無役職（N/Rは対象外） */
+      e.stagnant = (e.stagnant || 0) + 1;
+      if (e.stagnant >= STAGNANT_QUARTERS) bumpLoyalty(e, -3);
+    } else {
+      e.stagnant = 0;
+    }
+    if (post) bumpLoyalty(e, 1);                              /* 在任 +1 */
+    if (e.assign && state.conquered[e.assign.area]) bumpLoyalty(e, 5); /* 制覇エリア所属 +5 */
+  });
+}
+/* ---------- 逆引き抜き（競合→自社） ---------- */
+function poachGuard(state){ /* 人事部の全社戦力で被オファー率を最大-30% */
+  return Math.min(0.30, deptSum(state, 'hr') * 0.0003);
+}
+function gojoAlive(state){ /* 五常コンサル在世＝五常に未引き抜きの社員が残っている */
+  var mids = RIVAL_MIDS.gojo;
+  for (var i=0;i<mids.length;i++) if (!findByMid(state, mids[i])) return true;
+  return false;
+}
+function warActive(state, rid){
+  var q = state.wars && state.wars[rid];
+  return !!q && (state.quarter - q) < POACH_WAR_TERM;
+}
+function assaultActive(state, rid){ /* 攻勢イベント中の競合は引き抜きも活性化（競合係数） */
+  return (state.qevents || []).some(function(ev){ return ev.type === 'assault' && ev.rival === rid; });
+}
+function poachRate(state, e){
+  var r = POACH_BASE;
+  if (e.assign){ /* 接触係数: 同エリアで争う競合数×1%（シェアを奪った相手は2倍） */
+    RIVALS.forEach(function(rv){
+      var rvSt = state.rivals && state.rivals[rv.id];
+      if (!rvSt || !Array.isArray(rvSt.areas) || rvSt.areas.indexOf(e.assign.area) < 0) return;
+      r += 0.01 * (warActive(state, rv.id) ? 2 : 1);
+    });
+  }
+  if (gojoAlive(state)) r += POACH_GOJO; /* 競合係数: 五常コンサルは常時活性 */
+  RIVALS.forEach(function(rv){ if (rv.id !== 'gojo' && assaultActive(state, rv.id)) r += POACH_ASSAULT; }); /* 他社は攻勢イベント時 */
+  if (e.wavered) r *= 2;              /* 対抗提示で残留した過去 → 被オファー率2倍 */
+  r *= (1 - poachGuard(state));       /* 人事部防衛 最大-30% */
+  return Math.min(POACH_CAP, r);
+}
+function poachCandidates(state){ /* loyalty<60優先 → 高レア優先 → 低loyalty優先 */
+  return state.employees.slice().sort(function(a, b){
+    var la = a.loyalty < 60 ? 0 : 1, lb = b.loyalty < 60 ? 0 : 1;
+    if (la !== lb) return la - lb;
+    var d = RARS.indexOf(b.rar) - RARS.indexOf(a.rar);
+    if (d) return d;
+    return a.loyalty - b.loyalty;
+  });
+}
+function pickPoacher(state, e, rng){ /* オファー元: 同エリア競合・敵対中・五常を重み付け抽選 */
+  var pool = [];
+  RIVALS.forEach(function(rv){
+    var w = 1;
+    var rvSt = state.rivals && state.rivals[rv.id];
+    if (e.assign && rvSt && Array.isArray(rvSt.areas) && rvSt.areas.indexOf(e.assign.area) >= 0) w += 1;
+    if (warActive(state, rv.id)) w += 1;
+    if (assaultActive(state, rv.id)) w += 1;
+    if (rv.id === 'gojo' && gojoAlive(state)) w += 1;
+    for (var i=0;i<w;i++) pool.push(rv);
+  });
+  return pool[Math.floor(rng() * pool.length)];
+}
+function rollPoach(state, rng){ /* 最大1名/期。発生したらオファーを返す */
+  rng = rng || Math.random;
+  if (state.pendingOffer) return null; /* 対応待ちが残っている間は新規発生なし */
+  var cands = poachCandidates(state);
+  for (var i=0;i<cands.length;i++){
+    var e = cands[i];
+    if (rng() < poachRate(state, e)){
+      var rv = pickPoacher(state, e, rng);
+      return {empId:e.id, rival:rv.id, counterCost:Math.round(marketSalary(e.rar, e.lv) * COUNTER_OFFER_MULT), quarter:state.quarter};
+    }
+  }
+  return null;
+}
+function openPostsFor(state, e){ /* 昇進引き留め用: いま正当に就任できる空きポスト一覧 */
+  var out = [];
+  var cur = findAnyPost(state, e.id);
+  if (e.assign){
+    var site = state.sites[e.assign.area], dep = site && site.depts[e.assign.dept];
+    if (dep){
+      if (!dep.kacho && canBePost(e, 'kacho')) out.push({kind:'kacho', area:e.assign.area, dept:e.assign.dept});
+      if (dep.lv >= 2 && !dep.bucho && canBePost(e, 'bucho')) out.push({kind:'bucho', area:e.assign.area, dept:e.assign.dept});
+    }
+    if (site && !site.siteMgr && canBePost(e, 'shishacho')) out.push({kind:'shishacho', area:e.assign.area, dept:null});
+  }
+  if (RARS.indexOf(e.rar) >= RARS.indexOf('UR') && areaChiefCount(state) < areaChiefSlots(state)){
+    Object.keys(state.sites).forEach(function(a){
+      if (!findEmpById(state, state.execs.areaChiefs[a])) out.push({kind:'areaChief', area:a, dept:null});
+    });
+  }
+  if (e.rar === 'LEGEND' && state.execs.directors.length < DIRECTOR_SEATS && state.execs.directors.indexOf(e.id) < 0){
+    out.push({kind:'director', area:null, dept:null});
+  }
+  return out.filter(function(p){ return !cur || cur.kind !== p.kind; });
+}
+function resolveOfferCounter(state){ /* 3択①: 対抗提示（相場×1.5一時金・+15・揺れフラグ） */
+  var o = state.pendingOffer;
+  if (!o) return {ok:false, err:'対応待ちのオファーがありません'};
+  var e = findEmpById(state, o.empId);
+  if (!e){ state.pendingOffer = null; return {ok:false, err:'対象社員が見つかりません'}; }
+  if (state.money < o.counterCost) return {ok:false, err:'資金が足りません（一時金 ' + fmtMoney(o.counterCost) + '）'};
+  state.money -= o.counterCost;
+  bumpLoyalty(e, 15);
+  e.wavered = true; /* 以後の被オファー率2倍 */
+  state.pendingOffer = null;
+  if (!Array.isArray(state.hrLog)) state.hrLog = [];
+  state.hrLog.push('💰 ' + e.ln + ' ' + e.fn + 'に対抗提示（一時金' + fmtMoney(o.counterCost) + '）→ 残留（忠誠+15・揺れ跡あり）');
+  return {ok:true, emp:e, cost:o.counterCost};
+}
+function resolveOfferPromote(state, kind, areaId, dk){ /* 3択②: 昇進で引き留め */
+  var o = state.pendingOffer;
+  if (!o) return {ok:false, err:'対応待ちのオファーがありません'};
+  var e = findEmpById(state, o.empId);
+  if (!e){ state.pendingOffer = null; return {ok:false, err:'対象社員が見つかりません'}; }
+  var r = setPost(state, e.id, kind, areaId, dk); /* director/areaChiefは内部で委譲・就任+20込み */
+  if (!r.ok) return r;
+  state.pendingOffer = null;
+  if (!Array.isArray(state.hrLog)) state.hrLog = [];
+  state.hrLog.push('🎖️ ' + e.ln + ' ' + e.fn + 'を' + POST_DEFS[kind].name + 'に昇進させ引き留め成功（忠誠+20）');
+  return {ok:true, emp:e, kind:kind};
+}
+function resolveOfferRelease(state){ /* 3択③: 手放す（競合所属へ・図鑑残存） */
+  var o = state.pendingOffer;
+  if (!o) return {ok:false, err:'対応待ちのオファーがありません'};
+  state.pendingOffer = null;
+  var e = findEmpById(state, o.empId);
+  if (!e) return {ok:true, emp:null, rival:o.rival};
+  clearAllPostsOf(state, e.id); /* 配属・役職を解除してから除籍 */
+  if (e.mid){
+    if (!state.empSeen) state.empSeen = {};
+    state.empSeen[e.mid] = true; /* 図鑑には残る */
+  }
+  state.employees = state.employees.filter(function(x){ return x.id !== e.id; });
+  if (!Array.isArray(state.hrLog)) state.hrLog = [];
+  state.hrLog.push('👋 ' + e.ln + ' ' + e.fn + 'が' + (RIVAL_MAP[o.rival] ? RIVAL_MAP[o.rival].name : '競合') + 'へ移籍（退職）');
+  return {ok:true, emp:e, rival:o.rival};
+}
+/* ---------- 指名スカウト ---------- */
+function scoutAnnual(m){ return marketSalary(m.rar, 1) * 4; } /* オファー年俸の基準（四半期相場×4） */
+function scoutCost(m, mult){ return Math.round(scoutAnnual(m) * mult * 2); } /* 契約金 = オファー年俸×2 */
+function scoutRate(state, mid, mult){ /* 成功率 = 30%×年俸倍率×(1+人事部係数)÷(SR以上=役職者1.5)、上限90% */
+  var m = ROSTER_MAP[mid];
+  if (!m) return 0;
+  var hrCoef = Math.min(0.30, deptSum(state, 'hr') * 0.0003);
+  var senior = RARS.indexOf(m.rar) >= RARS.indexOf('SR');
+  return Math.min(0.90, 0.30 * mult * (1 + hrCoef) / (senior ? 1.5 : 1));
+}
+function tryScout(state, mid, mult, rng){
+  rng = rng || Math.random;
+  var m = ROSTER_MAP[mid];
+  if (!m) return {ok:false, err:'不明な社員です'};
+  if (findByMid(state, mid)) return {ok:false, err:'既に在籍しています'};
+  if (SCOUT_MULTS.indexOf(mult) < 0) return {ok:false, err:'不正なオファー年俸です'};
+  if (!state.scoutCd) state.scoutCd = {};
+  var cd = state.scoutCd[mid] || 0;
+  if (state.quarter < cd) return {ok:false, err:'交渉決裂中です（第' + cd + '期から再交渉可）'};
+  var cost = scoutCost(m, mult);
+  if (state.money < cost) return {ok:false, err:'資金が足りません（契約金 ' + fmtMoney(cost) + '）'};
+  state.money -= cost;
+  var rate = scoutRate(state, mid, mult);
+  if (rng() < rate){
+    delete state.scoutCd[mid];
+    var res = acquireMaster(state, mid, 0);
+    return {ok:true, success:true, res:res, cost:cost, rate:rate};
+  }
+  state.scoutCd[mid] = state.quarter + SCOUT_CD_QUARTERS; /* 失敗: 同一人物4期クールダウン */
+  return {ok:true, success:false, cost:cost, rate:rate, cdUntil:state.scoutCd[mid]};
+}
 
 /* =====================================================================
    ここから下は DOM / ブラウザ実行部
@@ -1330,7 +2212,8 @@ if (typeof document !== 'undefined') (function(){
   var state = null;
   var derived = null;
   var dispMoney = 0;
-  var curTab = 'office';
+  var curTab = 'nation';
+  var curSite = 'marunouchi'; /* v5: 拠点タブで選択中の拠点 */
   var filterJob = 'all', filterRar = 'all';
   var pendingCards = [];   // pack opening
   var resetArmed = false, resetTimer = null;
@@ -1354,9 +2237,8 @@ if (typeof document !== 'undefined') (function(){
       if (typeof st.v !== 'number') st.v = 1; /* vを持たないセーブ＝v1（base-fillでv3が入る前に確定） */
       var base = newState();
       Object.keys(base).forEach(function(k){ if (st[k] === undefined) st[k] = base[k]; });
-      DEPT_IDS.forEach(function(d){ if (!st.depts[d]) st.depts[d] = {slots:2}; });
       if (!st.stats) st.stats = base.stats;
-      migrateToLatest(st); /* v1→v2→v3 連鎖マイグレーション */
+      migrateToLatest(st); /* v1→…→v5 連鎖マイグレーション */
       return st;
     }catch(e){ return null; }
   }
@@ -1425,7 +2307,7 @@ if (typeof document !== 'undefined') (function(){
     var needRender = false;
     for (var i=0;i<state.employees.length;i++){
       var e = state.employees[i];
-      if (!e.dept) continue;
+      if (!e.assign) continue;
       var ups = gainXp(e, xr);
       if (ups.length){ enqueueLevelUps(e, ups); needRender = true; }
     }
@@ -1434,13 +2316,8 @@ if (typeof document !== 'undefined') (function(){
       toast('⏱️ 「' + state.buff.name + '」の効果が切れた');
       state.buff = null;
     }
-    /* v2: クエスト進行（ゲームループは止めない） */
+    /* v2/v5: エリア案件の進行（ゲームループは止めない） */
     updateQuestProgress(now);
-    /* v2: クエストタブのCD表示更新（1秒毎） */
-    if (curTab === 'quest' && now - lastQR > 1000){
-      lastQR = now;
-      renderQuestList();
-    }
     checkStage();
     checkAchs();
     renderHeader();
@@ -1451,6 +2328,7 @@ if (typeof document !== 'undefined') (function(){
   /* ---------- header ---------- */
   function renderHeader(){
     $('income').innerHTML = '売上/秒 <b>' + fmtMoney(derived.income) + '</b>';
+    $('quarterInd').textContent = '創業' + state.quarter + '期目';
     var bf = state.buff, bel = $('buffInd');
     if (bf && bf.until > Date.now()){
       bel.classList.remove('hidden');
@@ -1473,45 +2351,341 @@ if (typeof document !== 'undefined') (function(){
     requestAnimationFrame(animMoney);
   }
 
-  /* ---------- office tab ---------- */
+  /* ---------- v5: 全国タブ ---------- */
   function deptEffectLabel(d){
     switch(d){
       case 'sales': return fmtMoney(derived.salesSum) + '/秒';
-      case 'dev':   return 'P力 ' + Math.floor(state.productPower).toLocaleString('ja-JP') + '<br>×' + derived.devMult.toFixed(2);
+      case 'eng':   return 'P力 ' + Math.floor(state.productPower).toLocaleString('ja-JP') + '<br>×' + derived.devMult.toFixed(2);
       case 'mkt':   return '×' + derived.mktMult.toFixed(2);
       case 'hr':    return '割引 ' + Math.round(derived.hrDisc*100) + '%';
       case 'acc':   return 'オフライン ' + Math.round(derived.offRate*100) + '%';
     }
   }
-  function renderOffice(){
+  function shareBar(sh){
+    var seg = '<i style="width:' + sh.player + '%;background:linear-gradient(90deg,var(--gold),var(--gold2));"></i>';
+    RIVALS.forEach(function(rv){ seg += '<i style="width:' + sh[rv.id] + '%;background:' + rv.color + ';"></i>'; });
+    return '<div class="sbar">' + seg + '</div>';
+  }
+  function renderNation(){
+    var evHtml = '';
+    /* v5.1: 対応待ちの引き抜きオファー */
+    if (state.pendingOffer){
+      var poEmp = findEmpById(state, state.pendingOffer.empId);
+      if (!poEmp){ state.pendingOffer = null; }
+      else {
+        evHtml += '<div class="qtr-ev offer-ev">⚡ <b>' + RIVAL_MAP[state.pendingOffer.rival].name + '</b> が <b>' + poEmp.ln + ' ' + poEmp.fn + '</b> に引き抜きオファー！' +
+          '<button class="btn small danger" data-act="offer-modal">対応する</button></div>';
+      }
+    }
+    (state.qevents||[]).forEach(function(ev){
+      if (ev.type === 'assault') evHtml += '<div class="qtr-ev">⚔️ ' + RIVAL_MAP[ev.rival].name + 'が' + AREA_MAP[ev.area].name + 'で攻勢中（今期 戦力+20%）</div>';
+      else evHtml += '<div class="qtr-ev">🎉 ' + AREA_MAP[ev.area].name + 'で特需（今期 案件のシェア効果2倍）</div>';
+    });
+    $('qtrPanel').innerHTML =
+      '<div class="qtr-panel"><div>' +
+      '<div class="qtr-title">創業' + state.quarter + '期目</div>' +
+      '<div class="qtr-sub">制覇 ' + Object.keys(state.conquered).length + '/12エリア・拠点 ' + siteCount(state) + '箇所</div></div>' +
+      '<button class="btn gold" data-act="close-q">🗓 四半期を締める</button></div>' + evHtml;
+    renderActiveQuest();
     var html = '';
-    DEPT_IDS.forEach(function(d){
-      var def = DEPTS[d], dp = state.depts[d];
-      var members = state.employees.filter(function(e){ return e.dept === d; });
+    AREAS.forEach(function(a){
+      var sh = state.share[a.id];
+      var badges = '';
+      if (state.conquered[a.id]) badges += '<span class="abadge acq">🚩制覇</span>';
+      if (state.sites[a.id]) badges += '<span class="abadge">🏢拠点</span>';
+      (state.qevents||[]).forEach(function(ev){
+        if (ev.area !== a.id) return;
+        badges += ev.type === 'assault' ? '<span class="abadge aev">⚔️攻勢</span>' : '<span class="abadge aev">🎉特需</span>';
+      });
+      html += '<div class="area" data-act="area-open" data-area="' + a.id + '">' +
+        '<div class="area-top"><span class="area-name">' + a.name + '</span>' +
+        '<span class="area-dem">' + DEPTS[a.demand].emoji + aptName(a.demand) + '需要</span>' +
+        '<span class="area-size">市場' + a.size + '</span>' + badges +
+        '<span class="area-share">' + sh.player.toFixed(1) + '%</span></div>' +
+        shareBar(sh) + '</div>';
+    });
+    $('areaList').innerHTML = html;
+    refreshAffordance();
+  }
+  /* v5: エリア詳細シート（シェア内訳・競合・案件・拠点） */
+  function openAreaSheet(areaId){
+    var a = AREA_MAP[areaId], sh = state.share[areaId];
+    var b = dexStatBonus(state);
+    var html = '<div style="padding:4px 2px 12px;">';
+    html += '<div class="hint" style="margin:4px 0 8px;">需要部署：<b>' + DEPTS[a.demand].emoji + aptName(a.demand) + '（戦力×1.5）</b>・市場価値 ' +
+      fmtMoney(areaValue(areaId, state.stageIdx)) + '/四半期' +
+      (state.conquered[areaId] ? '・🚩制覇済（収益×1.2恒久）' : '・シェア' + CONQUER_LINE + '%超で制覇') + '</div>';
+    /* シェア内訳 */
+    html += '<div class="shrow"><span class="dot" style="background:linear-gradient(135deg,var(--gold),var(--gold2));"></span>自社（あなた）' +
+      (state.sites[areaId] ? ' <span class="abadge">🏢' + siteLabel(areaId) + '</span>' : '') +
+      '<span class="pct">' + sh.player.toFixed(1) + '%</span></div>';
+    RIVALS.forEach(function(rv){
+      html += '<div class="shrow"><span class="dot" style="background:' + rv.color + ';"></span>' + rv.name +
+        '<span style="font-size:10px;color:var(--sub);">' + (rv.home === areaId ? '本拠' : (state.rivals[rv.id].areas.indexOf(areaId) >= 0 ? '進出済' : '')) + '</span>' +
+        '<span class="pct">' + sh[rv.id].toFixed(1) + '%</span></div>';
+    });
+    html += '<div class="hint" style="margin:6px 0 10px;">自社戦力（この拠点）: <b>' + Math.round(sitePower(state, areaId, b)).toLocaleString('ja-JP') + '</b>' +
+      (state.sites[areaId] ? '' : '（拠点なし＝戦力0でシェア漸減）') + '</div>';
+    /* エリア案件 */
+    var qid = AREA_QUEST[areaId], q = QUEST_MAP[qid];
+    if (q){
+      var t = QUEST_TIER_DEFS[q.tier];
+      var req = Object.keys(q.req).map(function(k){ return STAT_DEFS[k].ico + STAT_DEFS[k].name + ' ' + q.req[k]; }).join(' ');
+      var rw = questReward(q, derived.income);
+      var pts = QUEST_SHARE_PTS[q.tier] * (boomActive(state, areaId) ? 2 : 1);
+      var cdLeft = Math.max(0, ((state.questCd[q.id]||0) - Date.now()) / 1000);
+      var btn;
+      if (!state.sites[areaId]) btn = '<button class="btn small ghost" disabled>拠点が必要</button>';
+      else if (state.activeQuest) btn = '<button class="btn small ghost" disabled>派遣中</button>';
+      else if (cdLeft > 0) btn = '<button class="btn small ghost" disabled>CD ' + fmtDur(Math.ceil(cdLeft)) + '</button>';
+      else btn = '<button class="btn small gold" data-act="quest-open" data-q="' + q.id + '">派遣する</button>';
+      html += '<div class="quest" style="margin-bottom:10px;"><div class="q-ico">' + q.ico + '</div>' +
+        '<div class="q-mid"><div class="q-name">' + t.ico + ' ' + q.name + '</div>' +
+        '<div class="q-req">要求 ' + req + '</div>' +
+        '<div class="q-rw">成功報酬 ' + fmtMoney(rw.money) + ' ＋ XP' + rw.xp.toLocaleString('ja-JP') + '/人 ＋ <b style="color:var(--gold)">シェア+' + pts + 'pt</b>' +
+        (boomActive(state, areaId) ? '（🎉特需2倍中）' : '') + ' ＋ アイテム抽選</div></div>' + btn + '</div>';
+    }
+    /* 拠点開設 / ショートカット */
+    if (state.sites[areaId]){
+      html += '<button class="btn" style="width:100%;" data-act="goto-site" data-area="' + areaId + '">🏢 ' + siteLabel(areaId) + ' を管理する（拠点タブへ）</button>';
+    } else {
+      var cost = siteCost(state);
+      html += '<button class="btn gold" style="width:100%;" data-act="site-open" data-area="' + areaId + '" data-cost="' + cost + '">🏗️ ' + a.name + 'に拠点を開設する ' + fmtMoney(cost) + '</button>';
+    }
+    html += '</div>';
+    showSheet('🗾 ' + a.name + ' — エリア詳細', html);
+    refreshAffordance();
+  }
+  /* v5: 四半期を締める → 決算＋人事レポート */
+  function doCloseQuarter(){
+    if (state.pendingOffer){
+      toast('⚡ 引き抜きオファーに対応してから四半期を締めてください');
+      showOfferModal();
+      return;
+    }
+    var rep = closeQuarter(state);
+    save();
+    derived = calcDerived(state);
+    renderHeader();
+    renderCurrentTab();
+    checkAchs();
+    var rows = '';
+    rep.areas.forEach(function(r){
+      var d = r.delta;
+      var cls = d >= 0.05 ? 'rep-up' : d <= -0.05 ? 'rep-down' : '';
+      var sign = d >= 0 ? '+' : '';
+      var note = [];
+      if (rep.conquests.indexOf(r.name) >= 0) note.push('🚩制覇！');
+      else if (r.conquered) note.push('🚩');
+      if (!r.hasSite) note.push('拠点なし');
+      if (r.ev) note.push(r.ev);
+      rows += '<div class="rep-row"><span class="rr-name">' + r.name + '</span>' +
+        '<span>' + r.before.toFixed(1) + '%→' + r.after.toFixed(1) + '%</span>' +
+        '<span style="font-size:9.5px;color:var(--sub);">' + note.join('・') + '</span>' +
+        '<span class="rr-delta ' + cls + '">' + sign + d.toFixed(1) + '</span></div>';
+    });
+    var extra = '';
+    rep.events.forEach(function(s){ extra += '<div class="hint" style="text-align:left;margin:4px 0 0;">' + s + '</div>'; });
+    rep.expansions.forEach(function(s){ extra += '<div class="hint" style="text-align:left;margin:4px 0 0;">🚚 ' + s + '</div>'; });
+    rep.conquests.forEach(function(s){ extra += '<div class="hint" style="text-align:left;margin:4px 0 0;color:var(--gold);font-weight:800;">🚩 ' + s + 'を制覇！（収益×1.2恒久）</div>'; });
+    /* v5.1: 収益／人件費／純利益の3行PL */
+    var pl =
+      '<div style="text-align:left;border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;margin-bottom:8px;font-size:12.5px;font-weight:800;font-variant-numeric:tabular-nums;">' +
+      '<div style="display:flex;justify-content:space-between;"><span>四半期収益</span><span class="rep-up">+' + fmtMoney(rep.revenue) + '</span></div>' +
+      '<div style="display:flex;justify-content:space-between;"><span>人件費（' + state.employees.length + '名）</span><span class="rep-down">−' + fmtMoney(rep.payroll || 0) + '</span></div>' +
+      '<div style="display:flex;justify-content:space-between;border-top:1px solid var(--line);margin-top:4px;padding-top:4px;"><span>純利益</span><span class="' + (rep.net >= 0 ? 'rep-up' : 'rep-down') + '">' + (rep.net >= 0 ? '+' : '−') + fmtMoney(Math.abs(rep.net || 0)) + '</span></div></div>';
+    /* v5.1: 人事レポート（未払い・オファー・退職/残留・忠誠警告） */
+    var hrItems = '';
+    if (rep.unpaid) hrItems += '<div class="hint" style="text-align:left;margin:4px 0 0;color:#B03030;font-weight:800;">💸 資金不足で給与未払い！全社員の忠誠が15下がった</div>';
+    (rep.hrEvents || []).forEach(function(s){ hrItems += '<div class="hint" style="text-align:left;margin:4px 0 0;">' + s + '</div>'; });
+    if (rep.offer){
+      var oe = findEmpById(state, rep.offer.empId);
+      if (oe) hrItems += '<div class="hint" style="text-align:left;margin:4px 0 0;color:#B03030;font-weight:800;">⚡ ' + RIVAL_MAP[rep.offer.rival].name + 'が ' + oe.ln + ' ' + oe.fn + ' に引き抜きオファー！ <button class="btn small danger" data-act="offer-modal" style="margin-left:4px;">対応する</button></div>';
+    }
+    (rep.loyaltyWarns || []).slice(0, 6).forEach(function(wn){
+      hrItems += '<div class="hint" style="text-align:left;margin:4px 0 0;">' + (wn.danger ? '🚨' : '⚠️') + ' ' + wn.name + ' の忠誠が ' + wn.loyalty + ' に低下' + (wn.danger ? '（引き抜き危険水域！）' : '') + '</div>';
+    });
+    if (!hrItems) hrItems = '<div class="hint" style="text-align:left;margin:4px 0 0;">特記事項なし。組織は安定している。</div>';
+    var hrHtml = '<div style="text-align:left;margin-top:10px;font-size:12.5px;font-weight:900;color:var(--navy);">👥 人事レポート</div>' + hrItems;
+    showModal('<h3>📈 第' + rep.quarter + '期 決算レポート</h3>' +
+      '<div class="big">+' + fmtMoney(rep.revenue) + '</div>' +
+      pl +
+      '<div style="text-align:left;max-height:30dvh;overflow-y:auto;border:1px solid var(--line);border-radius:10px;padding:6px 10px;">' + rows + '</div>' +
+      extra + hrHtml +
+      '<button class="btn gold" data-act="' + (rep.national ? 'national-modal' : 'close-modal') + '" style="margin-top:12px;">第' + state.quarter + '期へ</button>');
+  }
+  function showNationalModal(){
+    showModal('<h3>👑 全国制覇！</h3>' +
+      '<div class="big">称号「列島の覇者」</div>' +
+      '<p>12エリア全てのシェア50%超を達成！<br>日本の市場はあなたのホールディングスのものだ。<br>おめでとうございます、社長！</p>' +
+      '<button class="btn gold" data-act="close-modal">栄光を受け取る</button>');
+  }
+  /* ---------- v5: 拠点タブ ---------- */
+  function renderSites(){
+    var ids = Object.keys(state.sites);
+    if (ids.indexOf(curSite) < 0) curSite = ids[0] || 'marunouchi';
+    var chips = '';
+    ids.forEach(function(aid){
+      chips += '<button class="chip' + (curSite === aid ? ' on' : '') + '" data-act="site-sel" data-area="' + aid + '">🏢 ' + siteLabel(aid) + '</button>';
+    });
+    chips += '<button class="chip" data-act="site-new">＋ 拠点開設</button>';
+    $('siteChips').innerHTML = chips;
+    var site = state.sites[curSite];
+    if (!site){ $('siteBody').innerHTML = ''; return; }
+    var a = AREA_MAP[curSite];
+    var b = dexStatBonus(state);
+    var html = '<div class="sitepow">📍 ' + a.name + '（' + DEPTS[a.demand].emoji + aptName(a.demand) + '需要×1.5・市場' + a.size + '）— 拠点戦力 <b>' +
+      Math.round(sitePower(state, curSite, b)).toLocaleString('ja-JP') + '</b>・シェア ' + state.share[curSite].player.toFixed(1) + '%</div>';
+    /* 支社長 */
+    var mgr = site.siteMgr ? findEmpById(state, site.siteMgr) : null;
+    html += '<div class="mgr-card">' + (mgr ? pchip(mgr, 40) : '<span style="font-size:26px;">👑</span>') +
+      '<div class="emp-mid"><div class="emp-name">支社長 ' + (mgr ? '：' + mgr.ln + ' ' + mgr.fn : '（未任命）') + '</div>' +
+      '<div class="emp-sub">' + (mgr ? '拠点全部署 ×' + siteMgrMult(mgr).toFixed(2) + '（企画+体力）' : 'SSR以上・この拠点の配置社員から任命（最大×1.5）') + '</div></div>' +
+      (mgr ? '<button class="btn small ghost" data-act="post-clear" data-kind="shishacho" data-area="' + curSite + '">解任</button>' : '') +
+      '<button class="btn small' + (mgr ? ' ghost' : ' gold') + '" data-act="post-open" data-kind="shishacho" data-area="' + curSite + '">任命</button></div>';
+    /* v5.1: エリア統括（UR以上・拠点3箇所ごとに1枠・担当拠点+10%） */
+    var chiefId = state.execs.areaChiefs[curSite];
+    var chief = chiefId ? findEmpById(state, chiefId) : null;
+    html += '<div class="mgr-card">' + (chief ? pchip(chief, 40) : '<span style="font-size:26px;">🌐</span>') +
+      '<div class="emp-mid"><div class="emp-name">エリア統括 ' + (chief ? '：' + chief.ln + ' ' + chief.fn : '（未任命）') + '</div>' +
+      '<div class="emp-sub">' + (chief ? '担当拠点の戦力 ×1.10' : 'UR以上・担当拠点戦力+10%') +
+      '・枠 ' + areaChiefCount(state) + '/' + areaChiefSlots(state) + '（拠点3箇所ごとに1枠）</div></div>' +
+      (chief ? '<button class="btn small ghost" data-act="chief-unset" data-area="' + curSite + '">解任</button>' : '') +
+      '<button class="btn small' + (chief ? ' ghost' : ' gold') + '" data-act="chief-open" data-area="' + curSite + '">任命</button></div>';
+    /* 部署カード×5 */
+    DEPT_IDS.forEach(function(dk){
+      var def = DEPTS[dk], dep = site.depts[dk];
+      if (!dep){
+        var cost = deptSetupCost(state);
+        html += '<div class="build-card"><span class="build-name">' + def.emoji + ' ' + def.name + '（未設置）</span>' +
+          '<button class="btn small gold" data-act="dept-build" data-area="' + curSite + '" data-dept="' + dk + '" data-cost="' + cost + '">設置 ' + fmtMoney(cost) + '</button></div>';
+        return;
+      }
+      var members = deptMembers(state, curSite, dk);
+      var demandHit = dk === a.demand;
       html += '<div class="dept"><div class="dept-head">' +
         '<span class="dept-emoji">' + def.emoji + '</span>' +
-        '<span class="dept-name">' + def.name + '</span>' +
-        '<span class="dept-effect">' + deptEffectLabel(d) + '</span></div>' +
+        '<span class="dept-name">' + def.name + ' <span class="dept-lv">Lv' + dep.lv + '</span>' + (demandHit ? ' <span class="match">📍需要×1.5</span>' : '') + '</span>' +
+        '<span class="dept-effect">' + deptEffectLabel(dk) + '</span></div>' +
         '<div class="dept-desc">' + def.desc + '</div><div class="slots">';
-      for (var i=0;i<dp.slots;i++){
+      for (var i=0;i<dep.lv;i++){
         var e = members[i];
         if (e){
-          var m = def.job === e.job;
-          html += '<div class="slot filled" data-act="slot" data-dept="' + d + '" data-emp="' + e.id + '" style="flex-direction:row;align-items:center;gap:7px;">' +
+          var post = findPost(state, e.id);
+          html += '<div class="slot filled" data-act="member-open" data-emp="' + e.id + '" style="flex-direction:row;align-items:center;gap:7px;">' +
             '<span class="s-port">' + portraitHTML(e, 30) + '</span><div style="min-width:0;">' +
             '<div class="s-name">' + rarTag(e.rar) + ' ' + e.ln + ' ' + e.fn +
-            (m ? ' <span class="match">⭐一致×1.5</span>' : '') + '</div>' +
-            '<div class="s-sub">Lv' + e.lv + '・' + fmtMoney(empProd(e)) + '/秒</div></div></div>';
+            (post ? ' <span class="pbadge">' + POST_DEFS[post.kind].name + '</span>' : '') +
+            (e.job === dk ? ' <span class="match">⭐適正×1.5</span>' : '') + '</div>' +
+            '<div class="s-sub">Lv' + e.lv + '・戦力' + Math.round(empAreaPower(e, dk, b)) + '・' + fmtMoney(empProdIn(e, dk, b)) + '/秒</div></div></div>';
         } else {
-          html += '<div class="slot empty" data-act="slot-empty" data-dept="' + d + '">＋ 配属する</div>';
+          html += '<div class="slot empty" data-act="assign-open" data-area="' + curSite + '" data-dept="' + dk + '">＋ 配属する</div>';
         }
       }
-      html += '</div><div class="dept-foot">' +
-        '<button class="btn small ghost" data-act="expand" data-dept="' + d + '" data-cost="' + slotCost(dp.slots) + '">' +
-        'スロット拡張 ' + fmtMoney(slotCost(dp.slots)) + '</button></div></div>';
+      html += '</div>';
+      /* 役職・Lvアップ */
+      var kacho = dep.kacho ? findEmpById(state, dep.kacho) : null;
+      var bucho = dep.bucho ? findEmpById(state, dep.bucho) : null;
+      html += '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center;">' +
+        '<span class="post-chip' + (kacho ? '' : ' empty') + '" data-act="post-open" data-kind="kacho" data-area="' + curSite + '" data-dept="' + dk + '" style="cursor:pointer;">🎖️ 課長 ' + (kacho ? kacho.ln + '（×1.10）' : '任命する') + '</span>' +
+        (dep.lv >= 2
+          ? '<span class="post-chip' + (bucho ? '' : ' empty') + '" data-act="post-open" data-kind="bucho" data-area="' + curSite + '" data-dept="' + dk + '" style="cursor:pointer;">🏅 部長 ' + (bucho ? bucho.ln + '（×1.25）' : '任命する') + '</span>'
+          : '<span class="post-chip empty">🏅 部長（Lv2で解禁）</span>');
+      if (dep.lv < DEPT_LV_MAX){
+        var lvCost = deptLvUpCost(state, dep.lv);
+        html += '<button class="btn small ghost" style="margin-left:auto;" data-act="dept-lvup" data-area="' + curSite + '" data-dept="' + dk + '" data-cost="' + lvCost + '">Lv' + (dep.lv+1) + 'へ（枠+1） ' + fmtMoney(lvCost) + '</button>';
+      } else {
+        html += '<span style="margin-left:auto;font-size:10px;font-weight:800;color:var(--sub);">Lv MAX</span>';
+      }
+      html += '</div></div>';
     });
-    $('deptList').innerHTML = html;
+    $('siteBody').innerHTML = html;
     refreshAffordance();
+  }
+  /* v5: 拠点開設シート */
+  function openSiteNewSheet(){
+    var cost = siteCost(state);
+    var html = '<div class="hint" style="padding:6px;">拠点を開設すると部署を設置でき、そのエリアのシェア争いに参加できます。開設費は拠点数に応じて×2.5ずつ上昇。</div>';
+    var any = false;
+    AREAS.forEach(function(a){
+      if (state.sites[a.id]) return;
+      any = true;
+      html += '<div class="sheet-emp"><div class="emp-mid"><div class="emp-name">' + a.name + '</div>' +
+        '<div class="emp-sub">' + DEPTS[a.demand].emoji + aptName(a.demand) + '需要・市場' + a.size + '・自社シェア ' + state.share[a.id].player.toFixed(1) + '%</div></div>' +
+        '<button class="btn small gold" data-act="site-open" data-area="' + a.id + '" data-cost="' + cost + '">開設 ' + fmtMoney(cost) + '</button></div>';
+    });
+    if (!any) html += '<div class="hint" style="padding:14px;text-align:center;">全エリアに拠点開設済みです！</div>';
+    showSheet('🏗️ 拠点開設 — ' + fmtMoney(cost), html);
+    refreshAffordance();
+  }
+  /* v5: 配属シート */
+  function openAssignSheet(areaId, dk){
+    var def = DEPTS[dk];
+    var b = dexStatBonus(state);
+    var free = state.employees.filter(function(e){ return !e.assign; });
+    free.sort(function(x,y){ return empAreaPower(y, dk, b) - empAreaPower(x, dk, b); });
+    var html = '';
+    if (!free.length){
+      html = '<div class="hint" style="padding:18px 6px;text-align:center;">未配置の社員がいません。<br>スカウトで採用するか、他の部署から外してください。</div>';
+    }
+    free.forEach(function(e){
+      html += '<div class="sheet-emp" data-act="assign" data-emp="' + e.id + '" data-area="' + areaId + '" data-dept="' + dk + '">' +
+        pchip(e, 40) +
+        '<div class="emp-mid"><div class="emp-name">' + (e.nick ? '<span class="emp-nick">《' + e.nick + '》</span>' : '') + e.ln + ' ' + e.fn + '</div>' +
+        '<div class="emp-sub">' + aptLabel(e.job) + '・Lv' + e.lv + '</div></div>' +
+        '<div class="emp-right" style="font-size:12px;font-weight:800;color:var(--navy2);">戦力' + Math.round(empAreaPower(e, dk, b)) +
+        (e.job === dk ? '<div class="match">⭐適正×1.5</div>' : '') + '</div></div>';
+    });
+    showSheet(def.emoji + ' ' + siteLabel(areaId) + ' ' + def.name + ' に配属する社員を選択', html);
+  }
+  /* v5: 配属社員の操作シート（外す・役職） */
+  function openMemberSheet(empId){
+    var e = findEmpById(state, empId);
+    if (!e || !e.assign) return;
+    var areaId = e.assign.area, dk = e.assign.dept;
+    var post = findPost(state, e.id);
+    var dep = state.sites[areaId].depts[dk];
+    var html = '<div style="padding:8px 6px 14px;">' +
+      '<div class="emp" style="margin-bottom:12px;">' + pchip(e, 44) +
+      '<div class="emp-mid"><div class="emp-name">' + (e.nick ? '<span class="emp-nick">《' + e.nick + '》</span>' : '') + e.ln + ' ' + e.fn +
+      (post ? ' <span class="pbadge">' + POST_DEFS[post.kind].name + '</span>' : '') + '</div>' +
+      '<div class="emp-sub">' + aptLabel(e.job) + '・Lv' + e.lv + '・' + siteLabel(areaId) + ' ' + DEPTS[dk].name + '</div></div></div>' +
+      '<div style="display:flex;flex-direction:column;gap:8px;">';
+    if (!post && canBePost(e, 'kacho')) html += '<button class="btn" data-act="post-set" data-kind="kacho" data-emp="' + e.id + '" data-area="' + areaId + '" data-dept="' + dk + '">🎖️ 課長に任命（部署戦力×1.10）</button>';
+    if (!post && canBePost(e, 'bucho') && dep.lv >= 2) html += '<button class="btn" data-act="post-set" data-kind="bucho" data-emp="' + e.id + '" data-area="' + areaId + '" data-dept="' + dk + '">🏅 部長に任命（部署戦力×1.25）</button>';
+    if (!post && canBePost(e, 'shishacho')) html += '<button class="btn" data-act="post-set" data-kind="shishacho" data-emp="' + e.id + '" data-area="' + areaId + '">👑 支社長に任命（拠点×' + siteMgrMult(e).toFixed(2) + '）</button>';
+    if (post) html += '<button class="btn ghost" data-act="post-unset" data-emp="' + e.id + '">' + POST_DEFS[post.kind].ico + ' ' + POST_DEFS[post.kind].name + 'を解任する</button>';
+    html += '<button class="btn danger" data-act="unassign" data-emp="' + e.id + '">この社員を部署から外す' + (post ? '（役職も解任）' : '') + '</button></div></div>';
+    showSheet(DEPTS[dk].emoji + ' ' + DEPTS[dk].name + ' — ' + e.ln + ' ' + e.fn, html);
+  }
+  /* v5: 役職候補シート */
+  function openPostSheet(kind, areaId, dk){
+    var d = POST_DEFS[kind];
+    var pool = kind === 'shishacho' ? siteMembers(state, areaId) : deptMembers(state, areaId, dk);
+    var site = state.sites[areaId];
+    var curId = kind === 'shishacho' ? site.siteMgr : (site.depts[dk] ? site.depts[dk][kind === 'kacho' ? 'kacho' : 'bucho'] : null);
+    if (kind === 'bucho' && site.depts[dk] && site.depts[dk].lv < 2){ toast('部長は部署Lv2で解禁されます'); return; }
+    var html = '<div class="hint" style="padding:6px;">' + d.ico + ' ' + d.name + '：<b>' + d.minRar + '以上</b>のみ就任可・効果 ' + d.mult + '。1人1役職（就任すると旧役職は解任）。</div>';
+    if (curId){
+      var cur = findEmpById(state, curId);
+      if (cur) html += '<div class="sheet-emp">' + pchip(cur, 40) +
+        '<div class="emp-mid"><div class="emp-name">' + cur.ln + ' ' + cur.fn + ' <span class="pbadge">現任</span></div></div>' +
+        '<button class="btn small danger" data-act="post-unset" data-emp="' + cur.id + '">解任</button></div>';
+    }
+    var any = false;
+    pool.forEach(function(e){
+      if (e.id === curId) return;
+      var ok = canBePost(e, kind);
+      if (!ok) return;
+      any = true;
+      html += '<div class="sheet-emp" data-act="post-set" data-kind="' + kind + '" data-emp="' + e.id + '" data-area="' + areaId + '"' + (dk ? ' data-dept="' + dk + '"' : '') + '>' +
+        pchip(e, 40) +
+        '<div class="emp-mid"><div class="emp-name">' + (e.nick ? '<span class="emp-nick">《' + e.nick + '》</span>' : '') + e.ln + ' ' + e.fn + '</div>' +
+        '<div class="emp-sub">' + aptLabel(e.job) + '・Lv' + e.lv + (kind === 'shishacho' ? '・拠点×' + siteMgrMult(e).toFixed(2) : '') + '</div></div>' +
+        '<span style="font-size:11px;font-weight:800;color:var(--gold);">任命 ▶</span></div>';
+    });
+    if (!any) html += '<div class="hint" style="padding:14px;text-align:center;">' + d.minRar + '以上の候補者がこの' + (kind === 'shishacho' ? '拠点' : '部署') + 'に配置されていません。<br>先に配属してください。</div>';
+    showSheet(d.ico + ' ' + d.name + 'の任命 — ' + siteLabel(areaId) + (dk ? ' ' + DEPTS[dk].name : ''), html);
   }
   function pchip(e, size){
     return '<div class="pwrap" style="width:' + size + 'px;height:' + size + 'px;">' + portraitHTML(e, size) +
@@ -1629,8 +2803,9 @@ if (typeof document !== 'undefined') (function(){
       /* v3: 採用（NEW!）／覚醒（+N）／還元（MAX）のパターン分け表示 */
       var badge, msg;
       if (res.type === 'new'){
+        var rv = rivalOf(e.mid);
         badge = '<span class="f-badge bnew">NEW!</span>';
-        msg = '<span class="f-msg" style="color:var(--gold);">仲間に加わった！（入社）</span>';
+        msg = '<span class="f-msg" style="color:var(--gold);">' + (rv ? rv.name + 'から<br>引き抜き成功！' : '仲間に加わった！（入社）') + '</span>';
       } else if (res.type === 'awaken'){
         badge = '<span class="f-badge bawk">覚醒 +' + res.awaken + '</span>';
         msg = '<span class="f-msg" style="color:#8B3FD8;">全ステUP！生産力 ×' + awakenMult(e).toFixed(2) + '</span>';
@@ -1646,7 +2821,7 @@ if (typeof document !== 'undefined') (function(){
           '<span class="f-port">' + portraitHTML(e, 54) + '</span>' +
           '<span class="f-nick">' + (e.nick || '&nbsp;') + '</span>' +
           '<span class="f-name">' + e.ln + ' ' + e.fn + (e.awaken ? ' <span class="awk">+' + e.awaken + '</span>' : '') + '</span>' +
-          '<span class="f-job">' + JOB_DEFS[e.job].name + '</span>' +
+          '<span class="f-job">' + aptLabel(e.job) + '</span>' +
           '<span class="f-prod">' + fmtMoney(empBaseProd(e)) + '/秒</span>' + msg +
         '</div></div></div>';
     });
@@ -1686,7 +2861,7 @@ if (typeof document !== 'undefined') (function(){
   /* ---------- employees tab ---------- */
   var empView = 'own'; /* v3: 'own'=在籍 / 'dex'=図鑑 */
   function renderEmpFilters(){
-    var jf = '<button class="chip' + (filterJob==='all'?' on':'') + '" data-act="fjob" data-v="all">全職種</button>';
+    var jf = '<button class="chip' + (filterJob==='all'?' on':'') + '" data-act="fjob" data-v="all">全適正</button>';
     JOBS.forEach(function(j){
       jf += '<button class="chip' + (filterJob===j?' on':'') + '" data-act="fjob" data-v="' + j + '">' + JOB_DEFS[j].emoji + JOB_DEFS[j].name + '</button>';
     });
@@ -1726,14 +2901,25 @@ if (typeof document !== 'undefined') (function(){
     list.forEach(function(e){
       var capped = e.lv >= LV_CAP[e.rar];
       var xpLbl = capped ? 'Lv MAX' : 'あと' + Math.max(0, xpNeed(e.lv) - Math.floor(e.xp||0)).toLocaleString('ja-JP') + 'XP';
+      var mm = ROSTER_MAP[e.mid] || {};
+      var post = findAnyPost(state, e.id); /* v5.1: 役員ポスト含む */
+      var loy = typeof e.loyalty === 'number' ? Math.round(e.loyalty) : 70;
+      var loyIco = loy < 40 ? '🚨' : loy < 60 ? '⚠️' : '';
+      var loyCol = loy < 40 ? '#B03030' : loy < 60 ? '#D08A2E' : '#2E8B57';
       html += '<div class="emp" data-act="emp-detail" data-emp="' + e.id + '" style="cursor:pointer;">' + pchip(e, 44) +
         '<div class="emp-mid"><div class="emp-name">' +
         (e.nick ? '<span class="emp-nick">《' + e.nick + '》</span>' : '') +
         e.ln + ' ' + e.fn +
         (e.awaken ? '<span class="awk">+' + e.awaken + '</span>' : '') +
-        (e.dept ? '<span class="emp-dept">' + DEPTS[e.dept].emoji + DEPTS[e.dept].name + '</span>' : '<span class="emp-dept" style="background:#F5F5F5;color:var(--sub)">未配属</span>') +
-        '</div><div class="emp-sub">' + JOB_DEFS[e.job].emoji + JOB_DEFS[e.job].name + '・Lv' + e.lv + '（' + xpLbl + '）・生産力 ' + fmtMoney(empProd(e, dexB)) + '/秒' +
-        (e.dept && DEPTS[e.dept].job===e.job ? ' <span class="match">⭐一致×1.5</span>' : '') + '</div></div>' +
+        (post ? '<span class="pbadge">' + POST_DEFS[post.kind].name + '</span>' : '') +
+        (e.assign ? '<span class="emp-dept">' + siteLabel(e.assign.area) + ' ' + DEPTS[e.assign.dept].name + '</span>' : '<span class="emp-dept" style="background:#F5F5F5;color:var(--sub)">未配置</span>') +
+        '</div>' +
+        (mm.role ? '<div style="font-size:10px;font-weight:700;color:var(--navy2);margin-top:1px;">' + mm.role + '</div>' : '') +
+        '<div class="emp-sub">' + JOB_DEFS[e.job].emoji + aptLabel(e.job) + '・Lv' + e.lv + '（' + xpLbl + '）・生産力 ' + fmtMoney(empProd(e, dexB)) + '/秒' +
+        (e.assign && e.assign.dept === e.job ? ' <span class="match">⭐適正一致×1.5</span>' : '') + '</div>' +
+        '<div class="emp-sub">💗忠誠 <b style="color:' + loyCol + ';">' + loy + '</b>' + loyIco +
+        '<span class="loybar" style="display:inline-block;width:52px;vertical-align:middle;margin:0 4px;"><i style="width:' + loy + '%;background:' + loyCol + ';"></i></span>' +
+        '・💰給与 ' + fmtMoney(empSalary(state, e)) + '/期（' + salaryPolicyOf(e).name + '）</div></div>' +
         '<div class="emp-right" style="font-size:10px;color:var(--sub);font-weight:700;">ステータス<br>▶</div></div>';
     });
     if (!list.length) html = '<div class="hint" style="text-align:center;padding:24px 0;">該当する社員がいません。パックで採用しましょう！</div>';
@@ -1763,10 +2949,14 @@ if (typeof document !== 'undefined') (function(){
             '<span class="edx-name">' + m.ln + ' ' + m.fn + '</span>' +
             '<span class="edx-awk">' + (e.awaken ? '覚醒 +' + e.awaken : '&nbsp;') + '</span></div>';
         } else {
+          /* v5: 未採用社員は競合他社で働いている（所属を表示・顔はシルエット）。v5.1: 指名スカウト可 */
+          var onCd = state.quarter < ((state.scoutCd && state.scoutCd[m.mid]) || 0);
           html += '<div class="edex-item unknown">' +
             '<span class="ep">' + portraitHTML(m, 44) + '</span>' +
-            '<span class="edx-name">？？？</span>' +
-            '<span class="edx-awk">&nbsp;</span></div>';
+            '<span class="edx-name">' + m.ln + ' ' + m.fn + '</span>' +
+            '<span class="edx-awk" style="color:var(--sub);font-weight:700;">' + (rivalOf(m.mid) ? rivalOf(m.mid).name : '') + '</span>' +
+            '<button class="btn small' + (onCd ? ' ghost' : ' gold') + '" style="font-size:9px;padding:3px 7px;" data-act="scout-open" data-mid="' + m.mid + '">' +
+            (onCd ? '交渉決裂中' : '🎯スカウト') + '</button></div>';
         }
       });
       html += '</div>';
@@ -1790,8 +2980,135 @@ if (typeof document !== 'undefined') (function(){
     });
   }
 
+  /* ---------- v5.1: 役員会（取締役3席・エリア統括）＋給与一括設定 ---------- */
+  function renderBoard(){
+    /* 整合: 退職済みIDを掃除 */
+    state.execs.directors = state.execs.directors.filter(function(id){ return !!findEmpById(state, id); });
+    var dirs = state.execs.directors.map(function(id){ return findEmpById(state, id); });
+    var html = '<div class="hint" style="margin:0 0 8px;">現在の全社戦力補正 <b style="color:var(--gold);">×' + directorMult(state).toFixed(2) + '</b>（取締役' + dirs.length + '名 × +8%）</div>' +
+      '<div style="display:flex;gap:8px;margin-bottom:10px;">';
+    for (var i=0;i<DIRECTOR_SEATS;i++){
+      var de = dirs[i];
+      html += de
+        ? '<div class="chair">' + pchip(de, 46) + '<div class="chair-name">' + de.ln + ' ' + de.fn + '<br><span style="color:var(--gold);font-size:9px;">🏛️取締役</span></div>' +
+          '<button class="btn small ghost" data-act="director-unset" data-emp="' + de.id + '">解任</button></div>'
+        : '<div class="chair empty-seat"><span style="font-size:28px;">🪑</span><div class="chair-name" style="color:var(--sub);">空席</div>' +
+          '<button class="btn small gold" data-act="board-open">任命</button></div>';
+    }
+    html += '</div>';
+    var acList = [];
+    Object.keys(state.execs.areaChiefs).forEach(function(a){
+      var ce = findEmpById(state, state.execs.areaChiefs[a]);
+      if (ce) acList.push(siteLabel(a) + '＝' + ce.ln + ' ' + ce.fn);
+    });
+    html += '<div class="hint" style="margin:0;">🌐 エリア統括 ' + areaChiefCount(state) + '/' + areaChiefSlots(state) + '枠使用中' +
+      (acList.length ? '：' + acList.join('・') : '') + '（任命・解任は拠点タブから）</div>';
+    $('boardBox').innerHTML = html;
+    var sHtml = '<div style="display:flex;gap:6px;flex-wrap:wrap;">';
+    SALARY_POLICY.forEach(function(p){
+      sHtml += '<button class="btn small' + (p.key === 1 ? '' : ' ghost') + '" data-act="salary-all" data-lv="' + p.key + '">全員を「' + p.name + p.pct + '」に</button>';
+    });
+    sHtml += '</div><div class="hint" style="margin:8px 0 0;">現在の総人件費：<b>' + fmtMoney(totalPayroll(state)) + '/四半期</b>（在籍' + state.employees.length + '名）</div>';
+    $('salaryAllBox').innerHTML = sHtml;
+  }
+  /* v5.1: 取締役候補シート（LEGEND限定） */
+  function openBoardSheet(){
+    if (state.execs.directors.length >= DIRECTOR_SEATS){ toast('取締役は3席までです'); return; }
+    var pool = state.employees.filter(function(e){
+      return e.rar === 'LEGEND' && state.execs.directors.indexOf(e.id) < 0;
+    });
+    var html = '<div class="hint" style="padding:6px;">🏛️ 取締役：<b>LEGENDのみ</b>・適正不問・1人につき<b>全社戦力+8%</b>。1人1役職（就任すると旧役職は解任）。</div>';
+    if (!pool.length) html += '<div class="hint" style="padding:14px;text-align:center;">LEGEND社員が在籍していません。<br>ヘッドハンティングか指名スカウトで獲得しましょう！</div>';
+    pool.forEach(function(e){
+      html += '<div class="sheet-emp" data-act="director-set" data-emp="' + e.id + '">' + pchip(e, 40) +
+        '<div class="emp-mid"><div class="emp-name">' + (e.nick ? '<span class="emp-nick">《' + e.nick + '》</span>' : '') + e.ln + ' ' + e.fn + '</div>' +
+        '<div class="emp-sub">' + aptLabel(e.job) + '・Lv' + e.lv + '・忠誠' + Math.round(e.loyalty) + '</div></div>' +
+        '<span style="font-size:11px;font-weight:800;color:var(--gold);">任命 ▶</span></div>';
+    });
+    showSheet('🏛️ 取締役の任命 — 役員会', html);
+  }
+  /* v5.1: エリア統括候補シート（UR以上） */
+  function openChiefSheet(areaId){
+    var curId = state.execs.areaChiefs[areaId];
+    if (!findEmpById(state, curId) && areaChiefCount(state) >= areaChiefSlots(state)){
+      toast('エリア統括の枠がありません（拠点3箇所ごとに1枠・現在' + areaChiefSlots(state) + '枠）');
+      return;
+    }
+    var pool = state.employees.filter(function(e){
+      return RARS.indexOf(e.rar) >= RARS.indexOf('UR') && e.id !== curId;
+    });
+    var html = '<div class="hint" style="padding:6px;">🌐 エリア統括：<b>UR以上</b>・担当エリア（' + siteLabel(areaId) + '）の拠点戦力<b>+10%</b>。枠 ' +
+      areaChiefCount(state) + '/' + areaChiefSlots(state) + '。1人1役職（就任すると旧役職は解任）。</div>';
+    if (!pool.length) html += '<div class="hint" style="padding:14px;text-align:center;">UR以上の社員が在籍していません。</div>';
+    pool.forEach(function(e){
+      html += '<div class="sheet-emp" data-act="chief-set" data-emp="' + e.id + '" data-area="' + areaId + '">' + pchip(e, 40) +
+        '<div class="emp-mid"><div class="emp-name">' + (e.nick ? '<span class="emp-nick">《' + e.nick + '》</span>' : '') + e.ln + ' ' + e.fn + '</div>' +
+        '<div class="emp-sub">' + aptLabel(e.job) + '・Lv' + e.lv + '・忠誠' + Math.round(e.loyalty) + '</div></div>' +
+        '<span style="font-size:11px;font-weight:800;color:var(--gold);">任命 ▶</span></div>';
+    });
+    showSheet('🌐 エリア統括の任命 — ' + siteLabel(areaId), html);
+  }
+  /* v5.1: 逆引き抜きオファーモーダル（3択） */
+  function showOfferModal(){
+    var o = state.pendingOffer;
+    if (!o){ toast('対応待ちのオファーはありません'); return; }
+    var e = findEmpById(state, o.empId);
+    if (!e){ state.pendingOffer = null; return; }
+    var rv = RIVAL_MAP[o.rival];
+    var posts = openPostsFor(state, e);
+    var postBtns = '';
+    posts.slice(0, 4).forEach(function(p){
+      var d = POST_DEFS[p.kind];
+      var loc = p.kind === 'director' ? '役員会' : p.area ? siteLabel(p.area) + (p.dept ? ' ' + DEPTS[p.dept].name : '') : '';
+      postBtns += '<button class="btn" data-act="offer-promote" data-kind="' + p.kind + '"' +
+        (p.area ? ' data-area="' + p.area + '"' : '') + (p.dept ? ' data-dept="' + p.dept + '"' : '') +
+        '>' + d.ico + ' ' + loc + 'の' + d.name + 'に昇進させる（忠誠+20）</button>';
+    });
+    if (!posts.length) postBtns = '<button class="btn" disabled>昇進で引き留める（空きポストなし）</button>';
+    showModal(
+      '<h3>⚡ 引き抜きオファー発生！</h3>' +
+      '<div style="display:flex;justify-content:center;">' + portraitHTML(e, 72) + '</div>' +
+      '<p style="margin:8px 0;"><b>' + rv.name + '</b> が <b>' + e.ln + ' ' + e.fn + '</b>（' + e.rar + '・忠誠' + Math.round(e.loyalty) + '）に破格の条件を提示しています。<br>社長、どうしますか？</p>' +
+      '<div style="display:flex;flex-direction:column;gap:8px;">' +
+      '<button class="btn gold" data-act="offer-counter" data-cost="' + o.counterCost + '">💰 対抗提示 ' + fmtMoney(o.counterCost) + '<br><span style="font-size:10px;font-weight:700;">一時金（相場×1.5）・忠誠+15／以後の被オファー率2倍</span></button>' +
+      postBtns +
+      '<button class="btn danger" data-act="offer-release">👋 手放す（' + rv.name + 'へ移籍・図鑑には残る）</button>' +
+      '</div>');
+    refreshAffordance();
+  }
+  /* v5.1: 指名スカウトモーダル */
+  function showScoutModal(mid){
+    var m = ROSTER_MAP[mid];
+    if (!m) return;
+    if (findByMid(state, mid)){ toast('既に在籍しています'); return; }
+    var rv = rivalOf(mid);
+    var cdUntil = (state.scoutCd && state.scoutCd[mid]) || 0;
+    var onCd = state.quarter < cdUntil;
+    var senior = RARS.indexOf(m.rar) >= RARS.indexOf('SR');
+    var hrCoef = Math.min(0.30, deptSum(state, 'hr') * 0.0003);
+    var rows = '';
+    SCOUT_MULTS.forEach(function(mu){
+      var cost = scoutCost(m, mu), rate = scoutRate(state, mid, mu);
+      rows += '<button class="btn" style="width:100%;margin-top:6px;" data-act="scout-try" data-mid="' + mid + '" data-mult="' + mu + '"' +
+        (onCd ? ' disabled' : ' data-cost="' + cost + '"') +
+        '>年俸 相場×' + mu.toFixed(1) + '：契約金 ' + fmtMoney(cost) + '（成功率 ' + Math.round(rate * 100) + '%）</button>';
+    });
+    showModal(
+      '<h3>🎯 指名スカウト</h3>' +
+      '<div style="display:flex;justify-content:center;">' + portraitHTML(m, 72) + '</div>' +
+      '<h3 style="margin-top:6px;">' + rarTag(m.rar) + ' ' + m.ln + ' ' + m.fn + '</h3>' +
+      '<p style="margin:4px 0 8px;">' + (rivalBelongLabel(mid) || '') + '・' + aptLabel(m.job) +
+      (senior ? '<br><span style="font-size:11px;color:#B03030;font-weight:800;">SR以上は役職者相当：成功率÷1.5</span>' : '') + '</p>' +
+      (onCd ? '<p style="color:#B03030;font-weight:800;">交渉決裂中：第' + cdUntil + '期から再交渉できます（現在 第' + state.quarter + '期）</p>' : '') +
+      '<div class="hint" style="text-align:left;">契約金＝オファー年俸（四半期相場' + fmtMoney(marketSalary(m.rar, 1)) + '×4×倍率）×2。<b>失敗しても契約金は戻りません</b>（同一人物へは4期クールダウン）。人事部戦力ボーナス +' + Math.round(hrCoef * 100) + '%・成功率上限90%。</div>' +
+      rows +
+      '<button class="btn ghost" data-act="close-modal" style="margin-top:10px;">やめておく</button>');
+    refreshAffordance();
+  }
+
   /* ---------- misc tab ---------- */
   function renderMisc(){
+    renderBoard(); /* v5.1: 役員会＋給与一括設定 */
     var html = '';
     var unlocked = 0;
     ACHS.forEach(function(a){
@@ -1904,9 +3221,33 @@ if (typeof document !== 'undefined') (function(){
       '<h3 style="margin-top:6px;">' + e.ln + ' ' + e.fn +
       (e.awaken ? ' <span class="awk" style="font-size:14px;">+' + e.awaken + '</span>' : '') + '</h3>' +
       (mm.role ? '<div style="font-size:12px;font-weight:800;color:' + ((e.rar==='SSR'||e.rar==='UR'||e.rar==='LEGEND') ? 'var(--gold)' : 'var(--navy2)') + ';margin:2px 0 4px;">' + mm.role + '</div>' : '') +
-      '<p style="margin-bottom:6px;">' + rarTag(e.rar) + ' ' + JOB_DEFS[e.job].emoji + JOB_DEFS[e.job].name +
-      (e.dept ? '・' + DEPTS[e.dept].emoji + DEPTS[e.dept].name + '配属' : '・未配属') + '</p>' +
+      '<p style="margin-bottom:6px;">' + rarTag(e.rar) + ' ' + JOB_DEFS[e.job].emoji + aptLabel(e.job) +
+      (function(){
+        var post = findAnyPost(state, e.id); /* v5.1: 役員ポスト含む */
+        var s = e.assign ? '・' + siteLabel(e.assign.area) + ' ' + DEPTS[e.assign.dept].name + '配属' : '・未配置';
+        if (post) s += '・' + POST_DEFS[post.kind].ico + POST_DEFS[post.kind].name;
+        return s;
+      })() +
+      '<br><span style="font-size:11px;color:var(--sub);">引き抜き元：' + (rivalBelongLabel(e.mid) || '—') + '</span></p>' +
       (mm.ability ? '<div style="font-size:11.5px;color:var(--navy);background:#F6F2FC;border:1px solid #E4D9F5;border-radius:8px;padding:7px 9px;margin-bottom:8px;line-height:1.5;text-align:left;">✨ <b>固有アビリティ</b><br>' + mm.ability + '</div>' : '') +
+      (function(){ /* v5.1: 忠誠ゲージ＋給与水準設定 */
+        var loy = typeof e.loyalty === 'number' ? Math.round(e.loyalty) : 70;
+        var loyIco = loy < 40 ? ' 🚨引き抜き危険' : loy < 60 ? ' ⚠️要ケア' : '';
+        var loyCol = loy < 40 ? '#B03030' : loy < 60 ? '#D08A2E' : '#2E8B57';
+        var anyPost = findAnyPost(state, e.id);
+        var chips = '';
+        SALARY_POLICY.forEach(function(p){
+          chips += '<button class="sal-chip' + (salaryPolicyOf(e).key === p.key ? ' on' : '') + '" data-act="salary-set" data-emp="' + e.id + '" data-lv="' + p.key + '">' +
+            p.name + p.pct + '（忠誠' + (p.loy > 0 ? '+' + p.loy : p.loy === 0 ? '±0' : p.loy) + '/期）</button>';
+        });
+        return '<div style="text-align:left;margin-bottom:8px;">' +
+          '<div style="font-size:11.5px;font-weight:800;color:var(--navy);margin-bottom:3px;">💗 忠誠 ' + loy + '/100' + loyIco +
+          (e.wavered ? ' <span style="color:#B03030;font-size:10px;">（他社に揺れた過去あり・被オファー率2倍）</span>' : '') + '</div>' +
+          '<div class="loybar"><i style="width:' + loy + '%;background:' + loyCol + ';"></i></div>' +
+          '<div style="font-size:11.5px;font-weight:800;color:var(--navy);margin:8px 0 3px;">💰 給与（四半期） ' + fmtMoney(empSalary(state, e)) +
+          ' <span style="color:var(--sub);font-weight:700;">＝相場' + fmtMoney(marketSalary(e.rar, e.lv)) + '×' + salaryPolicyOf(e).pct + (anyPost ? '×役職手当1.3' : '') + '</span></div>' +
+          '<div style="display:flex;gap:5px;flex-wrap:wrap;">' + chips + '</div></div>';
+      })() +
       '<div class="dqstat">＊ つよさ<br>' +
       'レベル：' + e.lv + ' ／ ' + cap + '<br>' +
       'つぎのレベルまで：' + next + '<br>' +
@@ -1917,50 +3258,27 @@ if (typeof document !== 'undefined') (function(){
       '<button class="btn gold" data-act="close-modal" style="margin-top:10px;">閉じる</button>');
   }
 
-  /* ---------- v2: quest tab ---------- */
-  function renderQuest(){
-    renderActiveQuest();
-    renderQuestList();
+  /* ---------- v5: スカウトタブ（パック＋ショップ＋かばん） ---------- */
+  function renderScout(){
+    renderPacks();
     renderInv();
   }
+  /* ---------- v5: 進行中のエリア案件（全国タブ上部） ---------- */
   function renderActiveQuest(){
     var aq = state.activeQuest;
-    if (!aq){ $('activeQuestBox').innerHTML = ''; return; }
+    if (!aq){ $('activeProjBox').innerHTML = ''; return; }
     var q = QUEST_MAP[aq.qid];
-    if (!q){ state.activeQuest = null; $('activeQuestBox').innerHTML = ''; return; }
+    if (!q){ state.activeQuest = null; $('activeProjBox').innerHTML = ''; return; }
+    var aId = QUEST_AREA[q.id];
     var team = aq.team.map(function(id){ return state.employees.find(function(x){ return x.id === id; }); }).filter(Boolean);
     var ports = team.map(function(e){ return portraitHTML(e, 34); }).join('');
-    $('activeQuestBox').innerHTML =
+    $('activeProjBox').innerHTML =
       '<div class="quest active-quest"><div class="q-mid">' +
-      '<div class="q-name">' + q.ico + ' ' + q.name + ' <span style="color:var(--gold);font-size:11px;">遠征中（成功率 ' + Math.round(aq.rate) + '%）</span></div>' +
+      '<div class="q-name">' + q.ico + ' ' + (aId ? AREA_MAP[aId].name + '案件：' : '') + q.name +
+      ' <span style="color:var(--gold);font-size:11px;">派遣中（成功率 ' + Math.round(aq.rate) + '%）</span></div>' +
       '<div class="q-ports">' + ports + '</div>' +
       '<div class="qbar"><div class="qfill" id="qfill"></div></div>' +
       '<div class="q-msg" id="qmsg">奮闘中…</div></div></div>';
-  }
-  function renderQuestList(){
-    var now = Date.now();
-    var html = '';
-    ['bronze','silver','gold','legend'].forEach(function(tier){
-      var t = QUEST_TIER_DEFS[tier];
-      html += '<div class="qtier">' + t.ico + ' ' + t.name +
-        ' <span class="qtier-sub">所要 約' + t.dur + '秒・クールダウン ' + fmtDur(t.cd) + (tier==='legend' ? '・UR級アイテムの唯一の入手源！' : '') + '</span></div>';
-      QUESTS.forEach(function(q){
-        if (q.tier !== tier) return;
-        var cdLeft = Math.max(0, ((state.questCd[q.id]||0) - now) / 1000);
-        var req = Object.keys(q.req).map(function(k){ return STAT_DEFS[k].ico + STAT_DEFS[k].name + ' ' + q.req[k]; }).join(' ');
-        var rw = questReward(q, derived.income);
-        var btn;
-        if (state.activeQuest) btn = '<button class="btn small ghost" disabled>遠征中</button>';
-        else if (cdLeft > 0) btn = '<button class="btn small ghost" disabled>CD ' + fmtDur(Math.ceil(cdLeft)) + '</button>';
-        else btn = '<button class="btn small gold" data-act="quest-open" data-q="' + q.id + '">挑戦</button>';
-        html += '<div class="quest"><div class="q-ico">' + q.ico + '</div>' +
-          '<div class="q-mid"><div class="q-name">' + q.name + '</div>' +
-          '<div class="q-req">要求 ' + req + '</div>' +
-          '<div class="q-rw">成功報酬 ' + fmtMoney(rw.money) + ' ＋ XP' + rw.xp.toLocaleString('ja-JP') + '/人 ＋ アイテム抽選</div></div>' +
-          btn + '</div>';
-      });
-    });
-    $('questList').innerHTML = html;
   }
   function itemEffectLabel(it){
     if (it.cat === 'xp') return '研修系：社員1人にXP +' + it.xp.toLocaleString('ja-JP');
@@ -1993,13 +3311,13 @@ if (typeof document !== 'undefined') (function(){
     if (!html) html = '<div class="hint" style="text-align:center;padding:14px 0;">アイテムを持っていません。クエストやショップで入手しよう！</div>';
     $('invList').innerHTML = html;
   }
-  /* v2: クエスト進行（演出中も資金は tick で増え続ける） */
+  /* v2/v5: 案件進行（演出中も資金は tick で増え続ける） */
   var lastQMsg = 0;
   function updateQuestProgress(now){
     var aq = state.activeQuest;
     if (!aq) return;
     if (now >= aq.end){ resolveQuest(now); return; }
-    if (curTab === 'quest'){
+    if (curTab === 'nation'){
       var f = $('qfill');
       if (f) f.style.width = Math.min(100, (now - aq.start) / (aq.end - aq.start) * 100) + '%';
       var m = $('qmsg');
@@ -2034,6 +3352,14 @@ if (typeof document !== 'undefined') (function(){
     });
     lines.push('派遣メンバーは けいけんち ' + Math.floor(xpEach).toLocaleString('ja-JP') + ' を かくとくした！');
     if (win){
+      team.forEach(function(e){ bumpLoyalty(e, 2); }); /* v5.1: 案件成功メンバー 忠誠+2 */
+      /* v5: エリア案件成功→当該エリアシェア即時加算（特需イベント中は2倍） */
+      var aId = QUEST_AREA[q.id];
+      if (aId && state.share[aId]){
+        var pts = QUEST_SHARE_PTS[q.tier] * (boomActive(state, aId) ? 2 : 1);
+        var added = addPlayerShare(state, aId, pts);
+        if (added > 0) lines.push(AREA_MAP[aId].name + 'の シェアが ' + (Math.round(added*10)/10) + 'pt あがった！');
+      }
       var lukSum = 0;
       team.forEach(function(e){ lukSum += empStats(e).luk + dexStatBonus(state); });
       var dropped = rollQuestDrop(q.tier, lukSum);
@@ -2046,18 +3372,20 @@ if (typeof document !== 'undefined') (function(){
     save();
     showModal(
       '<h3>' + q.ico + ' ' + q.name + '</h3>' +
-      '<div class="big" style="color:' + (win ? 'var(--gold)' : 'var(--sub)') + ';">' + (win ? '⭐ クエスト成功！' : '💧 クエスト失敗…') + '</div>' +
+      '<div class="big" style="color:' + (win ? 'var(--gold)' : 'var(--sub)') + ';">' + (win ? '⭐ 案件成功！' : '💧 案件失敗…') + '</div>' +
       '<div class="dqstat" style="margin:10px 0;">' + lines.map(function(l){ return '▼ ' + l; }).join('<br>') + '</div>' +
       (win ? '' : '<p>失敗してもXPは半分もらえる。社員を鍛えて再挑戦だ！</p>') +
       '<button class="btn gold" data-act="close-modal">OK</button>');
     checkDex();
-    if (curTab === 'quest') renderQuest();
+    if (curTab === 'nation') renderNation();
   }
   /* v2: クエスト派遣メンバー選択（ボトムシート流用） */
   var questPick = [], questPickQ = null;
   function openQuestSheet(qid){
-    if (state.activeQuest){ toast('別のクエストが進行中です'); return; }
+    if (state.activeQuest){ toast('別の案件が進行中です'); return; }
     if ((state.questCd[qid]||0) > Date.now()){ toast('クールダウン中です'); return; }
+    var qArea = QUEST_AREA[qid];
+    if (qArea && !state.sites[qArea]){ toast('この案件は' + AREA_MAP[qArea].name + 'に拠点が必要です'); return; }
     var q = QUEST_MAP[qid];
     questPickQ = qid; questPick = [];
     var reqLbl = Object.keys(q.req).map(function(k){ return STAT_DEFS[k].name; }).join('・');
@@ -2111,8 +3439,7 @@ if (typeof document !== 'undefined') (function(){
         '<button class="btn gold" data-act="close-modal">OK</button>');
       derived = calcDerived(state);
       renderHeader();
-      if (curTab === 'quest') renderInv();
-      if (curTab === 'packs') renderShop();
+      if (curTab === 'scout'){ renderInv(); renderShop(); }
       return;
     }
     openItemTargetSheet(iid); /* 研修系・強化系は対象社員を選択 */
@@ -2171,7 +3498,7 @@ if (typeof document !== 'undefined') (function(){
       dqQueue.push('▼ ' + e.ln + ' ' + e.fn + 'は ' + it.name + ' を つかった！\n' + lines.join('\n'));
       pumpDQ();
     }
-    if (curTab === 'quest') renderQuest(); else renderCurrentTab();
+    renderCurrentTab();
   }
 
   /* ---------- affordability ---------- */
@@ -2185,37 +3512,6 @@ if (typeof document !== 'undefined') (function(){
         b.classList.toggle('pulse', ok);
       }
     }
-  }
-
-  /* ---------- assignment ---------- */
-  function openAssignSheet(deptId){
-    var def = DEPTS[deptId];
-    var free = state.employees.filter(function(e){ return !e.dept; });
-    free.sort(function(a,b){ return empProdIn(b,deptId) - empProdIn(a,deptId); });
-    var html = '';
-    if (!free.length){
-      html = '<div class="hint" style="padding:18px 6px;text-align:center;">未配属の社員がいません。<br>パックで採用するか、他部署から外してください。</div>';
-    }
-    free.forEach(function(e){
-      var m = def.job === e.job;
-      html += '<div class="sheet-emp" data-act="assign" data-emp="' + e.id + '" data-dept="' + deptId + '">' +
-        pchip(e, 40) +
-        '<div class="emp-mid"><div class="emp-name">' + (e.nick?'<span class="emp-nick">《'+e.nick+'》</span>':'') + e.ln + ' ' + e.fn + '</div>' +
-        '<div class="emp-sub">' + JOB_DEFS[e.job].emoji + JOB_DEFS[e.job].name + '・Lv' + e.lv + '</div></div>' +
-        '<div class="emp-right" style="font-size:12px;font-weight:800;color:var(--navy2);">' +
-        fmtMoney(empProdIn(e,deptId)) + '/秒' + (m?'<div class="match">⭐一致×1.5</div>':'') + '</div></div>';
-    });
-    showSheet(def.emoji + ' ' + def.name + ' に配属する社員を選択', html);
-  }
-  function openUnassignSheet(deptId, empId){
-    var e = state.employees.find(function(x){ return x.id === empId; });
-    if (!e) return;
-    var html = '<div style="padding:8px 6px 14px;">' +
-      '<div class="emp" style="margin-bottom:12px;">' + pchip(e, 44) +
-      '<div class="emp-mid"><div class="emp-name">' + (e.nick?'<span class="emp-nick">《'+e.nick+'》</span>':'') + e.ln + ' ' + e.fn + '</div>' +
-      '<div class="emp-sub">' + JOB_DEFS[e.job].emoji + JOB_DEFS[e.job].name + '・Lv' + e.lv + '・' + fmtMoney(empProd(e)) + '/秒</div></div></div>' +
-      '<button class="btn danger" style="width:100%;" data-act="unassign" data-emp="' + e.id + '">この社員を部署から外す</button></div>';
-    showSheet(DEPTS[deptId].emoji + ' ' + DEPTS[deptId].name, html);
   }
 
   /* ---------- offline ---------- */
@@ -2248,10 +3544,10 @@ if (typeof document !== 'undefined') (function(){
   }
   function renderCurrentTab(){
     derived = calcDerived(state);
-    if (curTab==='office') renderOffice();
-    else if (curTab==='packs') renderPacks();
+    if (curTab==='nation') renderNation();
+    else if (curTab==='sites') renderSites();
+    else if (curTab==='scout') renderScout();
     else if (curTab==='emps') renderEmps();
-    else if (curTab==='quest') renderQuest();
     else renderMisc();
   }
 
@@ -2312,16 +3608,17 @@ if (typeof document !== 'undefined') (function(){
     dispMoney = state.money;
     derived = calcDerived(state);
     b.textContent = 'ニューゲーム（はじめから）';
+    curSite = 'marunouchi';
     renderCurrentTab();
     renderHeader();
-    switchTab('office');
+    switchTab('nation');
     showWelcome();
   }
 
   function showWelcome(){
-    showModal('<h3>🏢 会社設立！</h3>' +
+    showModal('<h3>🏢 丸の内に会社設立！</h3>' +
       '<div class="big">' + fmtMoney(state.money) + '</div>' +
-      '<p>ようこそ、社長！<br>ここから会社を育てましょう。<br>まずはパックで最初の社員を採用！</p>' +
+      '<p>ようこそ、社長！<br>未採用の社員は競合5社で働いています。<br>スカウトで引き抜き、拠点と部署に配属して、<br>12エリアの市場シェアを奪いましょう！</p>' +
       '<button class="btn gold" data-act="close-modal">経営をはじめる</button>');
   }
 
@@ -2334,32 +3631,85 @@ if (typeof document !== 'undefined') (function(){
       case 'buy': buyPack(el.getAttribute('data-pack')); break;
       case 'flip': flipCard(el.getAttribute('data-i')); break;
       case 'close-modal': closeModal(); break;
-      case 'slot-empty': openAssignSheet(el.getAttribute('data-dept')); break;
-      case 'slot': openUnassignSheet(el.getAttribute('data-dept'), +el.getAttribute('data-emp')); break;
+      /* ---------- v5 actions: 全国・四半期 ---------- */
+      case 'close-q': doCloseQuarter(); break;
+      case 'national-modal': closeModal(); showNationalModal(); break;
+      case 'area-open': openAreaSheet(el.getAttribute('data-area')); break;
+      case 'goto-site': {
+        curSite = el.getAttribute('data-area');
+        closeSheet();
+        switchTab('sites');
+        break;
+      }
+      case 'site-new': openSiteNewSheet(); break;
+      case 'site-sel': curSite = el.getAttribute('data-area'); renderSites(); break;
+      case 'site-open': {
+        var soArea = el.getAttribute('data-area');
+        var soRes = openSite(state, soArea);
+        if (!soRes.ok){ toast(soRes.err); break; }
+        save(); closeSheet();
+        toast('🏗️ ' + siteLabel(soArea) + ' を開設しました！（' + fmtMoney(soRes.cost) + '）');
+        curSite = soArea;
+        checkAchs();
+        if (curTab === 'sites') renderSites(); else renderCurrentTab();
+        break;
+      }
+      /* ---------- v5 actions: 拠点・部署・配属・役職 ---------- */
+      case 'dept-build': {
+        var dbRes = buildDept(state, el.getAttribute('data-area'), el.getAttribute('data-dept'));
+        if (!dbRes.ok){ toast(dbRes.err); break; }
+        state.stats.expands++;
+        save(); renderCurrentTab();
+        toast(DEPTS[el.getAttribute('data-dept')].name + 'を設置しました（' + fmtMoney(dbRes.cost) + '）');
+        break;
+      }
+      case 'dept-lvup': {
+        var dlRes = lvUpDept(state, el.getAttribute('data-area'), el.getAttribute('data-dept'));
+        if (!dlRes.ok){ toast(dlRes.err); break; }
+        state.stats.expands++;
+        save(); renderCurrentTab();
+        toast(DEPTS[el.getAttribute('data-dept')].name + 'がLv' + dlRes.lv + 'になりました（配属枠 ' + dlRes.lv + '）');
+        break;
+      }
+      case 'assign-open': openAssignSheet(el.getAttribute('data-area'), el.getAttribute('data-dept')); break;
+      case 'member-open': openMemberSheet(+el.getAttribute('data-emp')); break;
       case 'assign': {
         var e = state.employees.find(function(x){ return x.id === +el.getAttribute('data-emp'); });
-        var d = el.getAttribute('data-dept');
-        var used = state.employees.filter(function(x){ return x.dept === d; }).length;
-        if (e && used < state.depts[d].slots){ e.dept = d; save(); }
+        if (e){
+          var asRes = assignEmp(state, e, el.getAttribute('data-area'), el.getAttribute('data-dept'));
+          if (!asRes.ok) toast(asRes.err);
+          else save();
+        }
         closeSheet(); renderCurrentTab();
         break;
       }
       case 'unassign': {
         var e2 = state.employees.find(function(x){ return x.id === +el.getAttribute('data-emp'); });
-        if (e2) e2.dept = null;
+        if (e2) unassignEmp(state, e2);
         save(); closeSheet(); renderCurrentTab();
         break;
       }
-      case 'expand': {
-        var dd = el.getAttribute('data-dept');
-        var cost = slotCost(state.depts[dd].slots);
-        if (state.money >= cost){
-          state.money -= cost;
-          state.depts[dd].slots++;
-          state.stats.expands++;
-          save(); renderCurrentTab();
-          toast(DEPTS[dd].name + 'のスロットを拡張しました（' + state.depts[dd].slots + '枠）');
-        }
+      case 'post-open': openPostSheet(el.getAttribute('data-kind'), el.getAttribute('data-area'), el.getAttribute('data-dept')); break;
+      case 'post-set': {
+        var psRes = setPost(state, +el.getAttribute('data-emp'), el.getAttribute('data-kind'),
+          el.getAttribute('data-area'), el.getAttribute('data-dept'));
+        if (!psRes.ok){ toast(psRes.err); break; }
+        var psEmp = findEmpById(state, +el.getAttribute('data-emp'));
+        save(); closeSheet(); renderCurrentTab();
+        toast(POST_DEFS[el.getAttribute('data-kind')].ico + ' ' + psEmp.ln + ' ' + psEmp.fn + 'が' + POST_DEFS[el.getAttribute('data-kind')].name + 'に就任！');
+        break;
+      }
+      case 'post-unset': {
+        clearPostsOf(state, +el.getAttribute('data-emp'));
+        save(); closeSheet(); renderCurrentTab();
+        toast('役職を解任しました');
+        break;
+      }
+      case 'post-clear': {
+        var pcKind = el.getAttribute('data-kind'), pcArea = el.getAttribute('data-area');
+        if (pcKind === 'shishacho' && state.sites[pcArea]) state.sites[pcArea].siteMgr = null;
+        save(); renderCurrentTab();
+        toast('支社長を解任しました');
         break;
       }
       case 'fjob': filterJob = el.getAttribute('data-v'); renderEmps(); break;
@@ -2420,11 +3770,106 @@ if (typeof document !== 'undefined') (function(){
         save();
         closeSheet();
         toast('⚔️ ' + qq.name + ' に出発！（約' + qt.dur + '秒）');
-        if (curTab === 'quest') renderQuest();
+        if (curTab === 'nation') renderNation();
         break;
       }
       case 'item-use': useItem(el.getAttribute('data-item')); break;
       case 'item-target': applyItemTo(el.getAttribute('data-item'), +el.getAttribute('data-emp')); break;
+      /* ---------- v5.1 actions: 給与・役員会・オファー・指名スカウト ---------- */
+      case 'salary-set': {
+        var ssRes = setSalaryLv(state, +el.getAttribute('data-emp'), +el.getAttribute('data-lv'));
+        if (!ssRes.ok){ toast(ssRes.err); break; }
+        save();
+        toast('💰 ' + ssRes.emp.ln + ' ' + ssRes.emp.fn + 'の給与水準を「' + salaryPolicyOf(ssRes.emp).name + '」に変更');
+        openEmpDetail(ssRes.emp.id); /* モーダル再描画 */
+        break;
+      }
+      case 'salary-all': {
+        var saLv = +el.getAttribute('data-lv');
+        var saRes = setSalaryLvAll(state, saLv);
+        if (!saRes.ok){ toast(saRes.err); break; }
+        save(); renderCurrentTab();
+        toast('💰 全社員（' + saRes.n + '名）の給与水準を「' + SALARY_POLICY[saLv].name + '」に一括設定');
+        break;
+      }
+      case 'board-open': openBoardSheet(); break;
+      case 'director-set': {
+        var dsRes = setDirector(state, +el.getAttribute('data-emp'));
+        if (!dsRes.ok){ toast(dsRes.err); break; }
+        save(); closeSheet(); renderCurrentTab();
+        toast('🏛️ ' + dsRes.emp.ln + ' ' + dsRes.emp.fn + 'が取締役に就任！（全社戦力+8%）');
+        break;
+      }
+      case 'director-unset': {
+        unsetDirector(state, +el.getAttribute('data-emp'));
+        save(); renderCurrentTab();
+        toast('取締役を解任しました');
+        break;
+      }
+      case 'chief-open': openChiefSheet(el.getAttribute('data-area')); break;
+      case 'chief-set': {
+        var csRes = setAreaChief(state, +el.getAttribute('data-emp'), el.getAttribute('data-area'));
+        if (!csRes.ok){ toast(csRes.err); break; }
+        save(); closeSheet(); renderCurrentTab();
+        toast('🌐 ' + csRes.emp.ln + ' ' + csRes.emp.fn + 'がエリア統括に就任！（担当拠点+10%）');
+        break;
+      }
+      case 'chief-unset': {
+        unsetAreaChief(state, el.getAttribute('data-area'));
+        save(); renderCurrentTab();
+        toast('エリア統括を解任しました');
+        break;
+      }
+      case 'offer-modal': closeModal(); showOfferModal(); break;
+      case 'offer-counter': {
+        var ocRes = resolveOfferCounter(state);
+        if (!ocRes.ok){ toast(ocRes.err); break; }
+        save(); closeModal(); renderCurrentTab(); renderHeader();
+        toast('💰 ' + ocRes.emp.ln + ' ' + ocRes.emp.fn + 'は残留を決めた！（忠誠+15・ただし揺れ跡が残る…）');
+        break;
+      }
+      case 'offer-promote': {
+        var opRes = resolveOfferPromote(state, el.getAttribute('data-kind'), el.getAttribute('data-area'), el.getAttribute('data-dept'));
+        if (!opRes.ok){ toast(opRes.err); break; }
+        save(); closeModal(); renderCurrentTab();
+        toast('🎖️ ' + opRes.emp.ln + ' ' + opRes.emp.fn + 'を' + POST_DEFS[opRes.kind].name + 'に昇進！引き留め成功（忠誠+20）');
+        break;
+      }
+      case 'offer-release': {
+        var orRes = resolveOfferRelease(state);
+        if (!orRes.ok){ toast(orRes.err); break; }
+        save(); closeModal();
+        derived = calcDerived(state);
+        renderCurrentTab(); renderHeader();
+        toast('👋 ' + (orRes.emp ? orRes.emp.ln + ' ' + orRes.emp.fn + 'が' : '') + RIVAL_MAP[orRes.rival].name + 'へ移籍した…（図鑑には残る）');
+        break;
+      }
+      case 'scout-open': showScoutModal(el.getAttribute('data-mid')); break;
+      case 'scout-try': {
+        var scMid = el.getAttribute('data-mid');
+        var scRes = tryScout(state, scMid, parseFloat(el.getAttribute('data-mult')));
+        if (!scRes.ok){ toast(scRes.err); break; }
+        save();
+        renderHeader();
+        if (scRes.success){
+          var scEmp = scRes.res.emp;
+          if (scEmp.rar === 'SSR') state.stats.ssr++;
+          if (scEmp.rar === 'UR'){ state.stats.ssr++; state.stats.ur++; }
+          if (scEmp.rar === 'LEGEND'){ state.stats.ssr++; state.stats.ur++; }
+          closeModal();
+          pendingCards = [scRes.res];
+          openPackOverlay('🎯 指名スカウト');
+        } else {
+          closeModal();
+          var scM = ROSTER_MAP[scMid];
+          showModal('<h3>💧 交渉決裂…</h3>' +
+            '<div style="display:flex;justify-content:center;">' + portraitHTML(scM, 64) + '</div>' +
+            '<p style="margin-top:8px;">' + scM.ln + ' ' + scM.fn + 'は首を縦に振らなかった。<br>契約金 ' + fmtMoney(scRes.cost) + ' は戻らない…。<br>再交渉は<b>第' + scRes.cdUntil + '期</b>から（4期クールダウン）。</p>' +
+            '<button class="btn gold" data-act="close-modal">次こそは</button>');
+          if (curTab === 'emps') renderEmps();
+        }
+        break;
+      }
     }
   });
   $('dqwin').addEventListener('click', nextDQ);
