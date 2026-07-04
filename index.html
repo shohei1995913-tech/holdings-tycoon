@@ -1,0 +1,2348 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#1B2A4A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>ホールディングス・タイクーン</title>
+<style>
+:root{
+  --navy:#1B2A4A; --navy2:#2A3F6E; --gold:#B8912A; --gold2:#E6B93C;
+  --bg:#F4F6FA; --card:#FFFFFF; --line:#DDE3EE; --text:#1B2A4A; --sub:#66708A;
+  --n:#9AA3AD; --r:#2E6FD8; --sr:#8B3FD8; --ssr:#C9971F;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+html,body{height:100%;}
+body{
+  font-family:system-ui,-apple-system,"Hiragino Kaku Gothic ProN","Meiryo",sans-serif;
+  background:#E8ECF4; color:var(--text); overscroll-behavior:none;
+  -webkit-user-select:none; user-select:none;
+}
+#app{max-width:480px;margin:0 auto;min-height:100dvh;background:var(--bg);position:relative;
+  display:flex;flex-direction:column;box-shadow:0 0 24px rgba(27,42,74,.15);}
+/* ===== header ===== */
+header{
+  position:sticky;top:0;z-index:50;background:var(--card);color:var(--navy);
+  padding:10px 14px 8px;border-bottom:2px solid var(--line);
+}
+.h-row1{display:flex;align-items:baseline;justify-content:space-between;gap:8px;}
+#money{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:.5px;color:var(--navy);}
+#income{font-size:13px;color:var(--sub);font-weight:600;}
+#income b{color:var(--gold);font-size:15px;}
+.h-row2{display:flex;align-items:center;gap:8px;margin-top:5px;}
+#stageName{font-size:12px;font-weight:700;background:var(--navy);color:#fff;border-radius:20px;padding:2px 10px;white-space:nowrap;}
+#stageMult{font-size:12px;font-weight:700;color:var(--gold);white-space:nowrap;}
+.stagebar{flex:1;height:6px;background:var(--line);border-radius:3px;overflow:hidden;}
+#stageFill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:3px;transition:width .5s;}
+/* ===== main ===== */
+main{flex:1;overflow-y:auto;padding:12px 12px calc(78px + var(--safe-b));-webkit-overflow-scrolling:touch;}
+.tabpane{display:none;}
+.tabpane.active{display:block;animation:fadein .18s ease;}
+@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+h2.sec{font-size:15px;font-weight:800;color:var(--navy);margin:14px 2px 8px;border-left:4px solid var(--gold);padding-left:8px;}
+h2.sec:first-child{margin-top:2px;}
+.hint{font-size:11px;color:var(--sub);margin:4px 2px 8px;line-height:1.5;}
+/* ===== dept cards ===== */
+.dept{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 1px 3px rgba(27,42,74,.06);}
+.dept-head{display:flex;align-items:center;gap:8px;}
+.dept-emoji{font-size:22px;}
+.dept-name{font-weight:800;font-size:15px;}
+.dept-effect{margin-left:auto;font-size:12px;font-weight:800;color:var(--gold);text-align:right;font-variant-numeric:tabular-nums;}
+.dept-desc{font-size:11px;color:var(--sub);margin:4px 0 8px;line-height:1.45;}
+.slots{display:flex;flex-wrap:wrap;gap:6px;}
+.slot{flex:1 1 calc(50% - 6px);min-width:130px;border:1.5px dashed var(--line);border-radius:10px;
+  padding:7px 9px;font-size:12px;min-height:46px;display:flex;flex-direction:column;justify-content:center;background:#FAFBFE;cursor:pointer;}
+.slot.filled{border-style:solid;border-color:var(--navy2);background:#fff;}
+.slot .s-name{font-weight:700;display:flex;align-items:center;gap:4px;}
+.slot .s-sub{color:var(--sub);font-size:11px;font-variant-numeric:tabular-nums;}
+.slot.empty{align-items:center;color:var(--sub);font-weight:700;}
+.match{color:var(--gold);font-weight:800;font-size:10px;}
+.dept-foot{margin-top:8px;display:flex;justify-content:flex-end;}
+/* ===== buttons ===== */
+button{font-family:inherit;border:none;border-radius:10px;cursor:pointer;font-weight:700;}
+.btn{background:var(--navy);color:#fff;padding:9px 14px;font-size:13px;}
+.btn:active{transform:scale(.97);}
+.btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#fff;}
+.btn.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--navy);}
+.btn.small{padding:6px 10px;font-size:12px;border-radius:8px;}
+.btn.danger{background:#B03030;color:#fff;}
+.btn:disabled{background:#C6CCDA;color:#fff;cursor:default;transform:none;}
+.btn.pulse{animation:pulse 1.4s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(184,145,42,.55)}50%{box-shadow:0 0 0 9px rgba(184,145,42,0)}}
+/* ===== packs ===== */
+.pack{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(27,42,74,.06);position:relative;overflow:hidden;}
+.pack::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;}
+.pack.p-normal::before{background:var(--n);}
+.pack.p-gold::before{background:linear-gradient(var(--gold),var(--gold2));}
+.pack.p-premium::before{background:linear-gradient(180deg,#e6483d,#e8a33d,#3dbb58,#3d7fe8,#8b3fd8);}
+.pack-title{font-weight:800;font-size:16px;}
+.pack-desc{font-size:11.5px;color:var(--sub);margin:5px 0 10px;line-height:1.55;}
+.pack-buy{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.pack-price{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;}
+.pack-price s{color:var(--sub);font-size:12px;font-weight:600;margin-right:5px;}
+.rates{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px;}
+.rate{font-size:10px;font-weight:800;border-radius:6px;padding:2px 6px;color:#fff;}
+.rate.rN{background:var(--n);}.rate.rR{background:var(--r);}.rate.rSR{background:var(--sr);}
+.rate.rSSR{background:var(--ssr);}.rate.rUR{background:linear-gradient(90deg,#e6483d,#e8a33d,#3dbb58,#3d7fe8,#8b3fd8);}
+/* ===== employees list ===== */
+.filters{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
+.chip{font-size:11.5px;font-weight:700;border-radius:20px;padding:5px 11px;background:#fff;border:1.5px solid var(--line);color:var(--sub);}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff;}
+.emp{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.rbadge{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:900;font-size:12px;flex-shrink:0;}
+.rbadge.rN{background:var(--n);}.rbadge.rR{background:var(--r);}.rbadge.rSR{background:var(--sr);}
+.rbadge.rSSR{background:linear-gradient(135deg,var(--gold),var(--gold2));}
+.rbadge.rUR{background:linear-gradient(135deg,#e6483d,#e8a33d,#3dbb58,#3d7fe8,#8b3fd8);font-size:11px;}
+.emp-mid{flex:1;min-width:0;}
+.emp-name{font-weight:800;font-size:13.5px;display:flex;gap:6px;align-items:baseline;flex-wrap:wrap;}
+.emp-nick{color:var(--gold);font-size:11px;font-weight:800;}
+.emp-sub{font-size:11px;color:var(--sub);margin-top:2px;font-variant-numeric:tabular-nums;}
+.emp-dept{font-size:10px;font-weight:800;background:#EEF2FA;color:var(--navy2);border-radius:6px;padding:1px 6px;margin-left:4px;}
+.emp-right{text-align:right;flex-shrink:0;}
+/* ===== v3.0: awakening / employee dex / debug ===== */
+.awk{color:#8B3FD8;font-weight:900;font-size:11px;white-space:nowrap;}
+.f-badge{position:absolute;top:6px;left:6px;font-size:9px;font-weight:900;color:#fff;border-radius:6px;padding:2px 6px;z-index:2;letter-spacing:.5px;}
+.f-badge.bnew{background:linear-gradient(135deg,var(--gold),var(--gold2));box-shadow:0 0 9px rgba(230,185,60,.85);}
+.f-badge.bawk{background:linear-gradient(135deg,#8B3FD8,#B36BF0);box-shadow:0 0 9px rgba(139,63,216,.7);}
+.f-badge.bmax{background:#66708A;}
+.f-msg{font-size:8.5px;font-weight:800;line-height:1.3;margin-top:2px;min-height:11px;}
+.edex-head{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px;}
+.edex-head .edx-cnt{font-weight:900;font-size:15px;color:var(--navy);font-variant-numeric:tabular-nums;}
+.edex-bonus{font-size:10.5px;font-weight:700;margin-top:4px;display:flex;gap:5px;flex-wrap:wrap;}
+.edex-bonus span{border-radius:6px;padding:2px 7px;background:#EEF2FA;color:var(--sub);}
+.edex-bonus span.got{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#fff;}
+.edex-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:6px;}
+.edex-item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:7px 2px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;min-height:82px;justify-content:flex-start;}
+.edex-item .ep{line-height:0;}
+.edex-item.unknown{background:#EEF1F7;}
+.edex-item.unknown .ep{filter:brightness(0);opacity:.25;}
+.edex-item .edx-name{font-size:9px;font-weight:700;line-height:1.25;}
+.edex-item .edx-awk{font-size:9px;font-weight:900;color:#8B3FD8;min-height:11px;}
+.dbg-input{flex:1;min-width:0;border:1.5px solid var(--line);border-radius:8px;font-size:13px;padding:8px;font-family:inherit;font-weight:700;-webkit-user-select:text;user-select:text;font-variant-numeric:tabular-nums;}
+/* ===== achievements / settings ===== */
+.ach{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.ach.locked{opacity:.5;}
+.ach-ico{font-size:20px;}
+.ach-name{font-weight:800;font-size:13px;}
+.ach-desc{font-size:11px;color:var(--sub);}
+.set-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;}
+textarea{width:100%;height:84px;border:1.5px solid var(--line);border-radius:8px;font-size:11px;padding:8px;font-family:monospace;resize:none;-webkit-user-select:text;user-select:text;}
+/* ===== tabbar ===== */
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;z-index:60;
+  background:var(--card);border-top:2px solid var(--line);display:flex;padding-bottom:var(--safe-b);}
+nav button{flex:1;background:none;padding:8px 0 7px;display:flex;flex-direction:column;align-items:center;gap:2px;
+  font-size:10px;font-weight:700;color:var(--sub);border-radius:0;}
+nav button .ti{font-size:21px;filter:grayscale(.7);opacity:.75;}
+nav button.on{color:var(--navy);}
+nav button.on .ti{filter:none;opacity:1;}
+nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;background:var(--gold);margin-top:1px;}
+/* ===== overlays ===== */
+.overlay{position:fixed;inset:0;z-index:100;background:rgba(15,22,40,.72);display:flex;align-items:center;justify-content:center;padding:18px;}
+.overlay.hidden,.hidden{display:none!important;}
+.modal{background:#fff;border-radius:18px;padding:22px 18px;max-width:400px;width:100%;text-align:center;animation:pop .25s ease;max-height:82dvh;overflow-y:auto;}
+@keyframes pop{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.modal h3{color:var(--navy);font-size:17px;margin-bottom:10px;}
+.modal .big{font-size:26px;font-weight:900;color:var(--gold);margin:8px 0;font-variant-numeric:tabular-nums;}
+.modal p{font-size:13px;color:var(--sub);line-height:1.6;margin-bottom:14px;}
+/* bottom sheet */
+#sheetWrap{position:fixed;inset:0;z-index:110;background:rgba(15,22,40,.5);}
+#sheet{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:#fff;
+  border-radius:18px 18px 0 0;max-height:72dvh;display:flex;flex-direction:column;animation:up .22s ease;padding-bottom:var(--safe-b);}
+@keyframes up{from{transform:translate(-50%,40%)}to{transform:translate(-50%,0)}}
+#sheetTitle{padding:14px 16px 8px;font-weight:800;font-size:14px;color:var(--navy);border-bottom:1px solid var(--line);}
+#sheetBody{overflow-y:auto;padding:10px 12px 16px;-webkit-overflow-scrolling:touch;}
+.sheet-emp{display:flex;align-items:center;gap:10px;padding:9px 8px;border-bottom:1px solid var(--line);cursor:pointer;}
+.sheet-emp:active{background:#F2F5FB;}
+/* ===== pack opening ===== */
+#packOverlay{background:radial-gradient(circle at 50% 30%,#2A3F6E,#101a30 75%);flex-direction:column;}
+#packOvTitle{color:#fff;font-size:16px;font-weight:800;margin-bottom:18px;letter-spacing:1px;}
+.pcards{display:flex;gap:10px;justify-content:center;width:100%;}
+.pcard{width:30%;max-width:118px;aspect-ratio:2/3;perspective:800px;cursor:pointer;}
+.pcard-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.4,1.4,.6,1);}
+.pcard.flipped .pcard-inner{transform:rotateY(180deg);}
+.pface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px;}
+.pback{background:linear-gradient(150deg,var(--navy) 0%,var(--navy2) 55%,var(--navy) 100%);border:2px solid #3E5588;color:#8FA2CC;}
+.pback .logo{font-size:34px;}
+.pback .lt{font-size:10px;font-weight:800;letter-spacing:2px;margin-top:6px;}
+.pback.tease{border-color:var(--gold2);animation:tease 1.1s ease-in-out infinite;}
+@keyframes tease{0%,100%{box-shadow:0 0 6px 1px rgba(230,185,60,.5)}50%{box-shadow:0 0 22px 7px rgba(230,185,60,.95)}}
+.pfront{transform:rotateY(180deg);background:#fff;border:3px solid var(--n);text-align:center;gap:2px;}
+.pfront .f-rar{font-size:12px;font-weight:900;border-radius:6px;padding:1px 8px;color:#fff;background:var(--n);}
+.pfront .f-port{margin:4px 0 2px;line-height:0;}
+.pfront .f-port svg{border-radius:50%;box-shadow:0 2px 6px rgba(27,42,74,.25);}
+.pwrap{position:relative;flex-shrink:0;line-height:0;}
+.pwrap svg{border-radius:50%;display:block;}
+.pmini{position:absolute;right:-5px;bottom:-3px;font-size:8px;font-weight:900;color:#fff;border-radius:5px;padding:1px 4px;border:1.5px solid #fff;line-height:1.2;}
+.pmini.rN{background:var(--n);}.pmini.rR{background:var(--r);}.pmini.rSR{background:var(--sr);}
+.pmini.rSSR{background:linear-gradient(135deg,var(--gold),var(--gold2));}
+.pmini.rUR{background:linear-gradient(135deg,#e6483d,#e8a33d,#3d7fe8,#8b3fd8);}
+.s-port{line-height:0;flex-shrink:0;}
+.s-port svg{border-radius:50%;vertical-align:middle;display:block;}
+.pfront .f-nick{font-size:9.5px;font-weight:800;color:var(--gold);min-height:12px;line-height:1.2;}
+.pfront .f-name{font-size:12.5px;font-weight:800;color:var(--navy);}
+.pfront .f-job{font-size:10px;color:var(--sub);font-weight:700;}
+.pfront .f-prod{font-size:10px;color:var(--navy2);font-weight:800;margin-top:2px;font-variant-numeric:tabular-nums;}
+.pfront.fR{border-color:var(--r);box-shadow:0 0 12px rgba(46,111,216,.55);}
+.pfront.fR .f-rar{background:var(--r);}
+.pfront.fSR{border-color:var(--sr);box-shadow:0 0 16px rgba(139,63,216,.65);}
+.pfront.fSR .f-rar{background:var(--sr);}
+.pfront.fSSR{border-color:var(--gold2);box-shadow:0 0 20px 4px rgba(230,185,60,.75);}
+.pfront.fSSR .f-rar{background:linear-gradient(135deg,var(--gold),var(--gold2));}
+.pfront.fUR{border-color:transparent;background:
+  linear-gradient(#fff,#fff) padding-box,
+  linear-gradient(120deg,#e6483d,#e8a33d,#3dbb58,#3d7fe8,#8b3fd8,#e6483d) border-box;
+  animation:urGlow 1.6s linear infinite;}
+.pfront.fUR .f-rar{background:linear-gradient(90deg,#e6483d,#e8a33d,#3dbb58,#3d7fe8,#8b3fd8);}
+@keyframes urGlow{0%{box-shadow:0 0 18px 4px rgba(232,72,61,.7)}25%{box-shadow:0 0 22px 6px rgba(232,163,61,.8)}
+ 50%{box-shadow:0 0 22px 6px rgba(61,127,232,.8)}75%{box-shadow:0 0 22px 6px rgba(139,63,216,.8)}
+ 100%{box-shadow:0 0 18px 4px rgba(232,72,61,.7)}}
+.pcard .spark{position:absolute;font-size:13px;animation:sparkfly 1.4s ease-in-out infinite;pointer-events:none;z-index:2;}
+@keyframes sparkfly{0%,100%{opacity:0;transform:translateY(0) scale(.6)}50%{opacity:1;transform:translateY(-14px) scale(1.15)}}
+.pack-actions{margin-top:22px;display:flex;gap:10px;}
+/* ===== v2.0: quests ===== */
+.qtier{font-size:13px;font-weight:800;color:var(--navy);margin:12px 2px 6px;}
+.qtier-sub{font-size:10px;color:var(--sub);font-weight:600;}
+.quest{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(27,42,74,.06);}
+.q-ico{font-size:24px;flex-shrink:0;}
+.q-mid{flex:1;min-width:0;}
+.q-name{font-weight:800;font-size:13.5px;}
+.q-req{font-size:11px;color:var(--navy2);font-weight:700;margin-top:2px;}
+.q-rw{font-size:10.5px;color:var(--sub);margin-top:1px;}
+.active-quest{border:1.5px solid var(--gold2);background:#FFFDF4;}
+.q-ports{display:flex;gap:4px;margin:6px 0 4px;}
+.q-ports svg{border-radius:50%;}
+.qbar{height:10px;background:var(--line);border-radius:5px;overflow:hidden;margin:4px 0;}
+.qfill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:5px;transition:width .25s linear;}
+.q-msg{font-size:11px;color:var(--sub);font-weight:700;}
+.q-start-bar{position:sticky;bottom:0;background:#fff;border-top:1px solid var(--line);margin:8px -12px -16px;padding:10px 14px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+#qRate{font-size:13px;font-weight:800;color:var(--navy);}
+.sheet-emp.sel{background:#FFF7E0;border-left:4px solid var(--gold);}
+/* ===== v2.0: items / inventory / shop ===== */
+.item{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 11px;margin-bottom:7px;display:flex;align-items:center;gap:10px;}
+.item-ico{font-size:22px;flex-shrink:0;}
+.item-mid{flex:1;min-width:0;}
+.item-name{font-weight:800;font-size:12.5px;}
+.item-desc{font-size:10.5px;color:var(--sub);margin-top:1px;line-height:1.4;}
+.item-count{font-weight:900;font-size:13px;color:var(--navy2);font-variant-numeric:tabular-nums;flex-shrink:0;}
+/* ===== v2.0: item dex ===== */
+.dex-cat{font-size:13px;font-weight:800;color:var(--navy);margin:10px 2px 6px;}
+.dex-comp{font-size:10px;font-weight:800;color:var(--gold);}
+.dex-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.dex-item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;min-height:64px;justify-content:center;}
+.dex-item .dx-ico{font-size:20px;}
+.dex-item .dx-name{font-size:9.5px;font-weight:700;line-height:1.25;}
+.dex-item .dx-rar{font-size:8.5px;font-weight:900;color:#fff;border-radius:4px;padding:0 5px;}
+.dex-item.rN .dx-rar{background:var(--n);}.dex-item.rR .dx-rar{background:var(--r);}.dex-item.rSR .dx-rar{background:var(--sr);}
+.dex-item.rSSR .dx-rar{background:linear-gradient(135deg,var(--gold),var(--gold2));}
+.dex-item.rUR .dx-rar{background:linear-gradient(135deg,#e6483d,#e8a33d,#3d7fe8,#8b3fd8);}
+.dex-item.unknown{opacity:.55;background:#EEF1F7;}
+/* ===== v2.0: DQ windows（黒地白枠二重線・レベルアップ演出とステータス表示のみに限定使用） ===== */
+#dqwin{position:fixed;bottom:calc(86px + var(--safe-b));left:50%;transform:translateX(-50%);width:92%;max-width:440px;z-index:250;
+  background:#000;color:#fff;border:2px solid #fff;border-radius:5px;
+  box-shadow:0 0 0 3px #000,0 6px 18px rgba(0,0,0,.45),inset 0 0 0 3px #000,inset 0 0 0 4px #fff;
+  padding:13px 16px;font-size:13px;font-weight:700;line-height:1.9;white-space:pre-line;cursor:pointer;
+  font-family:"Osaka-Mono","MS Gothic","Hiragino Kaku Gothic ProN",monospace;letter-spacing:1px;}
+#dqwin.dq-in{animation:dqup .22s ease;}
+@keyframes dqup{from{opacity:0;transform:translate(-50%,24px)}to{opacity:1;transform:translate(-50%,0)}}
+.dqstat{background:#000;color:#fff;border:2px solid #fff;border-radius:5px;
+  box-shadow:0 0 0 3px #000,inset 0 0 0 3px #000,inset 0 0 0 4px #fff;
+  padding:12px 14px;text-align:left;font-size:12.5px;line-height:1.95;font-weight:700;
+  font-family:"Osaka-Mono","MS Gothic","Hiragino Kaku Gothic ProN",monospace;letter-spacing:.5px;}
+.dqstat table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;}
+.dqstat td{padding:1px 0;}
+#buffInd{font-size:11px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:20px;padding:2px 8px;white-space:nowrap;font-variant-numeric:tabular-nums;}
+/* toast */
+#toasts{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:200;width:92%;max-width:440px;display:flex;flex-direction:column;gap:6px;pointer-events:none;}
+.toast{background:var(--navy);color:#fff;border-left:4px solid var(--gold2);border-radius:10px;padding:10px 14px;
+  font-size:12.5px;font-weight:700;box-shadow:0 4px 14px rgba(0,0,0,.3);animation:tin .3s ease;}
+@keyframes tin{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+.gainfx{position:fixed;z-index:90;font-weight:900;color:var(--gold);font-size:14px;pointer-events:none;animation:gup 1s ease-out forwards;}
+@keyframes gup{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-36px)}}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="h-row1"><span id="money">¥0</span><span id="income">売上/秒 <b>¥0</b></span></div>
+    <div class="h-row2">
+      <span id="stageName">個人事業</span><span id="stageMult">×1</span>
+      <span id="buffInd" class="hidden"></span>
+      <div class="stagebar"><div id="stageFill"></div></div>
+    </div>
+  </header>
+  <main id="main">
+    <section id="tab-office" class="tabpane active">
+      <h2 class="sec">🏢 オフィス — 部署と配属</h2>
+      <div class="hint">空きスロットをタップして社員を配属。職種と部署が一致すると <b class="match">⭐一致ボーナス ×1.5</b>！</div>
+      <div id="deptList"></div>
+    </section>
+    <section id="tab-packs" class="tabpane">
+      <h2 class="sec">🎴 社員パック</h2>
+      <div class="hint">パックを開封して社員100名の中から採用しよう。<b>未所持なら入社（NEW!）、所持済みなら覚醒（全ステUP＋生産力アップ・最大+10）</b>。覚醒上限後の重複は資金還元。人事部が強いとパックが割引されます。</div>
+      <div id="packList"></div>
+      <h2 class="sec">🛒 アイテムショップ</h2>
+      <div class="hint">N〜R級の消費アイテムを購入できます。SR以上はクエストでのみ入手可能。</div>
+      <div id="shopList"></div>
+    </section>
+    <section id="tab-emps" class="tabpane">
+      <h2 class="sec">👥 社員 <span id="empCount" style="font-size:12px;color:var(--sub)"></span></h2>
+      <div class="filters" id="empViewChips"></div>
+      <div id="empOwnBox">
+        <div class="filters" id="jobFilters"></div>
+        <div class="filters" id="rarFilters"></div>
+        <div id="empList"></div>
+      </div>
+      <div id="empDexBox" class="hidden"></div>
+    </section>
+    <section id="tab-quest" class="tabpane">
+      <h2 class="sec">⚔️ クエスト</h2>
+      <div class="hint">社員3人を派遣してクエストに挑戦！成功すると資金・XP・アイテムを獲得（同時進行は1件まで・失敗でもXP半分）。</div>
+      <div id="activeQuestBox"></div>
+      <div id="questList"></div>
+      <h2 class="sec">🎒 かばん（所持アイテム）</h2>
+      <div class="hint">タップで使用。研修系・強化系は対象社員を選択します。バフは重複不可。</div>
+      <div id="invList"></div>
+    </section>
+    <section id="tab-misc" class="tabpane">
+      <h2 class="sec">🏆 実績</h2>
+      <div id="achList"></div>
+      <h2 class="sec">📚 アイテム図鑑 <span id="dexCnt" style="font-size:12px;color:var(--sub)"></span></h2>
+      <div class="hint">一度でも入手したアイテムが記録されます（消費しても残る）。カテゴリコンプで永続ボーナス！</div>
+      <div id="dexList"></div>
+      <h2 class="sec">⚙️ 設定</h2>
+      <div class="set-card">
+        <div style="font-weight:800;font-size:13px;margin-bottom:6px;">セーブデータのエクスポート</div>
+        <textarea id="exportArea" readonly placeholder="「書き出す」を押すとここにコードが出ます"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button class="btn small ghost" id="btnExport">書き出す</button>
+          <button class="btn small ghost" id="btnCopy">コピー</button>
+        </div>
+      </div>
+      <div class="set-card">
+        <div style="font-weight:800;font-size:13px;margin-bottom:6px;">セーブデータのインポート</div>
+        <textarea id="importArea" placeholder="ここにコードを貼り付けて「読み込む」"></textarea>
+        <div style="margin-top:8px;"><button class="btn small" id="btnImport">読み込む</button></div>
+      </div>
+      <div class="set-card">
+        <div style="font-weight:800;font-size:13px;margin-bottom:6px;">🛠️ デバッグ</div>
+        <div class="hint" style="margin:0 0 8px;">動作確認用に資金を直接変更できます（0〜1e18でクランプ）。</div>
+        <div style="display:flex;gap:8px;align-items:stretch;">
+          <input class="dbg-input" id="debugMoney" type="number" min="0" step="any" inputmode="decimal" placeholder="設定したい資金額">
+          <button class="btn small" id="btnSetMoney">資金を設定</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <button class="btn small ghost" data-act="dbg-add" data-amt="10000000">＋1000万</button>
+          <button class="btn small ghost" data-act="dbg-add" data-amt="1000000000">＋10億</button>
+        </div>
+      </div>
+      <div class="set-card">
+        <div style="font-weight:800;font-size:13px;margin-bottom:6px;">データリセット</div>
+        <div class="hint" style="margin:0 0 8px;">全ての進行状況が消えます。取り消せません。</div>
+        <button class="btn small danger" id="btnReset">データをリセット</button>
+      </div>
+      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v3.1<br>リバースモール Game Studio</div>
+    </section>
+  </main>
+  <nav id="tabbar">
+    <button data-tab="office" class="on"><span class="ti">🏢</span>オフィス</button>
+    <button data-tab="packs"><span class="ti">🎴</span>パック</button>
+    <button data-tab="emps"><span class="ti">👥</span>社員</button>
+    <button data-tab="quest"><span class="ti">⚔️</span>クエスト</button>
+    <button data-tab="misc"><span class="ti">📚</span>実績・図鑑</button>
+  </nav>
+</div>
+
+<div id="packOverlay" class="overlay hidden">
+  <div id="packOvTitle"></div>
+  <div class="pcards" id="packCards"></div>
+  <div class="pack-actions">
+    <button class="btn gold" id="btnFlipAll">✨ まとめて開封</button>
+    <button class="btn ghost hidden" id="btnClosePack" style="background:#fff;">閉じる</button>
+  </div>
+</div>
+<div id="modalOverlay" class="overlay hidden"><div class="modal" id="modalBox"></div></div>
+<div id="sheetWrap" class="hidden"><div id="sheet"><div id="sheetTitle"></div><div id="sheetBody"></div></div></div>
+<div id="dqwin" class="hidden"></div>
+<div id="toasts"></div>
+
+<script>
+"use strict";
+/* =====================================================================
+   ホールディングス・タイクーン — core logic
+   純粋ロジック（定数・ロスター・抽選・覚醒・計算・移行）は DOM 非依存で先頭に定義し、
+   node での検証テストから直接呼び出せる構造にしている。
+===================================================================== */
+var SAVE_KEY = 'hd_tycoon_save';
+var SAVE_VERSION = 3;
+var RARS = ['N','R','SR','SSR','UR'];
+var RARITY = {
+  N:{base:10, color:'var(--n)'}, R:{base:30, color:'var(--r)'}, SR:{base:100, color:'var(--sr)'},
+  SSR:{base:400, color:'var(--ssr)'}, UR:{base:2000, color:'#8b3fd8'}
+};
+var JOBS = ['sales','eng','mkt','hr','acc'];
+var JOB_DEFS = {
+  sales:{name:'営業',       emoji:'💼'},
+  eng:  {name:'エンジニア', emoji:'💻'},
+  mkt:  {name:'マーケター', emoji:'📣'},
+  hr:   {name:'人事',       emoji:'🧑‍💼'},
+  acc:  {name:'経理',       emoji:'📊'}
+};
+var DEPTS = {
+  sales:{name:'営業部', emoji:'💼', job:'sales', desc:'配属社員の営業力⚔️が売上/秒になる、会社の稼ぎ頭。'},
+  dev:  {name:'開発部', emoji:'💻', job:'eng',  desc:'技術力🔧で「プロダクト力」を蓄積。営業売上に ×(1+補正) がかかる（最大×10）。'},
+  mkt:  {name:'マーケ部', emoji:'📣', job:'mkt', desc:'企画力💡で全社売上倍率アップ ×(1+0.05×係数)。上限 ×3。'},
+  hr:   {name:'人事部', emoji:'🧑‍💼', job:'hr',  desc:'体力❤️でパック価格を割引（最大30%）。'},
+  acc:  {name:'経理部', emoji:'📊', job:'acc',  desc:'運🍀でオフライン収益率アップ（基本50%→最大90%）。'}
+};
+var DEPT_IDS = ['sales','dev','mkt','hr','acc'];
+var STAGES = [
+  {name:'個人事業',               mult:1,   req:0},
+  {name:'スタートアップ',         mult:1.5, req:2e5},
+  {name:'ベンチャー',             mult:2,   req:2e6},
+  {name:'中堅企業',               mult:3,   req:2e7},
+  {name:'上場企業',               mult:5,   req:2e8},
+  {name:'大手',                   mult:8,   req:5e9},
+  {name:'メガコーポ',             mult:12,  req:5e11},
+  {name:'世界的コングロマリット', mult:20,  req:5e13}
+];
+var PACKS = {
+  normal: {id:'normal', name:'ノーマルパック', cls:'p-normal', price:30000, cards:3,
+    rates:{N:60,R:25,SR:10,SSR:4,UR:1}, desc:'基本の採用パック。まずはここから。'},
+  gold:   {id:'gold', name:'ゴールドパック', cls:'p-gold', price:300000, cards:3,
+    rates:{N:0,R:75,SR:20,SSR:4,UR:1}, desc:'R以上確定・SR排出率2倍のワンランク上の採用。'},
+  premium:{id:'premium', name:'プレミアパック', cls:'p-premium', price:3000000, cards:3,
+    rates:{N:40,R:29,SR:20,SSR:8,UR:3}, guarantee:true,
+    desc:'SR以上が1枚確定・UR排出率3倍。役員クラスを狙え。'}
+};
+var GUARANTEE_RATES = {N:0,R:0,SR:65,SSR:25,UR:10};
+var OFFLINE_CAP_SEC = 8*3600;
+var LASTNAMES = ['佐藤','鈴木','高橋','田中','伊藤','渡辺','山本','中村','小林','加藤','吉田','山田','佐々木','山口','松本','井上','木村','林','斎藤','清水'];
+var FIRST_M = ['太郎','健太','大輔','直樹','翔太','拓海','蓮','悠斗','大和','一郎','亮','慎司','俊介','啓太','智也','海斗','颯太','悠人','光','剛'];
+var FIRST_F = ['花子','美咲','葵','陽菜','さくら','結衣','恵子','真由美','千尋','美月','凛','七海','彩花','莉子','明日香','沙織','菜々子','遥','愛','瞳'];
+var NICKS = {
+  sales:['伝説の営業','契約の鬼','クロージングの神','歩く受注','沈黙のトップセールス'],
+  eng:['静かなる天才','10倍エンジニア','バグを許さぬ者','深夜のコミット王','アーキテクトの化身'],
+  mkt:['バズの錬金術師','市場の予言者','ブランドの魔術師','拡散の申し子','CVRの支配者'],
+  hr:['人を見る目','採用の達人','組織の設計者','伝説の面接官','文化の守護者'],
+  acc:['数字の番人','ミスなき決算','キャッシュの守護神','監査知らず','原価の魔術師']
+};
+
+/* =====================================================================
+   v2.0 pure: DQ風ステータス・XP・クエスト・アイテム定義
+===================================================================== */
+var STAT_KEYS = ['atk','tec','pln','vit','luk'];
+var STAT_DEFS = {
+  atk:{name:'営業力', ico:'⚔️'},
+  tec:{name:'技術力', ico:'🔧'},
+  pln:{name:'企画力', ico:'💡'},
+  vit:{name:'体力',   ico:'❤️'},
+  luk:{name:'運',     ico:'🍀'}
+};
+var JOB_MAIN_STAT  = {sales:'atk', eng:'tec', mkt:'pln', hr:'vit', acc:'luk'};
+var DEPT_MAIN_STAT = {sales:'atk', dev:'tec', mkt:'pln', hr:'vit', acc:'luk'};
+var RAR_STAT_BASE = {N:8, R:14, SR:24, SSR:40, UR:70};
+var LV_CAP = {N:50, R:60, SR:70, SSR:85, UR:99};
+var MAIN_STAT_MULT = 1.4;   // 職種の主要ステータス倍率
+var PROD_CONV = 0.5;        // ステータス→生産力換算係数（v1のLv1 N ≒ 10/秒相当に調整）
+
+/* ---------- v2 pure: stats ---------- */
+function genStatsLv1(e){
+  var rnd = mulberry32((((e.seed>>>0) || 1) + 0x51A7) | 0);
+  var base = RAR_STAT_BASE[e.rar], main = JOB_MAIN_STAT[e.job];
+  var st = {};
+  for (var i=0;i<STAT_KEYS.length;i++){
+    var k = STAT_KEYS[i];
+    var v = base * (0.8 + rnd()*0.4);   // seed由来の個体差 0.8〜1.2
+    if (k === main) v *= MAIN_STAT_MULT;
+    st[k] = Math.max(1, Math.round(v));
+  }
+  return st;
+}
+function genTalents(e){ /* 才能=レベルアップ時の成長率 1〜3（seedから決定論生成） */
+  var rnd = mulberry32((((e.seed>>>0) || 1) + 0x7A1E) | 0);
+  var t = {};
+  for (var i=0;i<STAT_KEYS.length;i++) t[STAT_KEYS[i]] = 1 + Math.floor(rnd()*3);
+  return t;
+}
+function levelGain(talent, rng){ /* +rand(0..才能)+才能/2 */
+  return Math.floor(rng()*(talent+1)) + Math.floor(talent/2);
+}
+function levelUpStats(e, rng){
+  rng = rng || Math.random;
+  var t = genTalents(e), gains = {};
+  empStats(e);
+  for (var i=0;i<STAT_KEYS.length;i++){
+    var k = STAT_KEYS[i], g = levelGain(t[k], rng);
+    if (g > 0){ e.stats[k] += g; gains[k] = g; }
+  }
+  return gains;
+}
+function statsAtLevel(e, lv){ /* 現lvとレア・seedから決定論逆算（v1→v2移行用） */
+  var st = genStatsLv1(e);
+  var t = genTalents(e);
+  var rnd = mulberry32(((((e.seed>>>0) || 1) ^ 0x3C6EF35) | 0));
+  for (var l=2; l<=lv; l++){
+    for (var i=0;i<STAT_KEYS.length;i++){
+      var k = STAT_KEYS[i];
+      st[k] += levelGain(t[k], rnd);
+    }
+  }
+  return st;
+}
+function empStats(e){
+  if (!e.stats) e.stats = statsAtLevel(e, e.lv || 1);
+  return e.stats;
+}
+/* ---------- v2 pure: xp / level ---------- */
+function xpNeed(lv){ return Math.ceil(80 * Math.pow(1.35, lv-1)); }
+function gainXp(e, amount, rng){
+  var cap = LV_CAP[e.rar];
+  if (e.lv >= cap){ e.xp = 0; return []; }
+  e.xp = (e.xp||0) + amount;
+  var ups = [];
+  while (e.lv < cap && e.xp >= xpNeed(e.lv)){
+    e.xp -= xpNeed(e.lv);
+    e.lv++;
+    ups.push({lv:e.lv, gains:levelUpStats(e, rng)});
+  }
+  if (e.lv >= cap) e.xp = 0;
+  return ups;
+}
+/* ---------- v2 pure: items（36種 N12/R10/SR8/SSR4/UR2） ---------- */
+var ITEM_CATS = {
+  xp:    {name:'研修系',     ico:'🎓', bonusShort:'獲得XP+10%'},
+  stat:  {name:'強化系',     ico:'💪', bonusShort:'全社員 全ステ+2'},
+  buff:  {name:'バフ系',     ico:'⏱️', bonusShort:'バフ時間+20%'},
+  ticket:{name:'チケット系', ico:'🎫', bonusShort:''}
+};
+var ITEMS = [
+  /* 研修系（対象社員にXP付与）10種 */
+  {id:'bizbook',   name:'ビジネス書',               rar:'N',   cat:'xp', ico:'📕', xp:150},
+  {id:'olcourse',  name:'オンライン講座',           rar:'N',   cat:'xp', ico:'🖥️', xp:300},
+  {id:'morning',   name:'朝活セミナー',             rar:'N',   cat:'xp', ico:'🌅', xp:600},
+  {id:'extrain',   name:'外部研修チケット',         rar:'R',   cat:'xp', ico:'🏫', xp:1500},
+  {id:'shikaku',   name:'資格取得ドリル',           rar:'R',   cat:'xp', ico:'📝', xp:2500},
+  {id:'mentor',    name:'メンター面談',             rar:'R',   cat:'xp', ico:'🗣️', xp:4000},
+  {id:'excoach',   name:'エグゼクティブコーチング', rar:'SR',  cat:'xp', ico:'🎩', xp:9000},
+  {id:'overseas',  name:'海外カンファレンス',       rar:'SR',  cat:'xp', ico:'✈️', xp:15000},
+  {id:'legendtr',  name:'伝説の社内研修',           rar:'SSR', cat:'xp', ico:'🏆', xp:40000},
+  {id:'founder',   name:'創業者の直伝ノート',       rar:'UR',  cat:'xp', ico:'📜', xp:99999},
+  /* 強化系（対象社員のステ永続+）13種 */
+  {id:'drink',     name:'栄養ドリンク',       rar:'N',   cat:'stat', ico:'🧃', stat:{vit:2}},
+  {id:'meishi',    name:'高級名刺入れ',       rar:'N',   cat:'stat', ico:'💼', stat:{atk:2}},
+  {id:'keyboard',  name:'静音キーボード',     rar:'N',   cat:'stat', ico:'⌨️', stat:{tec:2}},
+  {id:'ideanote',  name:'アイデアノート',     rar:'N',   cat:'stat', ico:'📓', stat:{pln:2}},
+  {id:'omamori',   name:'幸運のお守り',       rar:'N',   cat:'stat', ico:'🍀', stat:{luk:2}},
+  {id:'eigyo',     name:'営業の極意',         rar:'R',   cat:'stat', ico:'📗', stat:{atk:3}},
+  {id:'typing',    name:'神速タイピング術',   rar:'R',   cat:'stat', ico:'⚡', stat:{tec:3}},
+  {id:'kikaku',    name:'企画の虎の巻',       rar:'R',   cat:'stat', ico:'📙', stat:{pln:3}},
+  {id:'tetsujin',  name:'鉄人の休息法',       rar:'SR',  cat:'stat', ico:'🛌', stat:{vit:6}},
+  {id:'manekineko',name:'強運の招き猫',       rar:'SR',  cat:'stat', ico:'🐱', stat:{luk:6}},
+  {id:'sanbo',     name:'参謀の思考法',       rar:'SR',  cat:'stat', ico:'♟️', stat:{pln:6}},
+  {id:'hirameki',  name:'天才のひらめき',     rar:'SSR', cat:'stat', ico:'💡', stat:{all:5}},
+  {id:'kamisama',  name:'経営の神様の教え',   rar:'UR',  cat:'stat', ico:'⛩️', stat:{all:12}},
+  /* バフ系（時限・全社効果・重複不可）7種 */
+  {id:'coffee',    name:'缶コーヒー差し入れ', rar:'N',   cat:'buff', ico:'☕', buff:{kind:'income', mult:1.5, dur:180}},
+  {id:'noteiji',   name:'ノー残業デー宣言',   rar:'N',   cat:'buff', ico:'🔔', buff:{kind:'xp',     mult:2,   dur:300}},
+  {id:'pocket',    name:'社長のポケットマネー', rar:'R', cat:'buff', ico:'💰', buff:{kind:'income', mult:2,   dur:600}},
+  {id:'focus',     name:'全社集中タイム',     rar:'R',   cat:'buff', ico:'🧠', buff:{kind:'xp',     mult:3,   dur:600}},
+  {id:'gouhou',    name:'快進撃の号砲',       rar:'SR',  cat:'buff', ico:'📯', buff:{kind:'income', mult:3,   dur:300}},
+  {id:'kakusei',   name:'覚醒の朝礼',         rar:'SR',  cat:'buff', ico:'🌄', buff:{kind:'xp',     mult:5,   dur:300}},
+  {id:'kabunushi', name:'株主総会大成功',     rar:'SSR', cat:'buff', ico:'🎊', buff:{kind:'income', mult:5,   dur:600}},
+  /* チケット系（パック購入時に自動適用確認）6種 */
+  {id:'t10',       name:'パック割引券10%',       rar:'N',   cat:'ticket', ico:'🎫', ticket:{disc:0.10}},
+  {id:'t30',       name:'パック割引券30%',       rar:'N',   cat:'ticket', ico:'🎫', ticket:{disc:0.30}},
+  {id:'t50',       name:'パック割引券50%',       rar:'R',   cat:'ticket', ico:'🎫', ticket:{disc:0.50}},
+  {id:'tfree_n',   name:'ノーマルパック無料券',   rar:'R',   cat:'ticket', ico:'🆓', ticket:{free:'normal'}},
+  {id:'tfree_g',   name:'ゴールドパック無料券',   rar:'SR',  cat:'ticket', ico:'🆓', ticket:{free:'gold'}},
+  {id:'tfree_p',   name:'プレミアパック無料券',   rar:'SSR', cat:'ticket', ico:'🆓', ticket:{free:'premium'}}
+];
+var ITEM_MAP = {};
+ITEMS.forEach(function(it){ ITEM_MAP[it.id] = it; });
+var ITEMS_BY_RAR = {};
+RARS.forEach(function(r){ ITEMS_BY_RAR[r] = ITEMS.filter(function(it){ return it.rar === r; }); });
+var SHOP_PRICES = {N:30000, R:250000};
+
+function addItem(state, itemId, n){
+  state.items[itemId] = (state.items[itemId]||0) + (n||1);
+  state.itemsSeen[itemId] = true;
+}
+/* ---------- v2 pure: dex（図鑑） ---------- */
+function dexComplete(state, catOrAll){
+  var seen = state.itemsSeen || {};
+  for (var i=0;i<ITEMS.length;i++){
+    if (catOrAll !== 'all' && ITEMS[i].cat !== catOrAll) continue;
+    if (!seen[ITEMS[i].id]) return false;
+  }
+  return true;
+}
+function dexStatBonus(state){ return dexComplete(state,'stat') ? 2 : 0; }
+function dexCount(state){
+  var seen = state.itemsSeen || {}, n = 0;
+  for (var i=0;i<ITEMS.length;i++) if (seen[ITEMS[i].id]) n++;
+  return n;
+}
+/* ---------- v2 pure: buff ---------- */
+function buffMult(state, kind, now){
+  var b = state.buff;
+  return (b && b.kind === kind && b.until > now) ? b.mult : 1;
+}
+function xpRate(state, now){ /* 基礎1/秒 × 会社ステージ倍率 × XPバフ × 図鑑ボーナス */
+  return 1 * STAGES[state.stageIdx].mult * buffMult(state, 'xp', now) * (dexComplete(state,'xp') ? 1.1 : 1);
+}
+/* ---------- v2 pure: quests（12種×4ティア） ---------- */
+var QUEST_TIER_DEFS = {
+  bronze:{name:'ブロンズ', ico:'🥉', cd:60,  dur:12, xp:300,   moneyBase:30000,    moneySec:30,  drop:55, rars:[['N',85],['R',15]]},
+  silver:{name:'シルバー', ico:'🥈', cd:180, dur:25, xp:1200,  moneyBase:200000,   moneySec:90,  drop:65, rars:[['N',40],['R',45],['SR',15]]},
+  gold:  {name:'ゴールド', ico:'🥇', cd:300, dur:40, xp:4000,  moneyBase:2000000,  moneySec:240, drop:75, rars:[['R',40],['SR',40],['SSR',20]]},
+  legend:{name:'伝説',     ico:'🌈', cd:600, dur:60, xp:12000, moneyBase:30000000, moneySec:600, drop:90, rars:[['SR',40],['SSR',40],['UR',20]]}
+};
+var QUESTS = [
+  {id:'b1', tier:'bronze', name:'飛び込み営業100件',   ico:'🚪', req:{atk:35}},
+  {id:'b2', tier:'bronze', name:'徹夜のバグ修正',       ico:'🐛', req:{tec:35}},
+  {id:'b3', tier:'bronze', name:'SNSバズ企画',          ico:'📱', req:{pln:35}},
+  {id:'s1', tier:'silver', name:'深夜の障害対応',       ico:'🚨', req:{tec:70, vit:70}},
+  {id:'s2', tier:'silver', name:'展示会ブース出展',     ico:'🎪', req:{atk:70, pln:70}},
+  {id:'s3', tier:'silver', name:'月末の請求書ラッシュ', ico:'🧾', req:{luk:70, vit:70}},
+  {id:'g1', tier:'gold',   name:'大型コンペ',           ico:'🏟️', req:{atk:220, pln:220}},
+  {id:'g2', tier:'gold',   name:'基幹システム刷新',     ico:'🖥️', req:{tec:220, pln:220}},
+  {id:'g3', tier:'gold',   name:'全社採用フェス',       ico:'🤝', req:{vit:220, atk:220}},
+  {id:'l1', tier:'legend', name:'上場監査対応',         ico:'⚖️', req:{luk:600, tec:600}},
+  {id:'l2', tier:'legend', name:'世界同時ローンチ',     ico:'🌍', req:{atk:500, tec:500, pln:500}},
+  {id:'l3', tier:'legend', name:'買収交渉ファイナル',   ico:'🤵', req:{atk:700, luk:700}}
+];
+var QUEST_MAP = {};
+QUESTS.forEach(function(q){ QUEST_MAP[q.id] = q; });
+var QUEST_MSGS = ['奮闘中…','資料を読み込んでいる…','電話が鳴り止まない…','コーヒーを補給した！','会議室が白熱している…','キーボードの音が響く…','あと少しで突破口が…','チームの結束が高まっている！'];
+
+function questSuccessRate(quest, team, statBonus){
+  /* 成功率 = clamp(30 + 65×(チーム該当ステ合計/要求値), 30, 95) + min(5, luk合計/50) */
+  var b = statBonus || 0, have = 0, need = 0, lukSum = 0;
+  var keys = Object.keys(quest.req);
+  for (var i=0;i<keys.length;i++){
+    var k = keys[i];
+    need += quest.req[k];
+    for (var j=0;j<team.length;j++) have += empStats(team[j])[k] + b;
+  }
+  for (var m=0;m<team.length;m++) lukSum += empStats(team[m]).luk + b;
+  var base = 30 + 65 * (need > 0 ? have/need : 1);
+  base = Math.max(30, Math.min(95, base));
+  return Math.min(100, base + Math.min(5, lukSum/50));
+}
+function rollQuestDrop(tier, lukSum, rng){
+  rng = rng || Math.random;
+  var t = QUEST_TIER_DEFS[tier];
+  var chance = Math.min(100, t.drop + (lukSum||0)/10); /* 運がドロップ率に寄与 */
+  if (rng()*100 >= chance) return null;
+  var r = rng()*100, acc = 0, rar = t.rars[t.rars.length-1][0];
+  for (var i=0;i<t.rars.length;i++){
+    acc += t.rars[i][1];
+    if (r < acc){ rar = t.rars[i][0]; break; }
+  }
+  var pool = ITEMS_BY_RAR[rar];
+  return pool[Math.floor(rng()*pool.length)].id;
+}
+function questReward(quest, income){
+  var t = QUEST_TIER_DEFS[quest.tier];
+  return {money: Math.round(t.moneyBase + (income||0)*t.moneySec), xp: t.xp};
+}
+/* ---------- v2 pure: save migration v1→v2 ---------- */
+function migrateV1toV2(st){
+  if (!st) return st;
+  migrateEmployees(st);
+  if (Array.isArray(st.employees)){
+    st.employees.forEach(function(e){
+      if (typeof e.lv !== 'number' || e.lv < 1) e.lv = 1;
+      if (!e.stats) e.stats = statsAtLevel(e, e.lv); /* lvは維持しステを逆算生成 */
+      if (typeof e.xp !== 'number') e.xp = 0;
+    });
+  }
+  if (!st.items) st.items = {};
+  if (!st.itemsSeen) st.itemsSeen = {};
+  if (!st.questCd) st.questCd = {};
+  if (st.buff === undefined) st.buff = null;
+  if (st.activeQuest === undefined) st.activeQuest = null;
+  if (!st.dexAwarded) st.dexAwarded = {};
+  if (!st.stats) st.stats = {packs:0, ssr:0, ur:0, fuses:0, expands:0};
+  if (typeof st.stats.quests !== 'number') st.stats.quests = 0;
+  if (typeof st.stats.questWins !== 'number') st.stats.questWins = 0;
+  if (typeof st.stats.itemsUsed !== 'number') st.stats.itemsUsed = 0;
+  st.v = 2; /* v3への昇格は migrateV2toV3 が担当 */
+  return st;
+}
+
+/* ---------- pure: gacha ---------- */
+function drawRarity(rates, rnd){
+  var r = rnd*100, acc = 0;
+  for (var i=0;i<RARS.length;i++){ acc += rates[RARS[i]]; if (r < acc) return RARS[i]; }
+  return 'UR';
+}
+function drawPackRarities(packId, rng){
+  rng = rng || Math.random;
+  var p = PACKS[packId], res = [];
+  for (var i=0;i<p.cards;i++) res.push(drawRarity(p.rates, rng()));
+  if (p.guarantee){
+    var hasSR = res.some(function(r){ return r==='SR'||r==='SSR'||r==='UR'; });
+    if (!hasSR) res[Math.floor(rng()*res.length)] = drawRarity(GUARANTEE_RATES, rng());
+  }
+  return res;
+}
+/* =====================================================================
+   v3.0 pure: 既定社員マスター100名（固定ロスター制）
+   - ランダム生成ガチャを廃止。全端末・全セーブで同一のマスター100名から排出。
+   - 構成: N30(各職種6) / R25(各職種5) / SR20(各職種4) / SSR15(各職種3) / UR10(各職種2) ＝ 計100名
+   - Math.random 不使用。mulberry32(固定シード) と mid由来ハッシュのみで決定論生成。
+===================================================================== */
+var ROSTER_PLAN = [
+  {rar:'N',   prefix:'n',   perJob:6},
+  {rar:'R',   prefix:'r',   perJob:5},
+  {rar:'SR',  prefix:'sr',  perJob:4},
+  {rar:'SSR', prefix:'ssr', perJob:3},
+  {rar:'UR',  prefix:'ur',  perJob:2}
+];
+var ROSTER_SEED = 0x1B2A4A; /* 固定シード（ネイビー #1B2A4A に由来） */
+var AWAKEN_CAP = 10;
+var AWAKEN_PROD_STEP = 0.05;   /* 覚醒1段階ごとの生産力倍率 +5% */
+var REFUND_RATE = 0.2;         /* 覚醒上限後の重複はパック価格の20%を還元 */
+function midSeed(mid){ /* mid文字列→32bit顔シード（FNV-1a・決定論） */
+  var h = 2166136261;
+  for (var i=0;i<mid.length;i++){ h ^= mid.charCodeAt(i); h = Math.imul(h, 16777619); }
+  h = (h >>> 0) % 2147483647;
+  return h || 1;
+}
+function buildRoster(){
+  var rng = mulberry32(ROSTER_SEED);
+  var used = {}, roster = [], counter = 0;
+  var nickUsed = {}; /* 二つ名は職種ごとに NICKS[job] を順番に固定割当（SSR→UR で計5枠） */
+  for (var j=0;j<JOBS.length;j++) nickUsed[JOBS[j]] = 0;
+  for (var p=0;p<ROSTER_PLAN.length;p++){
+    var plan = ROSTER_PLAN[p], num = 0;
+    for (var ji=0;ji<JOBS.length;ji++){
+      var job = JOBS[ji];
+      for (var i=0;i<plan.perJob;i++){
+        num++;
+        var mid = plan.prefix + (num < 10 ? '0' : '') + num;
+        var g = (counter++ % 2) ? 'f' : 'm'; /* 交互割当で性別ちょうど半々 */
+        var ln, fn, key;
+        do {
+          ln = LASTNAMES[Math.floor(rng()*LASTNAMES.length)];
+          fn = (g === 'm' ? FIRST_M : FIRST_F)[Math.floor(rng()*20)];
+          key = ln + fn;
+        } while (used[key]); /* フルネーム重複ゼロ保証 */
+        used[key] = 1;
+        var seed = midSeed(mid); /* 顔はmid由来で永久固定 */
+        var nick = '';
+        if (plan.rar === 'SSR' || plan.rar === 'UR') nick = NICKS[job][nickUsed[job]++];
+        roster.push({
+          mid: mid, ln: ln, fn: fn, g: g, seed: seed,
+          job: job, rar: plan.rar, nick: nick,
+          talent: genTalents({seed: seed})
+        });
+      }
+    }
+  }
+  return roster;
+}
+var ROSTER = buildRoster();
+/* ---------- 実写キャラクター（キャラクター設計書 準拠・先行1名） ---------- */
+var ROSTER_OVERRIDES = {
+  ur05: {ln:'碧羅', fn:'燈花', g:'f', nick:'産業革命者'}
+};
+ROSTER.forEach(function(m){
+  var o = ROSTER_OVERRIDES[m.mid];
+  if (o) Object.keys(o).forEach(function(k){ m[k] = o[k]; });
+});
+var PHOTOS = {
+  ur05: 'data:image/jpeg;base64,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'
+};
+function portraitHTML(e, size){
+  if (e && e.mid && PHOTOS[e.mid]){
+    return '<img src="' + PHOTOS[e.mid] + '" width="' + size + '" height="' + size + '" style="border-radius:50%;object-fit:cover;display:block;" alt=""/>';
+  }
+  return portraitSVG(e, size);
+}
+/* マスター側の改名・写真化を既存セーブへ反映 */
+function refreshFromRoster(st){
+  if (!st || !Array.isArray(st.employees)) return st;
+  st.employees.forEach(function(e){
+    var m = e.mid && ROSTER_MAP[e.mid];
+    if (m){ e.ln = m.ln; e.fn = m.fn; e.g = m.g; e.seed = m.seed; e.nick = m.nick; }
+  });
+  return st;
+}
+var ROSTER_MAP = {};
+var ROSTER_BY_RAR = {N:[], R:[], SR:[], SSR:[], UR:[]};
+ROSTER.forEach(function(m){ ROSTER_MAP[m.mid] = m; ROSTER_BY_RAR[m.rar].push(m); });
+
+/* ---------- v3 pure: 採用・覚醒 ---------- */
+function createFromMaster(state, m){
+  state.nextId = (state.nextId||0) + 1;
+  var e = {
+    id: state.nextId, mid: m.mid,
+    ln: m.ln, fn: m.fn, g: m.g, seed: m.seed, nick: m.nick,
+    job: m.job, rar: m.rar, lv: 1, xp: 0, dept: null, awaken: 0
+  };
+  e.stats = genStatsLv1(e);
+  return e;
+}
+function findByMid(state, mid){
+  for (var i=0;i<state.employees.length;i++) if (state.employees[i].mid === mid) return state.employees[i];
+  return null;
+}
+function awakenEmployee(e){ /* 覚醒+1: 全ステータス+（才能値×2）を即時付与 */
+  var t = genTalents(e), s = empStats(e);
+  e.awaken = (e.awaken||0) + 1;
+  for (var i=0;i<STAT_KEYS.length;i++) s[STAT_KEYS[i]] += t[STAT_KEYS[i]] * 2;
+  return e.awaken;
+}
+function awakenMult(e){ return 1 + AWAKEN_PROD_STEP * (e && e.awaken ? e.awaken : 0); }
+function acquireMaster(state, mid, packPrice){
+  /* 未所持→採用 / 所持→覚醒+1 / 覚醒上限→資金還元（パック価格の20%） */
+  var m = ROSTER_MAP[mid];
+  if (!m) return null;
+  var e = findByMid(state, mid);
+  if (!e){
+    e = createFromMaster(state, m);
+    state.employees.push(e);
+    return {type:'new', emp:e, master:m};
+  }
+  if ((e.awaken||0) < AWAKEN_CAP){
+    var a = awakenEmployee(e);
+    return {type:'awaken', emp:e, master:m, awaken:a};
+  }
+  var refund = Math.round((packPrice||0) * REFUND_RATE);
+  state.money += refund;
+  return {type:'refund', emp:e, master:m, amount:refund};
+}
+function openDraw(state, rar, packPrice, rng){ /* レア決定後: 同レアのマスターから1名抽選 */
+  rng = rng || Math.random;
+  var pool = ROSTER_BY_RAR[rar];
+  var m = pool[Math.floor(rng()*pool.length)];
+  return acquireMaster(state, m.mid, packPrice);
+}
+/* ---------- v3 pure: 社員図鑑 ---------- */
+var EMP_DEX_TIERS = [[25,0.02],[50,0.04],[75,0.06],[100,0.10]]; /* コンプ報酬（重複加算） */
+function empDexCount(state){
+  var seen = {}, n = 0;
+  for (var i=0;i<state.employees.length;i++){
+    var mid = state.employees[i].mid;
+    if (mid && !seen[mid]){ seen[mid] = 1; n++; }
+  }
+  return n;
+}
+function empDexMult(state){
+  var c = empDexCount(state), m = 1;
+  for (var i=0;i<EMP_DEX_TIERS.length;i++) if (c >= EMP_DEX_TIERS[i][0]) m += EMP_DEX_TIERS[i][1];
+  return m;
+}
+/* ---------- v3 pure: save migration v2→v3 ---------- */
+function migrateV2toV3(st){
+  if (!st) return st;
+  if (st.v >= 3) return st;
+  var olds = Array.isArray(st.employees) ? st.employees.slice() : [];
+  olds.sort(function(a,b){ return (b.lv||1) - (a.lv||1); }); /* 高Lv社員から優先的にマスター枠を確保 */
+  var kept = [];
+  olds.forEach(function(e){
+    if (typeof e.lv !== 'number' || e.lv < 1) e.lv = 1;
+    if (typeof e.xp !== 'number') e.xp = 0;
+    if (!e.stats) e.stats = statsAtLevel(e, e.lv);
+    /* 同レアリティ×同職種の未所持マスターに割当（lv/xp/stats/dept引継ぎ・名前と顔はマスター側） */
+    var m = null;
+    for (var i=0;i<ROSTER.length;i++){
+      var c = ROSTER[i];
+      if (c.rar !== e.rar || c.job !== e.job) continue;
+      var taken = false;
+      for (var k=0;k<kept.length;k++) if (kept[k].mid === c.mid){ taken = true; break; }
+      if (!taken){ m = c; break; }
+    }
+    if (m){
+      e.mid = m.mid; e.ln = m.ln; e.fn = m.fn; e.g = m.g; e.seed = m.seed; e.nick = m.nick;
+      e.awaken = 0;
+      kept.push(e);
+    } else {
+      /* 同枠売り切れ → 所持済みの同レア同職種社員の覚醒+1に変換（本人のdept配属は消滅） */
+      var best = null;
+      for (var b=0;b<kept.length;b++){
+        var x = kept[b];
+        if (x.rar !== e.rar || x.job !== e.job) continue;
+        if ((x.awaken||0) >= AWAKEN_CAP) continue;
+        if (!best || (x.awaken||0) < (best.awaken||0)) best = x;
+      }
+      if (best) awakenEmployee(best);
+      /* 全員覚醒上限の場合は静かに消化（発生し得るのは覚醒110段階超の理論上のみ） */
+    }
+  });
+  st.employees = kept;
+  if (!st.empDexAwarded) st.empDexAwarded = {};
+  st.v = 3;
+  return st;
+}
+/* ---------- v3 pure: 一括マイグレーション（v1→v2→v3 連鎖） ---------- */
+function migrateToLatest(st){
+  if (!st) return st;
+  migrateEmployees(st);
+  if (!st.v || st.v < 2) migrateV1toV2(st);
+  if (st.v < 3) migrateV2toV3(st);
+  if (!st.empDexAwarded) st.empDexAwarded = {};
+  st.employees.forEach(function(e){ if (typeof e.awaken !== 'number') e.awaken = 0; });
+  refreshFromRoster(st);
+  return st;
+}
+/* ---------- pure: employees ---------- */
+/* 旧セーブ互換: seed/性別のない社員に付与する */
+function migrateEmployees(st){
+  if (!st || !Array.isArray(st.employees)) return st;
+  st.employees.forEach(function(e){
+    if (typeof e.seed !== 'number') e.seed = Math.floor(Math.random()*2147483647);
+    if (e.g !== 'm' && e.g !== 'f'){
+      e.g = FIRST_F.indexOf(e.fn) >= 0 ? 'f' : FIRST_M.indexOf(e.fn) >= 0 ? 'm' : (e.seed % 2 ? 'f' : 'm');
+    }
+  });
+  return st;
+}
+/* v2: 生産力 = 部署の主要ステータス ＋ 他ステ合計×0.15（換算係数PROD_CONV・職種一致×1.5維持） */
+function empProdIn(e, deptId, statBonus){
+  var s = empStats(e), b = statBonus || 0;
+  var main = deptId ? DEPT_MAIN_STAT[deptId] : JOB_MAIN_STAT[e.job];
+  var sub = 0;
+  for (var i=0;i<STAT_KEYS.length;i++){
+    var k = STAT_KEYS[i];
+    if (k !== main) sub += s[k] + b;
+  }
+  var p = ((s[main] + b) + sub * 0.15) * PROD_CONV;
+  if (deptId && DEPTS[deptId].job === e.job) p *= 1.5;
+  p *= awakenMult(e); /* v3: 覚醒 ×(1+0.05×awaken) */
+  return p;
+}
+function empBaseProd(e){ return empProdIn(e, null); }
+function empProd(e, statBonus){ return empProdIn(e, e.dept, statBonus); }
+function deptSum(state, d){
+  var b = dexStatBonus(state), s = 0;
+  for (var i=0;i<state.employees.length;i++){
+    var e = state.employees[i];
+    if (e.dept === d) s += empProdIn(e, d, b);
+  }
+  return s;
+}
+/* ---------- pure: derived stats ---------- */
+function calcDerived(state, now){
+  now = now || Date.now();
+  var salesSum = deptSum(state,'sales');
+  var devSum   = deptSum(state,'dev');
+  var mktSum   = deptSum(state,'mkt');
+  var hrSum    = deptSum(state,'hr');
+  var accSum   = deptSum(state,'acc');
+  var devMult  = 1 + Math.min(9, Math.sqrt(Math.max(0,state.productPower)) * 0.05);
+  var mktCoef  = mktSum / 20;
+  var mktMult  = Math.min(3, 1 + 0.05 * mktCoef);
+  var hrDisc   = Math.min(0.30, hrSum * 0.0003);
+  var offRate  = Math.min(0.90, 0.50 + accSum * 0.0004);
+  var stage    = STAGES[state.stageIdx];
+  var buffInc  = buffMult(state, 'income', now);          // v2: バフ系アイテム
+  var dexInc   = dexComplete(state, 'all') ? 1.1 : 1;     // v2: 全アイテム図鑑コンプで売上+10%
+  var edexInc  = empDexMult(state);                       // v3: 社員図鑑コンプ報酬（25/50/75/100名で+2/4/6/10%重複加算）
+  var income   = salesSum * devMult * mktMult * stage.mult * buffInc * dexInc * edexInc;
+  return {salesSum:salesSum, devSum:devSum, mktSum:mktSum, hrSum:hrSum, accSum:accSum,
+          devMult:devMult, mktMult:mktMult, hrDisc:hrDisc, offRate:offRate,
+          stageMult:stage.mult, buffInc:buffInc, edexInc:edexInc, income:income};
+}
+/* ---------- pure: costs ---------- */
+function slotCost(slots){ return Math.round(80000 * Math.pow(2.5, slots - 2)); }
+function packPrice(packId, hrDisc){ return Math.round(PACKS[packId].price * (1 - (hrDisc||0))); }
+/* ---------- pure: offline ---------- */
+function calcOffline(elapsedMs, incomePerSec, offRate){
+  var sec = Math.min(Math.max(0, elapsedMs/1000), OFFLINE_CAP_SEC);
+  return {sec: sec, gain: sec * incomePerSec * offRate};
+}
+/* ---------- pure: format ---------- */
+function fmtMoney(n){
+  if (n < 0) return '-' + fmtMoney(-n);
+  var units = [[1e16,'京'],[1e12,'兆'],[1e8,'億'],[1e4,'万']];
+  for (var i=0;i<units.length;i++){
+    if (n >= units[i][0]){
+      var x = n / units[i][0];
+      var s = x >= 100 ? Math.floor(x).toLocaleString('ja-JP') : (Math.floor(x*10)/10).toFixed(1);
+      return '¥' + s + units[i][1];
+    }
+  }
+  return '¥' + Math.floor(n).toLocaleString('ja-JP');
+}
+function fmtDur(sec){
+  var h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60);
+  if (h > 0) return h + '時間' + m + '分';
+  if (m > 0) return m + '分';
+  return Math.floor(sec) + '秒';
+}
+/* ---------- pure: portrait generator (SVG) ---------- */
+function mulberry32(a){
+  return function(){
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    var t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+var SKINS = [['#FFE3CF','#EFC0A0'],['#FFD8B9','#E8B48C'],['#F0C49E','#D5A276']];
+var HAIRS = [['#30303B','#54546A'],['#3B2B21','#63493A'],['#6B4A2F','#95704E'],['#787885','#9C9CAF'],['#A9744C','#CB9A6E'],['#DFDBE8','#F8F5FE']];
+var EYES = ['#4A3327','#31506E','#3E5B3A','#5C4370','#7A4E2A'];
+function _spark(x,y,r){
+  return '<path d="M'+x+' '+(y-r*1.8)+' L'+(x+r*.5)+' '+(y-r*.5)+' L'+(x+r*1.8)+' '+y+' L'+(x+r*.5)+' '+(y+r*.5)+' L'+x+' '+(y+r*1.8)+' L'+(x-r*.5)+' '+(y+r*.5)+' L'+(x-r*1.8)+' '+y+' L'+(x-r*.5)+' '+(y-r*.5)+' Z" fill="#fff" opacity=".9"/>';
+}
+function _hairF(st, c){
+  var b = c[0], h = c[1];
+  var hl = '<path d="M38 23.5 Q47 18.5 59 21.5" stroke="'+h+'" stroke-width="2.4" fill="none" opacity=".85" stroke-linecap="round"/>';
+  var back = '', front = '';
+  if (st===0){ /* ロングストレート */
+    back = '<path d="M28 44 Q25 14 50 13 Q75 14 72 44 L74 90 Q62 97 50 97 Q38 97 26 90 Z" fill="'+b+'"/>';
+    front = '<path d="M33 44 Q31 18 50 16 Q69 18 67 44 Q64 29 56 27 Q52 33 50 33 Q45 31 44 27 Q36 29 33 44 Z" fill="'+b+'"/>'
+      + '<path d="M31.5 40 Q28 62 30 80 Q33.5 85 37 80 Q34.5 60 36.5 42 Z" fill="'+b+'"/>'
+      + '<path d="M68.5 40 Q72 62 70 80 Q66.5 85 63 80 Q65.5 60 63.5 42 Z" fill="'+b+'"/>' + hl;
+  } else if (st===1){ /* ゆるふわ巻き */
+    back = '<path d="M28 44 Q25 14 50 13 Q75 14 72 44 L73 58 Q78 66 72 72 Q78 82 70 88 Q60 96 50 96 Q40 96 30 88 Q22 82 28 72 Q22 66 27 58 Z" fill="'+b+'"/>';
+    front = '<path d="M33 44 Q31 18 50 16 Q69 18 67 44 Q62 27 46 27 Q36 30 33 44 Z" fill="'+b+'"/>' + hl;
+  } else if (st===2){ /* ポニーテール */
+    back = '<path d="M31 44 Q29 14 50 13 Q71 14 69 44 Q69 50 65 51 L35 51 Q31 50 31 44 Z" fill="'+b+'"/>'
+      + '<path d="M67 28 Q86 32 82 60 Q79 78 70 74 Q77 56 66 38 Z" fill="'+b+'"/>';
+    front = '<path d="M33 42 Q31 17 50 15 Q69 17 67 42 Q63 26 50 25 Q37 26 33 42 Z" fill="'+b+'"/>' + hl
+      + '<circle cx="68.5" cy="31" r="2.6" fill="#C9971F"/>';
+  } else if (st===3){ /* ボブ */
+    back = '<path d="M28 44 Q25 13 50 12 Q75 13 72 44 L72 58 Q72 67 61 67 L39 67 Q28 67 28 58 Z" fill="'+b+'"/>';
+    front = '<path d="M33 43 Q31 17 50 15 Q69 17 67 43 Q66 31 61 30 L39 30 Q34 31 33 43 Z" fill="'+b+'"/>' + hl;
+  } else if (st===4){ /* お団子 */
+    back = '<path d="M31 44 Q29 14 50 13 Q71 14 69 44 Q69 50 65 51 L35 51 Q31 50 31 44 Z" fill="'+b+'"/>';
+    front = '<circle cx="50" cy="12" r="7" fill="'+b+'"/><path d="M44.5 10.5 Q50 6.5 55.5 10.5" stroke="'+h+'" stroke-width="1.8" fill="none"/>'
+      + '<path d="M50 15 Q31 18 33 44 Q39 27 50 25 Q61 27 67 44 Q69 18 50 15 Z" fill="'+b+'"/>' + hl;
+  } else { /* ショート */
+    back = '<path d="M29 46 Q26 14 50 13 Q74 14 71 46 Q71 55 65 56 L35 56 Q29 55 29 46 Z" fill="'+b+'"/>';
+    front = '<path d="M32 48 Q29 15 50 14 Q71 15 68 48 Q66 32 57 28 Q43 25 37 31 Q32 37 32 48 Z" fill="'+b+'"/>' + hl;
+  }
+  return {back:back, front:front};
+}
+function _hairM(st, c){
+  var b = c[0], h = c[1];
+  var back = '<path d="M32 44 Q30 14 50 13 Q70 14 68 44 Q68 49 64 49 L36 49 Q32 49 32 44 Z" fill="'+b+'"/>';
+  var hl = '<path d="M39 22.5 Q47 18.5 58 21" stroke="'+h+'" stroke-width="2.2" fill="none" opacity=".85" stroke-linecap="round"/>';
+  var front = '';
+  if (st===0){ /* ツーブロック */
+    front = '<path d="M34 36 Q33 15 50 14 Q67 15 66 36 Q62 24 50 23 Q38 24 34 36 Z" fill="'+b+'"/>'
+      + '<path d="M33.5 35 q-.2 8 2 11.5 l2 -1.2 q-1.8 -4.5 -1.2 -10.3 Z" fill="'+b+'" opacity=".5"/>'
+      + '<path d="M66.5 35 q.2 8 -2 11.5 l-2 -1.2 q1.8 -4.5 1.2 -10.3 Z" fill="'+b+'" opacity=".5"/>' + hl;
+  } else if (st===1){ /* センターパート */
+    front = '<path d="M33 41 Q32 15 50 14 Q68 15 67 41 Q66 25 53 24 L50 31 L47 24 Q34 25 33 41 Z" fill="'+b+'"/>' + hl;
+  } else if (st===2){ /* ナチュラルショート */
+    front = '<path d="M33 39 Q32 15 50 14 Q68 15 67 39 Q66 27 61 26.5 L57.5 30.5 L53.5 26.5 L50 30.5 L46.5 26.5 L42.5 30.5 L39 26.5 Q34 27 33 39 Z" fill="'+b+'"/>' + hl;
+  } else if (st===3){ /* オールバック */
+    back = '<path d="M33 42 Q31 13 50 12 Q69 13 67 42 Q67 47 63 47 L37 47 Q33 47 33 42 Z" fill="'+b+'"/>';
+    front = '<path d="M34 33 Q33 12 50 11 Q67 12 66 33 Q63 21 50 19.5 Q37 21 34 33 Z" fill="'+b+'"/>'
+      + '<path d="M40 15.5 Q50 12.5 61 15.5 M37 19 Q50 15 63 19" stroke="'+h+'" stroke-width="1.4" fill="none" opacity=".8"/>';
+  } else if (st===4){ /* マッシュ */
+    front = '<path d="M33 43 Q31 15 50 14 Q69 15 67 43 Q64 31.5 50 31.5 Q36 31.5 33 43 Z" fill="'+b+'"/>' + hl;
+  } else { /* ウェーブ */
+    front = '<path d="M33 39 Q29.5 24 38 18.5 Q42 12.5 50 14 Q58 12.5 62 18.5 Q70.5 24 67 39 Q62 27 50 26 Q38 27 33 39 Z" fill="'+b+'"/>' + hl;
+  }
+  return {back:back, front:front};
+}
+function _clothes(job, fem){
+  var J = 'M15 102 Q17 78 33 72 L45 67.5 H55 L67 72 Q83 78 85 102 Z';
+  var shirtV = '<path d="M43.5 69 L50 81 L56.5 69 L54 67.5 H46 Z" fill="#FFFFFF"/>';
+  function tie(col){ return '<path d="M50 70 l2.8 2.8 L50 87 l-2.8 -14.2 Z" fill="'+col+'"/>'; }
+  function ribbon(col){
+    return '<path d="M50 71.5 l6.5 -2.8 v5.6 Z M50 71.5 l-6.5 -2.8 v5.6 Z" fill="'+col+'"/>' +
+      '<circle cx="50" cy="71.5" r="1.7" fill="'+col+'" stroke="#fff" stroke-width=".6"/>';
+  }
+  if (job==='sales'){
+    return '<path d="'+J+'" fill="#24345C"/>' + shirtV + (fem ? ribbon('#A33241') : tie('#A33241'));
+  }
+  if (job==='eng'){
+    return '<path d="'+J+'" fill="#4A566E"/>'
+      + '<path d="M33 72 Q50 61 67 72 Q59 66.5 50 66.5 Q41 66.5 33 72 Z" fill="#3C475C"/>'
+      + '<path d="M44 68 L50 76 L56 68 Z" fill="#E9EDF4"/>'
+      + '<path d="M45.5 73 l-1 8 M54.5 73 l1 8" stroke="#F2F5FA" stroke-width="1.2" fill="none" stroke-linecap="round"/>';
+  }
+  if (job==='mkt'){
+    return '<path d="M42.5 60 h15 v11 q-7.5 4.5 -15 0 Z" fill="#2B2B35"/>'
+      + '<path d="'+J+'" fill="#4B4B58"/>'
+      + '<path d="M45 67.5 L50 80 L55 67.5 Z" fill="#2B2B35"/>'
+      + '<path d="M45 67.5 L50 80 M55 67.5 L50 80" stroke="#5E5E6C" stroke-width="1" fill="none"/>';
+  }
+  if (job==='hr'){
+    return '<path d="'+J+'" fill="#C8B08D"/>' + shirtV
+      + '<circle cx="50" cy="85" r="1.1" fill="#8F7A57"/><circle cx="50" cy="92" r="1.1" fill="#8F7A57"/>'
+      + (fem ? ribbon('#7E9BC0') : '');
+  }
+  return '<path d="'+J+'" fill="#FFFFFF"/>'
+    + '<path d="M15 102 Q17 78 33 72 L45 67.5 L50 80 L44 102 Z" fill="#66708C"/>'
+    + '<path d="M85 102 Q83 78 67 72 L55 67.5 L50 80 L56 102 Z" fill="#66708C"/>'
+    + (fem ? ribbon('#37507B') : tie('#37507B'));
+}
+function _eye(cx, fem, c, dir){
+  var s = '<ellipse cx="'+cx+'" cy="46.6" rx="'+(fem?4.2:3.9)+'" ry="'+(fem?4.6:3.5)+'" fill="#FFFFFF"/>'
+    + '<circle cx="'+cx+'" cy="46.9" r="'+(fem?2.9:2.5)+'" fill="'+c+'"/>'
+    + '<circle cx="'+cx+'" cy="46.9" r="1.25" fill="#20202A"/>'
+    + '<circle cx="'+(cx-1.1)+'" cy="45.4" r="1" fill="#fff"/>'
+    + '<circle cx="'+(cx+1.2)+'" cy="48.2" r=".55" fill="#fff" opacity=".9"/>';
+  if (fem){
+    s += '<path d="M'+(cx-4.4)+' 45.2 Q'+cx+' 41.2 '+(cx+4.4)+' 45.2" stroke="#262630" stroke-width="1.7" fill="none" stroke-linecap="round"/>';
+    var ox = cx + dir*4.2;
+    s += '<path d="M'+ox+' 45 l'+(dir*1.8)+' -1 M'+(ox-dir*0.7)+' 43.6 l'+(dir*1.5)+' -1.3" stroke="#262630" stroke-width="1.1" fill="none" stroke-linecap="round"/>';
+  } else {
+    s += '<path d="M'+(cx-3.9)+' 44.4 Q'+cx+' 42.9 '+(cx+3.9)+' 44.4" stroke="#262630" stroke-width="1.4" fill="none" stroke-linecap="round"/>';
+  }
+  return s;
+}
+function portraitSVG(e, size){
+  size = size || 48;
+  var rnd = mulberry32(((e.seed>>>0) || 1) + 0x9E37);
+  var fem = e.g === 'f';
+  var skin = SKINS[Math.floor(rnd()*SKINS.length)];
+  var hi = Math.floor(rnd()*5);
+  if ((e.rar==='SSR' || e.rar==='UR') && rnd() < 0.3) hi = 5;
+  var hairC = HAIRS[hi];
+  var eyeC = EYES[Math.floor(rnd()*EYES.length)];
+  var st = Math.floor(rnd()*6);
+  var glassP = e.job==='acc' ? 0.55 : e.job==='eng' ? 0.35 : 0.12;
+  var glasses = rnd() < glassP;
+  var earr = fem && rnd() < 0.4;
+  var uid = 'g' + (e.seed>>>0).toString(36);
+  var hair = fem ? _hairF(st, hairC) : _hairM(st, hairC);
+  /* 背景（レアリティ連動） */
+  var defs = '<clipPath id="c'+uid+'"><circle cx="50" cy="50" r="50"/></clipPath>';
+  var bg;
+  if (e.rar==='SSR' || e.rar==='UR'){
+    defs += e.rar==='SSR'
+      ? '<radialGradient id="'+uid+'" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#FFF7DE"/><stop offset="100%" stop-color="#EDCF7F"/></radialGradient>'
+      : '<linearGradient id="'+uid+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFC9E8"/><stop offset=".25" stop-color="#FFE9B3"/><stop offset=".5" stop-color="#C4F1CB"/><stop offset=".75" stop-color="#BBDDFF"/><stop offset="1" stop-color="#DCC6FF"/></linearGradient>';
+    bg = '<circle cx="50" cy="50" r="50" fill="url(#'+uid+')"/>';
+    for (var i=0;i<12;i++) bg += '<path d="M50 50 L46.5 -8 L53.5 -8 Z" fill="#FFFFFF" opacity="'+(i%2? '.16':'.3')+'" transform="rotate('+(i*30)+' 50 50)" clip-path="url(#c'+uid+')"/>';
+    if (e.rar==='UR') bg += _spark(20,20,3) + _spark(80,26,2.4) + _spark(74,78,2.2) + _spark(26,80,1.8);
+  } else {
+    bg = '<circle cx="50" cy="50" r="50" fill="'+(e.rar==='N' ? '#E9EDF3' : e.rar==='R' ? '#DFEBFB' : '#ECE1FA')+'"/>';
+  }
+  /* 顔・パーツ */
+  var frx = fem ? 15.8 : 16.4, fry = fem ? 18 : 19;
+  var feat = fem
+    ? '<path d="M38.2 40.8 Q42.5 38.8 46.6 40.4 M53.4 40.4 Q57.5 38.8 61.8 40.8" stroke="'+hairC[0]+'" stroke-width="1.3" fill="none" stroke-linecap="round"/>'
+    : '<path d="M37.8 40 L46.8 41.2 M53.2 41.2 L62.2 40" stroke="'+hairC[0]+'" stroke-width="2" fill="none" stroke-linecap="round"/>';
+  feat += _eye(42.5, fem, eyeC, -1) + _eye(57.5, fem, eyeC, 1)
+    + '<path d="M50 50.5 q1.1 1.8 0 3.4" stroke="'+skin[1]+'" stroke-width="1" fill="none" stroke-linecap="round"/>'
+    + (fem
+      ? '<path d="M47 57.6 Q50 60.3 53 57.6" stroke="#C4586B" stroke-width="1.5" fill="none" stroke-linecap="round"/>'
+      : '<path d="M45.8 57.2 Q50 61.2 54.2 57.2" stroke="#9A5B4C" stroke-width="1.6" fill="none" stroke-linecap="round"/>')
+    + '<ellipse cx="39.5" cy="52.5" rx="3.2" ry="1.8" fill="#FF9FAC" opacity="'+(fem?'.5':'.2')+'"/>'
+    + '<ellipse cx="60.5" cy="52.5" rx="3.2" ry="1.8" fill="#FF9FAC" opacity="'+(fem?'.5':'.2')+'"/>';
+  var gl = glasses
+    ? '<g stroke="#33415E" stroke-width="1.2" fill="rgba(255,255,255,.15)">'
+      + '<rect x="37" y="42.8" width="11" height="8.2" rx="3.4"/><rect x="52" y="42.8" width="11" height="8.2" rx="3.4"/>'
+      + '<path d="M48 46.2 h4 M34.3 45.5 L37 44.8 M65.7 45.5 L63 44.8" fill="none"/></g>'
+    : '';
+  var person = hair.back
+    + '<rect x="44.5" y="52" width="11" height="18" rx="4" fill="'+skin[0]+'"/>'
+    + '<ellipse cx="50" cy="65.5" rx="5.5" ry="2.4" fill="'+skin[1]+'" opacity=".55"/>'
+    + _clothes(e.job, fem)
+    + '<circle cx="34" cy="47" r="2.7" fill="'+skin[0]+'"/><circle cx="66" cy="47" r="2.7" fill="'+skin[0]+'"/>'
+    + (earr ? '<circle cx="34" cy="50.5" r="1.2" fill="#C9971F"/><circle cx="66" cy="50.5" r="1.2" fill="#C9971F"/>' : '')
+    + '<ellipse cx="50" cy="45" rx="'+frx+'" ry="'+fry+'" fill="'+skin[0]+'"/>'
+    + feat + hair.front + gl;
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="'+size+'" height="'+size+'">'
+    + '<defs>' + defs + '</defs>' + bg
+    + '<g clip-path="url(#c'+uid+')">' + person + '</g>'
+    + '<circle cx="50" cy="50" r="49" fill="none" stroke="rgba(27,42,74,.1)" stroke-width="2"/></svg>';
+}
+/* ---------- pure: state factory ---------- */
+function newState(){
+  var st = {
+    v: SAVE_VERSION, money: 50000, totalEarned: 0, productPower: 0,
+    stageIdx: 0, nextId: 0, employees: [],
+    depts: {}, ach: {}, lastSeen: 0,
+    items: {}, itemsSeen: {}, questCd: {}, buff: null, activeQuest: null, dexAwarded: {},
+    empDexAwarded: {},
+    stats: {packs:0, ssr:0, ur:0, fuses:0, expands:0, quests:0, questWins:0, itemsUsed:0}
+  };
+  DEPT_IDS.forEach(function(d){ st.depts[d] = {slots:2}; });
+  return st;
+}
+var ACHS = [
+  {id:'first_pack', ico:'🎉', name:'初めての採用',   desc:'パックを1回開封する',        chk:function(s){return s.stats.packs>=1;}},
+  {id:'first_ssr',  ico:'🌟', name:'初めてのSSR',    desc:'SSR社員を獲得する',          chk:function(s){return s.stats.ssr>=1;}},
+  {id:'first_ur',   ico:'🌈', name:'伝説との出会い', desc:'UR社員を獲得する',           chk:function(s){return s.stats.ur>=1;}},
+  {id:'emp10',      ico:'👥', name:'にぎやかな職場', desc:'社員10人を保有する',         chk:function(s){return s.employees.length>=10;}},
+  {id:'emp50',      ico:'🏬', name:'社員50人',       desc:'社員50人を保有する',         chk:function(s){return s.employees.length>=50;}},
+  {id:'emp100',     ico:'🏙️', name:'大所帯',        desc:'社員100人を保有する',        chk:function(s){return s.employees.length>=100;}},
+  {id:'ips1',       ico:'💴', name:'商いの芽',       desc:'売上/秒 ¥1万を達成',         chk:function(s,d){return d.income>=1e4;}},
+  {id:'ips2',       ico:'💰', name:'売上マシン',     desc:'売上/秒 ¥100万を達成',       chk:function(s,d){return d.income>=1e6;}},
+  {id:'ips3',       ico:'🤑', name:'金のなる木',     desc:'売上/秒 ¥1億を達成',         chk:function(s,d){return d.income>=1e8;}},
+  {id:'total1',     ico:'📈', name:'億り企業',       desc:'累計売上 ¥1億を達成',        chk:function(s){return s.totalEarned>=1e8;}},
+  {id:'stage_ipo',  ico:'🔔', name:'上場の鐘',       desc:'上場企業に到達する',         chk:function(s){return s.stageIdx>=4;}},
+  {id:'stage_max',  ico:'👑', name:'世界の頂点',     desc:'世界的コングロマリットに到達',chk:function(s){return s.stageIdx>=7;}},
+  {id:'awaken1',    ico:'🟣', name:'初覚醒',         desc:'社員を初めて覚醒させる',     chk:function(s){return s.employees.some(function(e){return (e.awaken||0)>=1;});}},
+  {id:'awaken10',   ico:'💜', name:'覚醒の極み',     desc:'覚醒+10の社員を保有する',    chk:function(s){return s.employees.some(function(e){return (e.awaken||0)>=10;});}},
+  {id:'edex50',     ico:'📇', name:'図鑑50名',       desc:'社員図鑑に50名登録する',     chk:function(s){return empDexCount(s)>=50;}},
+  {id:'edex100',    ico:'🏛️', name:'図鑑コンプ',    desc:'社員図鑑100名を全員登録する', chk:function(s){return empDexCount(s)>=100;}},
+  {id:'lv10',       ico:'🎓', name:'エリート育成',   desc:'社員をLv10まで育成する',     chk:function(s){return s.employees.some(function(e){return e.lv>=10;});}},
+  {id:'lv50',       ico:'🦾', name:'匠の域',         desc:'社員をLv50まで育成する',     chk:function(s){return s.employees.some(function(e){return e.lv>=50;});}},
+  {id:'expand5',    ico:'🏗️', name:'拡張主義',      desc:'スロット拡張を5回行う',      chk:function(s){return s.stats.expands>=5;}},
+  {id:'first_quest',ico:'⚔️', name:'いざ、クエストへ', desc:'クエストに1回挑戦する',    chk:function(s){return s.stats.quests>=1;}},
+  {id:'quest10',    ico:'🛡️', name:'歴戦の派遣団',   desc:'クエストに10回成功する',    chk:function(s){return s.stats.questWins>=10;}},
+  {id:'item_first', ico:'🎒', name:'はじめてのおつかい', desc:'アイテムを1回使用する',  chk:function(s){return s.stats.itemsUsed>=1;}},
+  {id:'dex_half',   ico:'📖', name:'コレクター',     desc:'図鑑を18種類埋める',         chk:function(s){return dexCount(s)>=18;}},
+  {id:'dex_all',    ico:'📚', name:'伝説の蒐集家',   desc:'図鑑を全て埋める',           chk:function(s){return dexCount(s)>=ITEMS.length;}}
+];
+
+/* =====================================================================
+   ここから下は DOM / ブラウザ実行部
+===================================================================== */
+if (typeof document !== 'undefined') (function(){
+  var state = null;
+  var derived = null;
+  var dispMoney = 0;
+  var curTab = 'office';
+  var filterJob = 'all', filterRar = 'all';
+  var pendingCards = [];   // pack opening
+  var resetArmed = false, resetTimer = null;
+  var lastTick = Date.now();
+
+  function $(id){ return document.getElementById(id); }
+
+  /* ---------- save / load ---------- */
+  function save(){
+    try{
+      state.lastSeen = Date.now();
+      localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+    }catch(e){}
+  }
+  function load(){
+    try{
+      var raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return null;
+      var st = JSON.parse(raw);
+      if (!st || typeof st.money !== 'number') return null;
+      if (typeof st.v !== 'number') st.v = 1; /* vを持たないセーブ＝v1（base-fillでv3が入る前に確定） */
+      var base = newState();
+      Object.keys(base).forEach(function(k){ if (st[k] === undefined) st[k] = base[k]; });
+      DEPT_IDS.forEach(function(d){ if (!st.depts[d]) st.depts[d] = {slots:2}; });
+      if (!st.stats) st.stats = base.stats;
+      migrateToLatest(st); /* v1→v2→v3 連鎖マイグレーション */
+      return st;
+    }catch(e){ return null; }
+  }
+
+  /* ---------- toast / fx ---------- */
+  function toast(msg){
+    var t = document.createElement('div');
+    t.className = 'toast'; t.textContent = msg;
+    $('toasts').appendChild(t);
+    setTimeout(function(){ t.style.opacity = '0'; t.style.transition = 'opacity .4s'; }, 2600);
+    setTimeout(function(){ t.remove(); }, 3100);
+  }
+  /* ---------- modal ---------- */
+  function showModal(html){
+    $('modalBox').innerHTML = html;
+    $('modalOverlay').classList.remove('hidden');
+  }
+  function closeModal(){ $('modalOverlay').classList.add('hidden'); }
+  /* ---------- bottom sheet ---------- */
+  function showSheet(title, bodyHtml){
+    $('sheetTitle').textContent = title;
+    $('sheetBody').innerHTML = bodyHtml;
+    $('sheetWrap').classList.remove('hidden');
+  }
+  function closeSheet(){ $('sheetWrap').classList.add('hidden'); }
+
+  /* ---------- achievements ---------- */
+  function checkAchs(){
+    ACHS.forEach(function(a){
+      if (!state.ach[a.id] && a.chk(state, derived)){
+        state.ach[a.id] = Date.now();
+        toast('🏆 実績解除「' + a.name + '」');
+        if (curTab === 'misc') renderMisc();
+      }
+    });
+  }
+  /* ---------- stage ---------- */
+  function checkStage(){
+    var upd = false;
+    while (state.stageIdx < STAGES.length-1 && state.totalEarned >= STAGES[state.stageIdx+1].req){
+      state.stageIdx++;
+      upd = true;
+      var s = STAGES[state.stageIdx];
+      showModal(
+        '<h3>🎊 会社ステージ昇格！</h3>' +
+        '<div class="big">' + s.name + '</div>' +
+        '<p>全社売上倍率が <b style="color:var(--gold)">×' + s.mult + '</b> になりました。<br>おめでとうございます、社長！</p>' +
+        '<button class="btn gold" data-act="close-modal">受け取る</button>');
+    }
+    if (upd) derived = calcDerived(state);
+  }
+
+  /* ---------- game loop ---------- */
+  var lastQR = 0;
+  function tick(){
+    var now = Date.now();
+    var dt = Math.min(2, (now - lastTick) / 1000); // バックグラウンド復帰の二重取り防止で最大2秒
+    lastTick = now;
+    derived = calcDerived(state, now);
+    var gain = derived.income * dt;
+    state.money += gain;
+    state.totalEarned += gain;
+    state.productPower += derived.devSum * dt * 0.02;
+    /* v2: 配属中の社員は毎秒XP自動獲得 */
+    var xr = xpRate(state, now) * dt;
+    var needRender = false;
+    for (var i=0;i<state.employees.length;i++){
+      var e = state.employees[i];
+      if (!e.dept) continue;
+      var ups = gainXp(e, xr);
+      if (ups.length){ enqueueLevelUps(e, ups); needRender = true; }
+    }
+    /* v2: バフ失効チェック */
+    if (state.buff && state.buff.until <= now){
+      toast('⏱️ 「' + state.buff.name + '」の効果が切れた');
+      state.buff = null;
+    }
+    /* v2: クエスト進行（ゲームループは止めない） */
+    updateQuestProgress(now);
+    /* v2: クエストタブのCD表示更新（1秒毎） */
+    if (curTab === 'quest' && now - lastQR > 1000){
+      lastQR = now;
+      renderQuestList();
+    }
+    checkStage();
+    checkAchs();
+    renderHeader();
+    if (needRender && curTab !== 'quest') renderCurrentTab();
+    refreshAffordance();
+  }
+
+  /* ---------- header ---------- */
+  function renderHeader(){
+    $('income').innerHTML = '売上/秒 <b>' + fmtMoney(derived.income) + '</b>';
+    var bf = state.buff, bel = $('buffInd');
+    if (bf && bf.until > Date.now()){
+      bel.classList.remove('hidden');
+      bel.textContent = bf.ico + '×' + bf.mult + ' ' + fmtDur(Math.ceil((bf.until - Date.now())/1000));
+    } else bel.classList.add('hidden');
+    var s = STAGES[state.stageIdx];
+    $('stageName').textContent = s.name;
+    $('stageMult').textContent = '×' + s.mult;
+    var next = STAGES[state.stageIdx+1];
+    if (next){
+      var prev = s.req;
+      var p = (state.totalEarned - prev) / (next.req - prev) * 100;
+      $('stageFill').style.width = Math.max(0, Math.min(100, p)) + '%';
+    } else $('stageFill').style.width = '100%';
+  }
+  function animMoney(){
+    var diff = state.money - dispMoney;
+    dispMoney = Math.abs(diff) < 1 ? state.money : dispMoney + diff * 0.12;
+    $('money').textContent = fmtMoney(dispMoney);
+    requestAnimationFrame(animMoney);
+  }
+
+  /* ---------- office tab ---------- */
+  function deptEffectLabel(d){
+    switch(d){
+      case 'sales': return fmtMoney(derived.salesSum) + '/秒';
+      case 'dev':   return 'P力 ' + Math.floor(state.productPower).toLocaleString('ja-JP') + '<br>×' + derived.devMult.toFixed(2);
+      case 'mkt':   return '×' + derived.mktMult.toFixed(2);
+      case 'hr':    return '割引 ' + Math.round(derived.hrDisc*100) + '%';
+      case 'acc':   return 'オフライン ' + Math.round(derived.offRate*100) + '%';
+    }
+  }
+  function renderOffice(){
+    var html = '';
+    DEPT_IDS.forEach(function(d){
+      var def = DEPTS[d], dp = state.depts[d];
+      var members = state.employees.filter(function(e){ return e.dept === d; });
+      html += '<div class="dept"><div class="dept-head">' +
+        '<span class="dept-emoji">' + def.emoji + '</span>' +
+        '<span class="dept-name">' + def.name + '</span>' +
+        '<span class="dept-effect">' + deptEffectLabel(d) + '</span></div>' +
+        '<div class="dept-desc">' + def.desc + '</div><div class="slots">';
+      for (var i=0;i<dp.slots;i++){
+        var e = members[i];
+        if (e){
+          var m = def.job === e.job;
+          html += '<div class="slot filled" data-act="slot" data-dept="' + d + '" data-emp="' + e.id + '" style="flex-direction:row;align-items:center;gap:7px;">' +
+            '<span class="s-port">' + portraitHTML(e, 30) + '</span><div style="min-width:0;">' +
+            '<div class="s-name">' + rarTag(e.rar) + ' ' + e.ln + ' ' + e.fn +
+            (m ? ' <span class="match">⭐一致×1.5</span>' : '') + '</div>' +
+            '<div class="s-sub">Lv' + e.lv + '・' + fmtMoney(empProd(e)) + '/秒</div></div></div>';
+        } else {
+          html += '<div class="slot empty" data-act="slot-empty" data-dept="' + d + '">＋ 配属する</div>';
+        }
+      }
+      html += '</div><div class="dept-foot">' +
+        '<button class="btn small ghost" data-act="expand" data-dept="' + d + '" data-cost="' + slotCost(dp.slots) + '">' +
+        'スロット拡張 ' + fmtMoney(slotCost(dp.slots)) + '</button></div></div>';
+    });
+    $('deptList').innerHTML = html;
+    refreshAffordance();
+  }
+  function pchip(e, size){
+    return '<div class="pwrap" style="width:' + size + 'px;height:' + size + 'px;">' + portraitHTML(e, size) +
+      '<span class="pmini r' + e.rar + '">' + e.rar + '</span></div>';
+  }
+  function rarTag(r){
+    return '<span style="font-size:9px;font-weight:900;color:#fff;border-radius:4px;padding:0 4px;background:' +
+      (r==='N'?'var(--n)':r==='R'?'var(--r)':r==='SR'?'var(--sr)':r==='SSR'?'linear-gradient(135deg,var(--gold),var(--gold2))':'linear-gradient(135deg,#e6483d,#e8a33d,#3d7fe8,#8b3fd8)') +
+      '">' + r + '</span>';
+  }
+
+  /* ---------- packs tab ---------- */
+  function renderPacks(){
+    var html = '';
+    ['normal','gold','premium'].forEach(function(pid){
+      var p = PACKS[pid];
+      var price = packPrice(pid, derived.hrDisc);
+      var priceHtml = price < p.price
+        ? '<s>' + fmtMoney(p.price) + '</s>' + fmtMoney(price)
+        : fmtMoney(p.price);
+      var rates = '';
+      RARS.forEach(function(r){ if (p.rates[r] > 0) rates += '<span class="rate r' + r + '">' + r + ' ' + p.rates[r] + '%</span>'; });
+      if (p.guarantee) rates += '<span class="rate" style="background:var(--navy)">SR以上1枚確定</span>';
+      html += '<div class="pack ' + p.cls + '"><div class="pack-title">' + p.name + '（3枚）</div>' +
+        '<div class="pack-desc">' + p.desc + '</div>' +
+        '<div class="rates">' + rates + '</div>' +
+        '<div class="pack-buy" style="margin-top:12px;"><span class="pack-price">' + priceHtml + '</span>' +
+        '<button class="btn gold" data-act="buy" data-pack="' + pid + '" data-cost="' + price + '">🎴 開封する</button></div></div>';
+    });
+    $('packList').innerHTML = html;
+    renderShop();
+    refreshAffordance();
+  }
+  /* ---------- v2: item shop（N〜R級のみ販売） ---------- */
+  function renderShop(){
+    var html = '';
+    ITEMS.forEach(function(it){
+      if (it.rar !== 'N' && it.rar !== 'R') return;
+      var price = SHOP_PRICES[it.rar];
+      html += '<div class="item"><span class="item-ico">' + it.ico + '</span>' +
+        '<div class="item-mid"><div class="item-name">' + rarTag(it.rar) + ' ' + it.name +
+        (state.items[it.id] > 0 ? ' <span style="color:var(--sub);font-weight:600;font-size:10px;">所持×' + state.items[it.id] + '</span>' : '') + '</div>' +
+        '<div class="item-desc">' + itemEffectLabel(it) + '</div></div>' +
+        '<button class="btn small gold" data-act="shop-buy" data-item="' + it.id + '" data-cost="' + price + '">' + fmtMoney(price) + '</button></div>';
+    });
+    $('shopList').innerHTML = html;
+  }
+
+  /* ---------- pack opening ---------- */
+  /* v2: チケット系アイテムの自動適用確認 */
+  function bestTicket(pid){
+    var best = null;
+    ITEMS.forEach(function(it){
+      if (it.cat !== 'ticket' || !(state.items[it.id] > 0)) return;
+      if (it.ticket.free){ if (it.ticket.free === pid && (!best || !best.ticket.free)) best = it; return; }
+      if (!best || (!best.ticket.free && (best.ticket.disc||0) < it.ticket.disc)) best = it;
+    });
+    /* 無料券があればそれを最優先 */
+    var free = ITEMS.filter(function(it){ return it.cat==='ticket' && it.ticket.free === pid && state.items[it.id] > 0; });
+    if (free.length) return free[0];
+    return best;
+  }
+  function buyPack(pid, ticketId){
+    var price = packPrice(pid, derived.hrDisc);
+    if (ticketId === undefined){
+      var tk = bestTicket(pid);
+      if (tk){
+        var np = tk.ticket.free ? 0 : Math.round(price * (1 - tk.ticket.disc));
+        showModal('<h3>🎫 チケットを使いますか？</h3>' +
+          '<p><b>' + tk.ico + ' ' + tk.name + '</b> を所持しています。<br>' +
+          fmtMoney(price) + ' → <b style="color:var(--gold)">' + (np===0 ? '無料！' : fmtMoney(np)) + '</b></p>' +
+          '<div style="display:flex;gap:8px;justify-content:center;">' +
+          '<button class="btn gold" data-act="buy-ticket" data-pack="' + pid + '" data-item="' + tk.id + '">使う</button>' +
+          '<button class="btn ghost" data-act="buy-noticket" data-pack="' + pid + '">使わない</button></div>');
+        return;
+      }
+      ticketId = null;
+    }
+    if (ticketId){
+      var tit = ITEM_MAP[ticketId];
+      if (!tit || !(state.items[ticketId] > 0)) ticketId = null;
+      else price = tit.ticket.free ? 0 : Math.round(price * (1 - tit.ticket.disc));
+    }
+    if (state.money < price) { toast('資金が足りません'); return; }
+    state.money -= price;
+    if (ticketId){
+      state.items[ticketId]--;
+      state.stats.itemsUsed++;
+      toast('🎫 「' + ITEM_MAP[ticketId].name + '」を使用！');
+    }
+    var rars = drawPackRarities(pid);
+    var basePrice = PACKS[pid].price; /* 還元はパック定価の20% */
+    pendingCards = rars.map(function(r){
+      var res = openDraw(state, r, basePrice); /* v3: 未所持→採用 / 所持→覚醒 / 上限→還元 */
+      if (r === 'SSR') state.stats.ssr++;
+      if (r === 'UR')  { state.stats.ssr++; state.stats.ur++; }
+      return res;
+    });
+    state.stats.packs++;
+    save();
+    openPackOverlay(PACKS[pid].name);
+  }
+  function openPackOverlay(title){
+    $('packOvTitle').textContent = title + ' 開封！';
+    var html = '';
+    pendingCards.forEach(function(res, i){
+      var e = res.emp;
+      var tease = (e.rar==='SSR' || e.rar==='UR') ? ' tease' : '';
+      var sparks = e.rar==='UR'
+        ? '<span class="spark" style="left:8%;top:12%;">✦</span><span class="spark" style="right:6%;top:30%;animation-delay:.4s;">✧</span><span class="spark" style="left:20%;bottom:8%;animation-delay:.8s;">✦</span>'
+        : '';
+      /* v3: 採用（NEW!）／覚醒（+N）／還元（MAX）のパターン分け表示 */
+      var badge, msg;
+      if (res.type === 'new'){
+        badge = '<span class="f-badge bnew">NEW!</span>';
+        msg = '<span class="f-msg" style="color:var(--gold);">仲間に加わった！（入社）</span>';
+      } else if (res.type === 'awaken'){
+        badge = '<span class="f-badge bawk">覚醒 +' + res.awaken + '</span>';
+        msg = '<span class="f-msg" style="color:#8B3FD8;">全ステUP！生産力 ×' + awakenMult(e).toFixed(2) + '</span>';
+      } else {
+        badge = '<span class="f-badge bmax">覚醒MAX</span>';
+        msg = '<span class="f-msg" style="color:var(--sub);">これ以上覚醒できない！<br>' + fmtMoney(res.amount) + ' を受け取った</span>';
+      }
+      html += '<div class="pcard" data-act="flip" data-i="' + i + '">' + sparks +
+        '<div class="pcard-inner">' +
+        '<div class="pface pback' + tease + '"><span class="logo">🏢</span><span class="lt">HD TYCOON</span></div>' +
+        '<div class="pface pfront f' + e.rar + '">' + badge +
+          '<span class="f-rar">' + e.rar + '</span>' +
+          '<span class="f-port">' + portraitHTML(e, 54) + '</span>' +
+          '<span class="f-nick">' + (e.nick || '&nbsp;') + '</span>' +
+          '<span class="f-name">' + e.ln + ' ' + e.fn + (e.awaken ? ' <span class="awk">+' + e.awaken + '</span>' : '') + '</span>' +
+          '<span class="f-job">' + JOB_DEFS[e.job].name + '</span>' +
+          '<span class="f-prod">' + fmtMoney(empBaseProd(e)) + '/秒</span>' + msg +
+        '</div></div></div>';
+    });
+    $('packCards').innerHTML = html;
+    $('btnFlipAll').classList.remove('hidden');
+    $('btnClosePack').classList.add('hidden');
+    $('packOverlay').classList.remove('hidden');
+  }
+  function flipCard(i){
+    var cards = $('packCards').children;
+    // sparkは子要素に含まれるので data-i で特定
+    var el = $('packCards').querySelector('.pcard[data-i="' + i + '"]');
+    if (!el || el.classList.contains('flipped')) return;
+    el.classList.add('flipped');
+    var allFlipped = true;
+    for (var c=0;c<cards.length;c++){
+      if (cards[c].classList && cards[c].classList.contains('pcard') && !cards[c].classList.contains('flipped')) allFlipped = false;
+    }
+    if (allFlipped){
+      $('btnFlipAll').classList.add('hidden');
+      $('btnClosePack').classList.remove('hidden');
+    }
+  }
+  function flipAll(){
+    var els = $('packCards').querySelectorAll('.pcard');
+    els.forEach(function(el, idx){
+      setTimeout(function(){ flipCard(el.getAttribute('data-i')); }, idx * 220);
+    });
+  }
+  function closePack(){
+    $('packOverlay').classList.add('hidden');
+    pendingCards = [];
+    checkEmpDex(); /* v3: 図鑑登録数のコンプ報酬チェック */
+    renderCurrentTab();
+  }
+
+  /* ---------- employees tab ---------- */
+  var empView = 'own'; /* v3: 'own'=在籍 / 'dex'=図鑑 */
+  function renderEmpFilters(){
+    var jf = '<button class="chip' + (filterJob==='all'?' on':'') + '" data-act="fjob" data-v="all">全職種</button>';
+    JOBS.forEach(function(j){
+      jf += '<button class="chip' + (filterJob===j?' on':'') + '" data-act="fjob" data-v="' + j + '">' + JOB_DEFS[j].emoji + JOB_DEFS[j].name + '</button>';
+    });
+    $('jobFilters').innerHTML = jf;
+    var rf = '<button class="chip' + (filterRar==='all'?' on':'') + '" data-act="frar" data-v="all">全レア</button>';
+    RARS.forEach(function(r){
+      rf += '<button class="chip' + (filterRar===r?' on':'') + '" data-act="frar" data-v="' + r + '">' + r + '</button>';
+    });
+    $('rarFilters').innerHTML = rf;
+  }
+  function renderEmps(){
+    /* v3: 在籍 / 図鑑 切替チップ */
+    $('empViewChips').innerHTML =
+      '<button class="chip' + (empView==='own'?' on':'') + '" data-act="eview" data-v="own">👥 在籍</button>' +
+      '<button class="chip' + (empView==='dex'?' on':'') + '" data-act="eview" data-v="dex">📖 図鑑</button>';
+    if (empView === 'dex'){
+      $('empOwnBox').classList.add('hidden');
+      $('empDexBox').classList.remove('hidden');
+      $('empCount').textContent = '（図鑑登録 ' + empDexCount(state) + ' / ' + ROSTER.length + '）';
+      renderEmpDex();
+      return;
+    }
+    $('empOwnBox').classList.remove('hidden');
+    $('empDexBox').classList.add('hidden');
+    renderEmpFilters();
+    $('empCount').textContent = '（在籍' + state.employees.length + '人）';
+    var list = state.employees.filter(function(e){
+      return (filterJob==='all' || e.job===filterJob) && (filterRar==='all' || e.rar===filterRar);
+    });
+    list.sort(function(a,b){
+      var d = RARS.indexOf(b.rar) - RARS.indexOf(a.rar);
+      if (d) return d;
+      return empBaseProd(b) - empBaseProd(a);
+    });
+    var html = '';
+    var dexB = dexStatBonus(state);
+    list.forEach(function(e){
+      var capped = e.lv >= LV_CAP[e.rar];
+      var xpLbl = capped ? 'Lv MAX' : 'あと' + Math.max(0, xpNeed(e.lv) - Math.floor(e.xp||0)).toLocaleString('ja-JP') + 'XP';
+      html += '<div class="emp" data-act="emp-detail" data-emp="' + e.id + '" style="cursor:pointer;">' + pchip(e, 44) +
+        '<div class="emp-mid"><div class="emp-name">' +
+        (e.nick ? '<span class="emp-nick">《' + e.nick + '》</span>' : '') +
+        e.ln + ' ' + e.fn +
+        (e.awaken ? '<span class="awk">+' + e.awaken + '</span>' : '') +
+        (e.dept ? '<span class="emp-dept">' + DEPTS[e.dept].emoji + DEPTS[e.dept].name + '</span>' : '<span class="emp-dept" style="background:#F5F5F5;color:var(--sub)">未配属</span>') +
+        '</div><div class="emp-sub">' + JOB_DEFS[e.job].emoji + JOB_DEFS[e.job].name + '・Lv' + e.lv + '（' + xpLbl + '）・生産力 ' + fmtMoney(empProd(e, dexB)) + '/秒' +
+        (e.dept && DEPTS[e.dept].job===e.job ? ' <span class="match">⭐一致×1.5</span>' : '') + '</div></div>' +
+        '<div class="emp-right" style="font-size:10px;color:var(--sub);font-weight:700;">ステータス<br>▶</div></div>';
+    });
+    if (!list.length) html = '<div class="hint" style="text-align:center;padding:24px 0;">該当する社員がいません。パックで採用しましょう！</div>';
+    $('empList').innerHTML = html;
+    refreshAffordance();
+  }
+  /* ---------- v3: 社員図鑑 ---------- */
+  function renderEmpDex(){
+    var cnt = empDexCount(state);
+    var bonus = '';
+    EMP_DEX_TIERS.forEach(function(t){
+      bonus += '<span class="' + (cnt >= t[0] ? 'got' : '') + '">' + t[0] + '名 売上+' + Math.round(t[1]*100) + '%</span>';
+    });
+    var html = '<div class="edex-head"><span class="edx-cnt">📖 図鑑登録 ' + cnt + ' / ' + ROSTER.length + '</span>' +
+      '<div class="edex-bonus">' + bonus + '</div>' +
+      '<div class="hint" style="margin:6px 0 0;">コンプ報酬は重複加算（全達成で全社売上 +22%）。未所持社員はパックで採用しよう！</div></div>';
+    ['UR','SSR','SR','R','N'].forEach(function(r){
+      var pool = ROSTER_BY_RAR[r];
+      var own = 0;
+      pool.forEach(function(m){ if (findByMid(state, m.mid)) own++; });
+      html += '<div class="dex-cat">' + rarTag(r) + ' <span style="font-size:11px;color:var(--sub);font-weight:700;">' + own + ' / ' + pool.length + '</span></div><div class="edex-grid">';
+      pool.forEach(function(m){
+        var e = findByMid(state, m.mid);
+        if (e){
+          html += '<div class="edex-item" data-act="edex-detail" data-mid="' + m.mid + '" style="cursor:pointer;">' +
+            '<span class="ep">' + portraitHTML(m, 44) + '</span>' +
+            '<span class="edx-name">' + m.ln + ' ' + m.fn + '</span>' +
+            '<span class="edx-awk">' + (e.awaken ? '覚醒 +' + e.awaken : '&nbsp;') + '</span></div>';
+        } else {
+          html += '<div class="edex-item unknown">' +
+            '<span class="ep">' + portraitHTML(m, 44) + '</span>' +
+            '<span class="edx-name">？？？</span>' +
+            '<span class="edx-awk">&nbsp;</span></div>';
+        }
+      });
+      html += '</div>';
+    });
+    $('empDexBox').innerHTML = html;
+  }
+  /* v3: 図鑑コンプ報酬の達成モーダル */
+  function checkEmpDex(){
+    var cnt = empDexCount(state);
+    EMP_DEX_TIERS.forEach(function(t){
+      var key = String(t[0]);
+      if (cnt >= t[0] && !state.empDexAwarded[key]){
+        state.empDexAwarded[key] = Date.now();
+        save();
+        showModal('<h3>📖 社員図鑑 ' + t[0] + '名達成！</h3>' +
+          '<div class="big">全社売上 +' + Math.round(t[1]*100) + '%</div>' +
+          '<p>図鑑コンプ報酬（永続・重複加算）を獲得しました。<br>' +
+          (t[0] === 100 ? 'ついに全社員コンプリート！あなたこそ伝説の人事王だ！' : '次の節目でさらに売上ボーナス！') + '</p>' +
+          '<button class="btn gold" data-act="close-modal">受け取る</button>');
+      }
+    });
+  }
+
+  /* ---------- misc tab ---------- */
+  function renderMisc(){
+    var html = '';
+    var unlocked = 0;
+    ACHS.forEach(function(a){
+      var ok = !!state.ach[a.id];
+      if (ok) unlocked++;
+      html += '<div class="ach' + (ok?'':' locked') + '"><span class="ach-ico">' + (ok?a.ico:'🔒') + '</span>' +
+        '<div><div class="ach-name">' + a.name + '</div><div class="ach-desc">' + a.desc + '</div></div>' +
+        (ok?'<span style="margin-left:auto;color:var(--gold);font-weight:900;font-size:12px;">達成</span>':'') + '</div>';
+    });
+    $('achList').innerHTML = '<div class="hint">達成状況：' + unlocked + ' / ' + ACHS.length + '</div>' + html;
+    renderDex();
+  }
+  /* ---------- v2: item dex（図鑑） ---------- */
+  function renderDex(){
+    var html = '';
+    ['xp','stat','buff','ticket'].forEach(function(cat){
+      var c = ITEM_CATS[cat];
+      var comp = dexComplete(state, cat);
+      html += '<div class="dex-cat">' + c.ico + ' ' + c.name +
+        (comp ? ' <span class="dex-comp">✅コンプ' + (c.bonusShort ? '：' + c.bonusShort : '') + '</span>'
+              : (c.bonusShort ? ' <span style="font-size:10px;color:var(--sub);font-weight:600;">コンプで ' + c.bonusShort + '</span>' : '')) +
+        '</div><div class="dex-grid">';
+      ITEMS.forEach(function(it){
+        if (it.cat !== cat) return;
+        html += state.itemsSeen[it.id]
+          ? '<div class="dex-item r' + it.rar + '"><span class="dx-ico">' + it.ico + '</span><span class="dx-name">' + it.name + '</span><span class="dx-rar">' + it.rar + '</span></div>'
+          : '<div class="dex-item unknown"><span class="dx-ico">？</span><span class="dx-name">？？？</span></div>';
+      });
+      html += '</div>';
+    });
+    html += '<div class="hint" style="margin-top:8px;">全図鑑コンプで全社売上 +10%' + (dexComplete(state,'all') ? '（達成中！）' : '') + '</div>';
+    $('dexCnt').textContent = '（' + dexCount(state) + ' / ' + ITEMS.length + '）';
+    $('dexList').innerHTML = html;
+  }
+  /* v2: 図鑑コンプボーナスの達成モーダル */
+  function checkDex(){
+    [
+      {k:'xp',     name:'研修系コンプリート',     desc:'全社員の獲得XPが永続 +10%！'},
+      {k:'stat',   name:'強化系コンプリート',     desc:'全社員の全ステータスが永続 +2！'},
+      {k:'buff',   name:'バフ系コンプリート',     desc:'バフの効果時間が永続 +20%！'},
+      {k:'ticket', name:'チケット系コンプリート', desc:'図鑑コンプリートまであと少し！'},
+      {k:'all',    name:'図鑑コンプリート！',     desc:'全社売上が永続 +10%！あなたこそ伝説の蒐集家だ！'}
+    ].forEach(function(d){
+      if (!state.dexAwarded[d.k] && dexComplete(state, d.k)){
+        state.dexAwarded[d.k] = Date.now();
+        save();
+        showModal('<h3>📚 図鑑ボーナス達成！</h3><div class="big">' + d.name + '</div><p>' + d.desc + '</p>' +
+          '<button class="btn gold" data-act="close-modal">やったー！</button>');
+      }
+    });
+  }
+
+  /* ---------- v2: DQ風レベルアップ演出（黒枠白文字ウィンドウ・順次表示） ---------- */
+  var dqQueue = [], dqShowing = false, dqTimer = null;
+  function dqLevelMsg(name, lv, gains){
+    var s = '▼ ' + name + 'は レベル ' + lv + ' に あがった！';
+    STAT_KEYS.forEach(function(k){
+      if (gains[k]) s += '\n' + STAT_DEFS[k].name + 'が ' + gains[k] + ' あがった！';
+    });
+    return s;
+  }
+  function enqueueLevelUps(e, ups){
+    if (!ups || !ups.length) return;
+    var name = e.ln + ' ' + e.fn;
+    if (ups.length === 1){
+      dqQueue.push(dqLevelMsg(name, ups[0].lv, ups[0].gains));
+    } else { /* 一括レベルアップは合算表示 */
+      var total = {};
+      ups.forEach(function(u){
+        STAT_KEYS.forEach(function(k){ if (u.gains[k]) total[k] = (total[k]||0) + u.gains[k]; });
+      });
+      dqQueue.push(dqLevelMsg(name, ups[ups.length-1].lv, total));
+    }
+    pumpDQ();
+  }
+  function pumpDQ(){
+    if (dqShowing || !dqQueue.length) return;
+    dqShowing = true;
+    var el = $('dqwin');
+    el.textContent = dqQueue.shift();
+    el.classList.remove('hidden');
+    el.classList.remove('dq-in'); void el.offsetWidth; el.classList.add('dq-in');
+    dqTimer = setTimeout(nextDQ, 2400);
+  }
+  function nextDQ(){
+    clearTimeout(dqTimer);
+    dqShowing = false;
+    if (dqQueue.length) pumpDQ();
+    else $('dqwin').classList.add('hidden');
+  }
+
+  /* ---------- v2: 社員詳細モーダル（DQ風ステータスウィンドウ） ---------- */
+  function rep(ch, n){ return new Array(Math.max(0, n) + 1).join(ch); }
+  function openEmpDetail(empId){
+    var e = state.employees.find(function(x){ return x.id === empId; });
+    if (!e) return;
+    var s = empStats(e), t = genTalents(e), b = dexStatBonus(state);
+    var cap = LV_CAP[e.rar];
+    var next = e.lv >= cap ? 'カンスト' : 'あと ' + Math.max(0, xpNeed(e.lv) - Math.floor(e.xp||0)).toLocaleString('ja-JP');
+    var tbl = '<table>';
+    STAT_KEYS.forEach(function(k){
+      tbl += '<tr><td style="text-align:left;">' + STAT_DEFS[k].ico + ' ' + STAT_DEFS[k].name + '</td>' +
+        '<td style="text-align:right;">' + (s[k] + b) + (b ? ' <span style="color:#7CE37C;font-size:10px;">(+' + b + ')</span>' : '') + '</td>' +
+        '<td style="text-align:right;width:56px;color:#F3D14F;">' + rep('★', t[k]) + '<span style="opacity:.35;">' + rep('★', 3 - t[k]) + '</span></td></tr>';
+    });
+    tbl += '</table>';
+    showModal(
+      '<div style="display:flex;justify-content:center;">' + portraitHTML(e, 84) + '</div>' +
+      '<h3 style="margin-top:6px;">' + (e.nick ? '《' + e.nick + '》 ' : '') + e.ln + ' ' + e.fn +
+      (e.awaken ? ' <span class="awk" style="font-size:14px;">+' + e.awaken + '</span>' : '') + '</h3>' +
+      '<p style="margin-bottom:8px;">' + rarTag(e.rar) + ' ' + JOB_DEFS[e.job].emoji + JOB_DEFS[e.job].name +
+      (e.dept ? '・' + DEPTS[e.dept].emoji + DEPTS[e.dept].name + '配属' : '・未配属') + '</p>' +
+      '<div class="dqstat">＊ つよさ<br>' +
+      'レベル：' + e.lv + ' ／ ' + cap + '<br>' +
+      'つぎのレベルまで：' + next + '<br>' +
+      '覚醒：+' + (e.awaken||0) + ' ／ +' + AWAKEN_CAP + '（生産力 ×' + awakenMult(e).toFixed(2) + '）<br>' + tbl +
+      '生産力：' + fmtMoney(empProd(e, b)) + '/秒</div>' +
+      '<div class="hint" style="text-align:left;margin-top:8px;">★は才能（レベルアップ時の成長率）。配属中は毎秒XPを自動獲得。同じ社員をパックで引くと覚醒し、全ステ+（才能×2）＆生産力+5%/段階。' +
+      (b ? '図鑑ボーナスで全ステ+' + b + '中。' : '') + '</div>' +
+      '<button class="btn gold" data-act="close-modal" style="margin-top:10px;">閉じる</button>');
+  }
+
+  /* ---------- v2: quest tab ---------- */
+  function renderQuest(){
+    renderActiveQuest();
+    renderQuestList();
+    renderInv();
+  }
+  function renderActiveQuest(){
+    var aq = state.activeQuest;
+    if (!aq){ $('activeQuestBox').innerHTML = ''; return; }
+    var q = QUEST_MAP[aq.qid];
+    if (!q){ state.activeQuest = null; $('activeQuestBox').innerHTML = ''; return; }
+    var team = aq.team.map(function(id){ return state.employees.find(function(x){ return x.id === id; }); }).filter(Boolean);
+    var ports = team.map(function(e){ return portraitHTML(e, 34); }).join('');
+    $('activeQuestBox').innerHTML =
+      '<div class="quest active-quest"><div class="q-mid">' +
+      '<div class="q-name">' + q.ico + ' ' + q.name + ' <span style="color:var(--gold);font-size:11px;">遠征中（成功率 ' + Math.round(aq.rate) + '%）</span></div>' +
+      '<div class="q-ports">' + ports + '</div>' +
+      '<div class="qbar"><div class="qfill" id="qfill"></div></div>' +
+      '<div class="q-msg" id="qmsg">奮闘中…</div></div></div>';
+  }
+  function renderQuestList(){
+    var now = Date.now();
+    var html = '';
+    ['bronze','silver','gold','legend'].forEach(function(tier){
+      var t = QUEST_TIER_DEFS[tier];
+      html += '<div class="qtier">' + t.ico + ' ' + t.name +
+        ' <span class="qtier-sub">所要 約' + t.dur + '秒・クールダウン ' + fmtDur(t.cd) + (tier==='legend' ? '・UR級アイテムの唯一の入手源！' : '') + '</span></div>';
+      QUESTS.forEach(function(q){
+        if (q.tier !== tier) return;
+        var cdLeft = Math.max(0, ((state.questCd[q.id]||0) - now) / 1000);
+        var req = Object.keys(q.req).map(function(k){ return STAT_DEFS[k].ico + STAT_DEFS[k].name + ' ' + q.req[k]; }).join(' ');
+        var rw = questReward(q, derived.income);
+        var btn;
+        if (state.activeQuest) btn = '<button class="btn small ghost" disabled>遠征中</button>';
+        else if (cdLeft > 0) btn = '<button class="btn small ghost" disabled>CD ' + fmtDur(Math.ceil(cdLeft)) + '</button>';
+        else btn = '<button class="btn small gold" data-act="quest-open" data-q="' + q.id + '">挑戦</button>';
+        html += '<div class="quest"><div class="q-ico">' + q.ico + '</div>' +
+          '<div class="q-mid"><div class="q-name">' + q.name + '</div>' +
+          '<div class="q-req">要求 ' + req + '</div>' +
+          '<div class="q-rw">成功報酬 ' + fmtMoney(rw.money) + ' ＋ XP' + rw.xp.toLocaleString('ja-JP') + '/人 ＋ アイテム抽選</div></div>' +
+          btn + '</div>';
+      });
+    });
+    $('questList').innerHTML = html;
+  }
+  function itemEffectLabel(it){
+    if (it.cat === 'xp') return '研修系：社員1人にXP +' + it.xp.toLocaleString('ja-JP');
+    if (it.cat === 'stat'){
+      var parts = [];
+      Object.keys(it.stat).forEach(function(k){
+        parts.push((k === 'all' ? '全ステータス' : STAT_DEFS[k].name) + ' +' + it.stat[k]);
+      });
+      return '強化系：' + parts.join('・') + '（永続）';
+    }
+    if (it.cat === 'buff') return 'バフ系：' + (it.buff.kind === 'income' ? '全社売上' : '獲得XP') + ' ×' + it.buff.mult + '（' + fmtDur(it.buff.dur) + '・重複不可）';
+    if (it.cat === 'ticket') return 'チケット系：パック購入時に自動適用確認';
+    return '';
+  }
+  function renderInv(){
+    var ids = Object.keys(state.items).filter(function(id){ return state.items[id] > 0 && ITEM_MAP[id]; });
+    ids.sort(function(a,b){
+      var d = RARS.indexOf(ITEM_MAP[b].rar) - RARS.indexOf(ITEM_MAP[a].rar);
+      return d || (a < b ? -1 : 1);
+    });
+    var html = '';
+    ids.forEach(function(id){
+      var it = ITEM_MAP[id];
+      html += '<div class="item" data-act="item-use" data-item="' + id + '" style="cursor:pointer;">' +
+        '<span class="item-ico">' + it.ico + '</span>' +
+        '<div class="item-mid"><div class="item-name">' + rarTag(it.rar) + ' ' + it.name + '</div>' +
+        '<div class="item-desc">' + itemEffectLabel(it) + '</div></div>' +
+        '<span class="item-count">×' + state.items[id] + '</span></div>';
+    });
+    if (!html) html = '<div class="hint" style="text-align:center;padding:14px 0;">アイテムを持っていません。クエストやショップで入手しよう！</div>';
+    $('invList').innerHTML = html;
+  }
+  /* v2: クエスト進行（演出中も資金は tick で増え続ける） */
+  var lastQMsg = 0;
+  function updateQuestProgress(now){
+    var aq = state.activeQuest;
+    if (!aq) return;
+    if (now >= aq.end){ resolveQuest(now); return; }
+    if (curTab === 'quest'){
+      var f = $('qfill');
+      if (f) f.style.width = Math.min(100, (now - aq.start) / (aq.end - aq.start) * 100) + '%';
+      var m = $('qmsg');
+      if (m && now - lastQMsg > 3000){
+        lastQMsg = now;
+        m.textContent = QUEST_MSGS[Math.floor(Math.random() * QUEST_MSGS.length)];
+      }
+    }
+  }
+  function resolveQuest(now){
+    var aq = state.activeQuest;
+    state.activeQuest = null;
+    var q = QUEST_MAP[aq.qid];
+    if (!q){ save(); return; }
+    var team = aq.team.map(function(id){ return state.employees.find(function(x){ return x.id === id; }); }).filter(Boolean);
+    var t = QUEST_TIER_DEFS[q.tier];
+    state.questCd[q.id] = now + t.cd * 1000;
+    var win = Math.random() * 100 < aq.rate;
+    var rw = questReward(q, derived.income);
+    var lines = [];
+    state.stats.quests++;
+    if (win){
+      state.stats.questWins++;
+      state.money += rw.money;
+      state.totalEarned += rw.money;
+      lines.push(fmtMoney(rw.money) + ' を かくとくした！');
+    }
+    var xpEach = Math.floor(win ? rw.xp : rw.xp / 2) * (dexComplete(state,'xp') ? 1.1 : 1);
+    team.forEach(function(e){
+      var ups = gainXp(e, xpEach);
+      if (ups.length) enqueueLevelUps(e, ups);
+    });
+    lines.push('派遣メンバーは けいけんち ' + Math.floor(xpEach).toLocaleString('ja-JP') + ' を かくとくした！');
+    if (win){
+      var lukSum = 0;
+      team.forEach(function(e){ lukSum += empStats(e).luk + dexStatBonus(state); });
+      var dropped = rollQuestDrop(q.tier, lukSum);
+      if (dropped){
+        addItem(state, dropped, 1);
+        var it = ITEM_MAP[dropped];
+        lines.push(it.ico + '「' + it.name + '」を てにいれた！');
+      }
+    }
+    save();
+    showModal(
+      '<h3>' + q.ico + ' ' + q.name + '</h3>' +
+      '<div class="big" style="color:' + (win ? 'var(--gold)' : 'var(--sub)') + ';">' + (win ? '⭐ クエスト成功！' : '💧 クエスト失敗…') + '</div>' +
+      '<div class="dqstat" style="margin:10px 0;">' + lines.map(function(l){ return '▼ ' + l; }).join('<br>') + '</div>' +
+      (win ? '' : '<p>失敗してもXPは半分もらえる。社員を鍛えて再挑戦だ！</p>') +
+      '<button class="btn gold" data-act="close-modal">OK</button>');
+    checkDex();
+    if (curTab === 'quest') renderQuest();
+  }
+  /* v2: クエスト派遣メンバー選択（ボトムシート流用） */
+  var questPick = [], questPickQ = null;
+  function openQuestSheet(qid){
+    if (state.activeQuest){ toast('別のクエストが進行中です'); return; }
+    if ((state.questCd[qid]||0) > Date.now()){ toast('クールダウン中です'); return; }
+    var q = QUEST_MAP[qid];
+    questPickQ = qid; questPick = [];
+    var reqLbl = Object.keys(q.req).map(function(k){ return STAT_DEFS[k].name; }).join('・');
+    var list = state.employees.slice();
+    list.sort(function(a,b){
+      var sa = 0, sb = 0;
+      Object.keys(q.req).forEach(function(k){ sa += empStats(a)[k]; sb += empStats(b)[k]; });
+      return sb - sa;
+    });
+    var html = '<div class="hint" style="padding:6px;">派遣する社員を<b>3人</b>選択（' + reqLbl + ' が高いほど成功率UP・配属と兼務OK）</div>';
+    if (!list.length) html += '<div class="hint" style="padding:18px 6px;text-align:center;">社員がいません。パックで採用しましょう！</div>';
+    list.forEach(function(e){
+      var vals = Object.keys(q.req).map(function(k){ return STAT_DEFS[k].ico + (empStats(e)[k] + dexStatBonus(state)); }).join(' ');
+      html += '<div class="sheet-emp" data-act="quest-pick" data-emp="' + e.id + '">' +
+        pchip(e, 40) +
+        '<div class="emp-mid"><div class="emp-name">' + (e.nick ? '<span class="emp-nick">《' + e.nick + '》</span>' : '') + e.ln + ' ' + e.fn + '</div>' +
+        '<div class="emp-sub">' + JOB_DEFS[e.job].emoji + JOB_DEFS[e.job].name + '・Lv' + e.lv + '・' + vals + '</div></div></div>';
+    });
+    html += '<div class="q-start-bar"><span id="qRate">選択中 0/3人</span>' +
+      '<button class="btn gold" id="btnQStart" data-act="quest-start" disabled>この3人で挑戦！</button></div>';
+    showSheet(q.ico + ' ' + q.name + ' — メンバー選択', html);
+  }
+  function updateQuestPickUI(){
+    var q = QUEST_MAP[questPickQ];
+    var lbl = $('qRate'), btn = $('btnQStart');
+    if (!q || !lbl || !btn) return;
+    if (questPick.length === 3){
+      var team = questPick.map(function(id){ return state.employees.find(function(x){ return x.id === id; }); }).filter(Boolean);
+      lbl.textContent = '成功率 ' + Math.round(questSuccessRate(q, team, dexStatBonus(state))) + '%';
+      btn.disabled = false;
+    } else {
+      lbl.textContent = '選択中 ' + questPick.length + '/3人';
+      btn.disabled = true;
+    }
+  }
+  /* v2: アイテム使用フロー */
+  function useItem(iid){
+    var it = ITEM_MAP[iid];
+    if (!it || !(state.items[iid] > 0)) return;
+    if (it.cat === 'ticket'){ toast('🎫 チケットはパック購入時に自動で使用確認されます'); return; }
+    if (it.cat === 'buff'){
+      var now = Date.now();
+      if (state.buff && state.buff.until > now){ toast('⏱️ 既にバフが有効です（重複不可）'); return; }
+      state.items[iid]--;
+      state.stats.itemsUsed++;
+      var dur = Math.round(it.buff.dur * (dexComplete(state,'buff') ? 1.2 : 1)); /* 図鑑コンプでバフ時間+20% */
+      state.buff = {kind:it.buff.kind, mult:it.buff.mult, until:now + dur*1000, name:it.name, ico:it.ico};
+      save();
+      showModal('<h3>' + it.ico + ' ' + it.name + '</h3>' +
+        '<div class="dqstat" style="margin:10px 0;">▼ ' + (it.buff.kind === 'income' ? 'ぜんしゃの うりあげ' : 'ぜんしゃいんの けいけんち') + 'が<br>　' + it.buff.mult + 'ばいに なった！<br>▼ こうかは ' + fmtDur(dur) + ' つづく！</div>' +
+        '<button class="btn gold" data-act="close-modal">OK</button>');
+      derived = calcDerived(state);
+      renderHeader();
+      if (curTab === 'quest') renderInv();
+      if (curTab === 'packs') renderShop();
+      return;
+    }
+    openItemTargetSheet(iid); /* 研修系・強化系は対象社員を選択 */
+  }
+  function openItemTargetSheet(iid){
+    var it = ITEM_MAP[iid];
+    var list = state.employees.slice();
+    list.sort(function(a,b){
+      var d = RARS.indexOf(b.rar) - RARS.indexOf(a.rar);
+      return d || b.lv - a.lv;
+    });
+    var html = '';
+    if (!list.length) html = '<div class="hint" style="padding:18px 6px;text-align:center;">社員がいません。</div>';
+    list.forEach(function(e){
+      var capped = e.lv >= LV_CAP[e.rar];
+      html += '<div class="sheet-emp" data-act="item-target" data-item="' + iid + '" data-emp="' + e.id + '">' +
+        pchip(e, 40) +
+        '<div class="emp-mid"><div class="emp-name">' + (e.nick ? '<span class="emp-nick">《' + e.nick + '》</span>' : '') + e.ln + ' ' + e.fn + '</div>' +
+        '<div class="emp-sub">' + JOB_DEFS[e.job].emoji + JOB_DEFS[e.job].name + '・Lv' + e.lv +
+        (it.cat === 'xp' ? (capped ? '（Lv上限）' : '・あと' + Math.max(0, xpNeed(e.lv) - Math.floor(e.xp||0)).toLocaleString('ja-JP') + 'XP') : '') +
+        '</div></div></div>';
+    });
+    showSheet(it.ico + ' ' + it.name + ' — 対象社員を選択', html);
+  }
+  function applyItemTo(iid, empId){
+    var it = ITEM_MAP[iid];
+    var e = state.employees.find(function(x){ return x.id === empId; });
+    if (!it || !e || !(state.items[iid] > 0)) return;
+    closeSheet();
+    if (it.cat === 'xp'){
+      if (e.lv >= LV_CAP[e.rar]){ toast(e.ln + ' ' + e.fn + ' はレベル上限です'); return; }
+      state.items[iid]--;
+      state.stats.itemsUsed++;
+      var amount = it.xp * (dexComplete(state,'xp') ? 1.1 : 1);
+      var ups = gainXp(e, amount);
+      save();
+      if (ups.length) enqueueLevelUps(e, ups);
+      else {
+        dqQueue.push('▼ ' + e.ln + ' ' + e.fn + 'は ' + it.name + ' で しゅぎょうした！\nけいけんちを ' + Math.floor(amount).toLocaleString('ja-JP') + ' かくとくした！');
+        pumpDQ();
+      }
+    } else if (it.cat === 'stat'){
+      state.items[iid]--;
+      state.stats.itemsUsed++;
+      var s = empStats(e), lines = [];
+      Object.keys(it.stat).forEach(function(k){
+        if (k === 'all'){
+          STAT_KEYS.forEach(function(kk){ s[kk] += it.stat.all; });
+          lines.push('ぜんステータスが ' + it.stat.all + ' あがった！');
+        } else {
+          s[k] += it.stat[k];
+          lines.push(STAT_DEFS[k].name + 'が ' + it.stat[k] + ' あがった！');
+        }
+      });
+      save();
+      dqQueue.push('▼ ' + e.ln + ' ' + e.fn + 'は ' + it.name + ' を つかった！\n' + lines.join('\n'));
+      pumpDQ();
+    }
+    if (curTab === 'quest') renderQuest(); else renderCurrentTab();
+  }
+
+  /* ---------- affordability ---------- */
+  function refreshAffordance(){
+    var btns = document.querySelectorAll('button[data-cost]');
+    for (var i=0;i<btns.length;i++){
+      var b = btns[i], c = +b.getAttribute('data-cost');
+      var ok = state.money >= c;
+      b.disabled = !ok;
+      if (b.getAttribute('data-act')==='buy'){
+        b.classList.toggle('pulse', ok);
+      }
+    }
+  }
+
+  /* ---------- assignment ---------- */
+  function openAssignSheet(deptId){
+    var def = DEPTS[deptId];
+    var free = state.employees.filter(function(e){ return !e.dept; });
+    free.sort(function(a,b){ return empProdIn(b,deptId) - empProdIn(a,deptId); });
+    var html = '';
+    if (!free.length){
+      html = '<div class="hint" style="padding:18px 6px;text-align:center;">未配属の社員がいません。<br>パックで採用するか、他部署から外してください。</div>';
+    }
+    free.forEach(function(e){
+      var m = def.job === e.job;
+      html += '<div class="sheet-emp" data-act="assign" data-emp="' + e.id + '" data-dept="' + deptId + '">' +
+        pchip(e, 40) +
+        '<div class="emp-mid"><div class="emp-name">' + (e.nick?'<span class="emp-nick">《'+e.nick+'》</span>':'') + e.ln + ' ' + e.fn + '</div>' +
+        '<div class="emp-sub">' + JOB_DEFS[e.job].emoji + JOB_DEFS[e.job].name + '・Lv' + e.lv + '</div></div>' +
+        '<div class="emp-right" style="font-size:12px;font-weight:800;color:var(--navy2);">' +
+        fmtMoney(empProdIn(e,deptId)) + '/秒' + (m?'<div class="match">⭐一致×1.5</div>':'') + '</div></div>';
+    });
+    showSheet(def.emoji + ' ' + def.name + ' に配属する社員を選択', html);
+  }
+  function openUnassignSheet(deptId, empId){
+    var e = state.employees.find(function(x){ return x.id === empId; });
+    if (!e) return;
+    var html = '<div style="padding:8px 6px 14px;">' +
+      '<div class="emp" style="margin-bottom:12px;">' + pchip(e, 44) +
+      '<div class="emp-mid"><div class="emp-name">' + (e.nick?'<span class="emp-nick">《'+e.nick+'》</span>':'') + e.ln + ' ' + e.fn + '</div>' +
+      '<div class="emp-sub">' + JOB_DEFS[e.job].emoji + JOB_DEFS[e.job].name + '・Lv' + e.lv + '・' + fmtMoney(empProd(e)) + '/秒</div></div></div>' +
+      '<button class="btn danger" style="width:100%;" data-act="unassign" data-emp="' + e.id + '">この社員を部署から外す</button></div>';
+    showSheet(DEPTS[deptId].emoji + ' ' + DEPTS[deptId].name, html);
+  }
+
+  /* ---------- offline ---------- */
+  function grantOffline(){
+    if (!state.lastSeen) return;
+    var elapsed = Date.now() - state.lastSeen;
+    if (elapsed < 60000) return; // 1分未満は無視
+    var d = calcDerived(state);
+    var r = calcOffline(elapsed, d.income, d.offRate);
+    if (r.gain < 1) return;
+    state.money += r.gain;
+    state.totalEarned += r.gain;
+    showModal('<h3>💤 おかえりなさい、社長！</h3>' +
+      '<p>離席中も社員たちは働いていました。</p>' +
+      '<div class="big">+' + fmtMoney(r.gain) + '</div>' +
+      '<p><b>' + fmtDur(r.sec) + '</b> の間に稼ぎました<br>（オフライン収益率 ' + Math.round(d.offRate*100) + '%・上限8時間）</p>' +
+      '<button class="btn gold" data-act="close-modal">受け取る</button>');
+  }
+
+  /* ---------- tabs ---------- */
+  function switchTab(t){
+    curTab = t;
+    document.querySelectorAll('.tabpane').forEach(function(p){ p.classList.remove('active'); });
+    $('tab-' + t).classList.add('active');
+    document.querySelectorAll('nav button').forEach(function(b){
+      b.classList.toggle('on', b.getAttribute('data-tab') === t);
+    });
+    $('main').scrollTop = 0;
+    renderCurrentTab();
+  }
+  function renderCurrentTab(){
+    derived = calcDerived(state);
+    if (curTab==='office') renderOffice();
+    else if (curTab==='packs') renderPacks();
+    else if (curTab==='emps') renderEmps();
+    else if (curTab==='quest') renderQuest();
+    else renderMisc();
+  }
+
+  /* ---------- settings ---------- */
+  function doExport(){
+    save();
+    var json = JSON.stringify(state);
+    var code = btoa(unescape(encodeURIComponent(json)));
+    $('exportArea').value = code;
+    toast('セーブコードを書き出しました');
+  }
+  function doCopy(){
+    var ta = $('exportArea');
+    if (!ta.value) { doExport(); }
+    ta.select(); ta.setSelectionRange(0, 999999);
+    var ok = false;
+    try{ ok = document.execCommand('copy'); }catch(e){}
+    if (!ok && navigator.clipboard) navigator.clipboard.writeText(ta.value);
+    toast('コピーしました');
+  }
+  function doImport(){
+    var code = $('importArea').value.trim();
+    if (!code) { toast('コードを貼り付けてください'); return; }
+    try{
+      var json;
+      try{ json = decodeURIComponent(escape(atob(code))); }
+      catch(e){ json = code; } // 素のJSONも受け付ける
+      var st = JSON.parse(json);
+      if (typeof st.money !== 'number' || !Array.isArray(st.employees)) throw new Error('bad');
+      if (typeof st.v !== 'number') st.v = 1; /* vを持たないコード＝v1 */
+      var base = newState();
+      Object.keys(base).forEach(function(k){ if (st[k] === undefined) st[k] = base[k]; });
+      migrateToLatest(st); /* 旧エクスポートコード(v1/v2)もv3に連鎖移行 */
+      state = st;
+      state.lastSeen = 0;
+      dispMoney = state.money;
+      save();
+      toast('インポートに成功しました');
+      checkEmpDex();
+      renderCurrentTab();
+      renderHeader();
+    }catch(e){ toast('インポート失敗：コードが不正です'); }
+  }
+  function doReset(){
+    var b = $('btnReset');
+    if (!resetArmed){
+      resetArmed = true;
+      b.textContent = '⚠️ 本当にリセットする（もう一度タップ）';
+      resetTimer = setTimeout(function(){
+        resetArmed = false; b.textContent = 'データをリセット';
+      }, 5000);
+      return;
+    }
+    clearTimeout(resetTimer);
+    resetArmed = false;
+    try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
+    state = newState();
+    dispMoney = state.money;
+    derived = calcDerived(state);
+    b.textContent = 'データをリセット';
+    toast('データをリセットしました');
+    renderCurrentTab();
+    renderHeader();
+  }
+
+  /* ---------- global event delegation ---------- */
+  document.addEventListener('click', function(ev){
+    var el = ev.target.closest('[data-act]');
+    if (!el) return;
+    var act = el.getAttribute('data-act');
+    switch(act){
+      case 'buy': buyPack(el.getAttribute('data-pack')); break;
+      case 'flip': flipCard(el.getAttribute('data-i')); break;
+      case 'close-modal': closeModal(); break;
+      case 'slot-empty': openAssignSheet(el.getAttribute('data-dept')); break;
+      case 'slot': openUnassignSheet(el.getAttribute('data-dept'), +el.getAttribute('data-emp')); break;
+      case 'assign': {
+        var e = state.employees.find(function(x){ return x.id === +el.getAttribute('data-emp'); });
+        var d = el.getAttribute('data-dept');
+        var used = state.employees.filter(function(x){ return x.dept === d; }).length;
+        if (e && used < state.depts[d].slots){ e.dept = d; save(); }
+        closeSheet(); renderCurrentTab();
+        break;
+      }
+      case 'unassign': {
+        var e2 = state.employees.find(function(x){ return x.id === +el.getAttribute('data-emp'); });
+        if (e2) e2.dept = null;
+        save(); closeSheet(); renderCurrentTab();
+        break;
+      }
+      case 'expand': {
+        var dd = el.getAttribute('data-dept');
+        var cost = slotCost(state.depts[dd].slots);
+        if (state.money >= cost){
+          state.money -= cost;
+          state.depts[dd].slots++;
+          state.stats.expands++;
+          save(); renderCurrentTab();
+          toast(DEPTS[dd].name + 'のスロットを拡張しました（' + state.depts[dd].slots + '枠）');
+        }
+        break;
+      }
+      case 'fjob': filterJob = el.getAttribute('data-v'); renderEmps(); break;
+      case 'frar': filterRar = el.getAttribute('data-v'); renderEmps(); break;
+      /* ---------- v3 actions ---------- */
+      case 'eview': empView = el.getAttribute('data-v'); renderEmps(); break;
+      case 'edex-detail': {
+        var dm = findByMid(state, el.getAttribute('data-mid'));
+        if (dm) openEmpDetail(dm.id); /* 所持済のみ詳細表示 */
+        break;
+      }
+      case 'dbg-add': {
+        var amt = parseFloat(el.getAttribute('data-amt')) || 0;
+        state.money = Math.max(0, Math.min(1e18, state.money + amt));
+        save(); renderHeader(); refreshAffordance();
+        toast('💰 資金 +' + fmtMoney(amt) + '（現在 ' + fmtMoney(state.money) + '）');
+        break;
+      }
+      /* ---------- v2 actions ---------- */
+      case 'buy-ticket': closeModal(); buyPack(el.getAttribute('data-pack'), el.getAttribute('data-item')); break;
+      case 'buy-noticket': closeModal(); buyPack(el.getAttribute('data-pack'), null); break;
+      case 'shop-buy': {
+        var sid = el.getAttribute('data-item');
+        var sit = ITEM_MAP[sid];
+        if (!sit) break;
+        var sp = SHOP_PRICES[sit.rar];
+        if (state.money >= sp){
+          state.money -= sp;
+          addItem(state, sid, 1);
+          save();
+          toast(sit.ico + '「' + sit.name + '」を購入した！');
+          checkDex();
+          renderShop();
+          refreshAffordance();
+        }
+        break;
+      }
+      case 'emp-detail': openEmpDetail(+el.getAttribute('data-emp')); break;
+      case 'quest-open': openQuestSheet(el.getAttribute('data-q')); break;
+      case 'quest-pick': {
+        var qeid = +el.getAttribute('data-emp');
+        var qidx = questPick.indexOf(qeid);
+        if (qidx >= 0){ questPick.splice(qidx, 1); el.classList.remove('sel'); }
+        else if (questPick.length < 3){ questPick.push(qeid); el.classList.add('sel'); }
+        else toast('3人まで選択できます');
+        updateQuestPickUI();
+        break;
+      }
+      case 'quest-start': {
+        var qq = QUEST_MAP[questPickQ];
+        if (!qq || questPick.length !== 3 || state.activeQuest) break;
+        var qteam = questPick.map(function(id){ return state.employees.find(function(x){ return x.id === id; }); }).filter(Boolean);
+        if (qteam.length !== 3) break;
+        var qrate = questSuccessRate(qq, qteam, dexStatBonus(state));
+        var qt = QUEST_TIER_DEFS[qq.tier];
+        var qnow = Date.now();
+        state.activeQuest = {qid:qq.id, team:questPick.slice(), start:qnow, end:qnow + qt.dur*1000, rate:qrate};
+        save();
+        closeSheet();
+        toast('⚔️ ' + qq.name + ' に出発！（約' + qt.dur + '秒）');
+        if (curTab === 'quest') renderQuest();
+        break;
+      }
+      case 'item-use': useItem(el.getAttribute('data-item')); break;
+      case 'item-target': applyItemTo(el.getAttribute('data-item'), +el.getAttribute('data-emp')); break;
+    }
+  });
+  $('dqwin').addEventListener('click', nextDQ);
+  $('btnFlipAll').addEventListener('click', flipAll);
+  $('btnClosePack').addEventListener('click', closePack);
+  $('sheetWrap').addEventListener('click', function(ev){ if (ev.target === $('sheetWrap')) closeSheet(); });
+  document.querySelectorAll('nav button').forEach(function(b){
+    b.addEventListener('click', function(){ switchTab(b.getAttribute('data-tab')); });
+  });
+  $('btnExport').addEventListener('click', doExport);
+  $('btnCopy').addEventListener('click', doCopy);
+  $('btnImport').addEventListener('click', doImport);
+  $('btnReset').addEventListener('click', doReset);
+  /* v3: デバッグ資金設定 */
+  $('btnSetMoney').addEventListener('click', function(){
+    var v = parseFloat($('debugMoney').value);
+    if (!isFinite(v)){ toast('数値を入力してください'); return; }
+    v = Math.max(0, Math.min(1e18, v));
+    state.money = v;
+    dispMoney = v;
+    save();
+    derived = calcDerived(state);
+    renderHeader();
+    refreshAffordance();
+    toast('💰 資金を ' + fmtMoney(v) + ' に設定しました');
+  });
+
+  /* ---------- lifecycle ---------- */
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden){
+      save();
+    } else {
+      lastTick = Date.now();
+      grantOffline();
+      state.lastSeen = 0;
+      derived = calcDerived(state);
+      renderCurrentTab();
+    }
+  });
+  window.addEventListener('pagehide', save);
+
+  /* ---------- boot ---------- */
+  state = load() || newState();
+  derived = calcDerived(state);
+  dispMoney = state.money;
+  grantOffline();
+  state.lastSeen = 0;
+  renderHeader();
+  renderCurrentTab();
+  checkEmpDex(); /* v3: 移行後セーブの図鑑コンプ報酬付与 */
+  animMoney();
+  setInterval(tick, 250);   // ゲームループ（deltaTime計算・rAF不使用）
+  setInterval(save, 5000);  // オートセーブ
+
+  // Service Worker（https配信時のみ / file://直開きでは登録しない）
+  if (location.protocol === 'https:' && 'serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  }
+})();
+</script>
+</body>
+</html>

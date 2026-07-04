@@ -1,0 +1,26 @@
+{
+  "name": "ホールディングス・タイクーン",
+  "short_name": "HDタイクーン",
+  "description": "社員パックを開封して部署に配属、放置で売上が伸びる経営タイクーンゲーム",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4F6FA",
+  "theme_color": "#1B2A4A",
+  "lang": "ja",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
