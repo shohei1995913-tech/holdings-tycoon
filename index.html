@@ -409,7 +409,7 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
         <div class="hint" style="margin:0 0 8px;">全ての進行状況を消して最初からはじめます。取り消せません。</div>
         <button class="btn small danger" id="btnReset">ニューゲーム（はじめから）</button>
       </div>
-      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.0「群雄割拠」<br>リバースモール Game Studio</div>
+      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.0.1「群雄割拠」<br>リバースモール Game Studio</div>
     </section>
   </main>
   <nav id="tabbar">
@@ -2658,6 +2658,44 @@ if (typeof document !== 'undefined') (function(){
     html += '<button class="btn danger" data-act="unassign" data-emp="' + e.id + '">この社員を部署から外す' + (post ? '（役職も解任）' : '') + '</button></div></div>';
     showSheet(DEPTS[dk].emoji + ' ' + DEPTS[dk].name + ' — ' + e.ln + ' ' + e.fn, html);
   }
+  /* v5.0.1: 社員画面からの直接配属 — 空き枠一覧シート */
+  function openEmpAssignSheet(empId){
+    var e = findEmpById(state, empId);
+    if (!e) return;
+    closeModal();
+    var b = dexStatBonus(state);
+    var rows = [];
+    AREAS.forEach(function(a, idx){
+      var site = state.sites[a.id];
+      if (!site) return;
+      DEPT_IDS.forEach(function(dk){
+        var dep = site.depts[dk];
+        if (!dep) return;
+        if (e.assign && e.assign.area === a.id && e.assign.dept === dk) return; /* 現在の配属先は候補から除外 */
+        var freeN = dep.lv - deptMembers(state, a.id, dk).length;
+        if (freeN <= 0) return;
+        rows.push({area:a.id, dk:dk, free:freeN, apt:(e.job === dk ? 1 : 0), dem:(a.demand === dk ? 1 : 0), ord:idx});
+      });
+    });
+    rows.sort(function(x, y){ return (y.apt - x.apt) || (y.dem - x.dem) || (x.ord - y.ord); }); /* 適正一致＞需要一致＞拠点順 */
+    var html = '<div class="sheet-emp" style="cursor:default;">' + pchip(e, 40) +
+      '<div class="emp-mid"><div class="emp-name">' + (e.nick ? '<span class="emp-nick">《' + e.nick + '》</span>' : '') + e.ln + ' ' + e.fn + '</div>' +
+      '<div class="emp-sub">' + aptLabel(e.job) + '・Lv' + e.lv + '・' +
+      (e.assign ? '現在：' + siteLabel(e.assign.area) + ' ' + DEPTS[e.assign.dept].name : '未配置') + '</div></div></div>';
+    if (!rows.length){
+      html += '<div class="hint" style="padding:18px 6px;text-align:center;">空き枠がありません。<br>拠点タブで部署の設置・Lvアップを。</div>';
+    }
+    rows.forEach(function(r){
+      var def = DEPTS[r.dk];
+      html += '<div class="sheet-emp" data-act="emp-assign-to" data-emp="' + e.id + '" data-area="' + r.area + '" data-dept="' + r.dk + '">' +
+        '<div class="emp-mid"><div class="emp-name">' + def.emoji + ' ' + AREA_MAP[r.area].name + ' ＞ ' + def.name + '（空き' + r.free + '）</div>' +
+        '<div class="emp-sub">戦力' + Math.round(empAreaPower(e, r.dk, b)) +
+        (r.apt ? ' <span class="match">⭐一致×1.5</span>' : '') +
+        (r.dem ? ' <span class="match">📈需要×1.5</span>' : '') + '</div></div>' +
+        '<span style="font-size:11px;font-weight:800;color:var(--gold);">' + (e.assign ? '異動 ▶' : '配属 ▶') + '</span></div>';
+    });
+    showSheet('📍 ' + e.ln + ' ' + e.fn + ' の配属先を選択', html);
+  }
   /* v5: 役職候補シート */
   function openPostSheet(kind, areaId, dk){
     var d = POST_DEFS[kind];
@@ -2920,7 +2958,9 @@ if (typeof document !== 'undefined') (function(){
         '<div class="emp-sub">💗忠誠 <b style="color:' + loyCol + ';">' + loy + '</b>' + loyIco +
         '<span class="loybar" style="display:inline-block;width:52px;vertical-align:middle;margin:0 4px;"><i style="width:' + loy + '%;background:' + loyCol + ';"></i></span>' +
         '・💰給与 ' + fmtMoney(empSalary(state, e)) + '/期（' + salaryPolicyOf(e).name + '）</div></div>' +
-        '<div class="emp-right" style="font-size:10px;color:var(--sub);font-weight:700;">ステータス<br>▶</div></div>';
+        '<div class="emp-right" style="font-size:10px;color:var(--sub);font-weight:700;text-align:center;">ステータス<br>▶' +
+        (e.assign ? '' : '<br><button class="btn small gold" data-act="emp-assign-open" data-emp="' + e.id + '" style="margin-top:4px;font-size:10px;padding:3px 8px;">配属</button>') +
+        '</div></div>';
     });
     if (!list.length) html = '<div class="hint" style="text-align:center;padding:24px 0;">該当する社員がいません。パックで採用しましょう！</div>';
     $('empList').innerHTML = html;
@@ -3255,6 +3295,13 @@ if (typeof document !== 'undefined') (function(){
       '生産力：' + fmtMoney(empProd(e, b)) + '/秒</div>' +
       '<div class="hint" style="text-align:left;margin-top:8px;">★は才能（レベルアップ時の成長率）。配属中は毎秒XPを自動獲得。同じ社員をパックで引くと覚醒し、全ステ+（才能×2）＆生産力+5%/段階。' +
       (b ? '図鑑ボーナスで全ステ+' + b + '中。' : '') + '</div>' +
+      /* v5.0.1: 社員画面からの直接配属 */
+      (e.assign
+        ? '<div class="hint" style="text-align:left;margin-top:8px;">📍 現在の配属：<b>' + siteLabel(e.assign.area) + ' ' + DEPTS[e.assign.dept].name + '</b></div>' +
+          '<div style="display:flex;gap:8px;margin-top:8px;">' +
+          '<button class="btn" style="flex:1;" data-act="emp-assign-open" data-emp="' + e.id + '">📍 異動する</button>' +
+          '<button class="btn ghost" style="flex:1;" data-act="emp-unassign" data-emp="' + e.id + '">配属を外す' + (findPost(state, e.id) ? '（役職も解任）' : '') + '</button></div>'
+        : '<button class="btn" data-act="emp-assign-open" data-emp="' + e.id + '" style="margin-top:8px;">📍 配属する</button>') +
       '<button class="btn gold" data-act="close-modal" style="margin-top:10px;">閉じる</button>');
   }
 
@@ -3687,6 +3734,36 @@ if (typeof document !== 'undefined') (function(){
         var e2 = state.employees.find(function(x){ return x.id === +el.getAttribute('data-emp'); });
         if (e2) unassignEmp(state, e2);
         save(); closeSheet(); renderCurrentTab();
+        break;
+      }
+      /* ---------- v5.0.1 actions: 社員画面からの直接配属 ---------- */
+      case 'emp-assign-open': openEmpAssignSheet(+el.getAttribute('data-emp')); break;
+      case 'emp-assign-to': {
+        var eaEmp = findEmpById(state, +el.getAttribute('data-emp'));
+        var eaArea = el.getAttribute('data-area'), eaDk = el.getAttribute('data-dept');
+        if (!eaEmp){ closeSheet(); break; }
+        var eaSite = state.sites[eaArea], eaDep = eaSite && eaSite.depts[eaDk];
+        if (!eaDep || deptMembers(state, eaArea, eaDk).length >= eaDep.lv){
+          toast('配属枠が満員です（枠数=部署Lv）');
+          openEmpAssignSheet(eaEmp.id); /* 最新の空き枠で再描画 */
+          break;
+        }
+        var eaMoved = !!eaEmp.assign;
+        if (eaMoved) unassignEmp(state, eaEmp); /* 旧枠解放＋役職解任（既存ルール） */
+        var eaRes = assignEmp(state, eaEmp, eaArea, eaDk);
+        if (!eaRes.ok){ toast(eaRes.err); closeSheet(); renderCurrentTab(); break; }
+        save(); closeSheet(); closeModal(); renderCurrentTab();
+        toast('📍 ' + eaEmp.ln + ' ' + eaEmp.fn + 'を' + AREA_MAP[eaArea].name + ' ' + DEPTS[eaDk].name + (eaMoved ? 'に異動しました' : 'に配属しました'));
+        break;
+      }
+      case 'emp-unassign': {
+        var euEmp = findEmpById(state, +el.getAttribute('data-emp'));
+        if (euEmp){
+          unassignEmp(state, euEmp);
+          save();
+          toast(euEmp.ln + ' ' + euEmp.fn + 'の配属を外しました');
+        }
+        closeModal(); closeSheet(); renderCurrentTab();
         break;
       }
       case 'post-open': openPostSheet(el.getAttribute('data-kind'), el.getAttribute('data-area'), el.getAttribute('data-dept')); break;
