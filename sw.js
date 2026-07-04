@@ -1,5 +1,5 @@
 /* ホールディングス・タイクーン — cache-first Service Worker */
-var CACHE_NAME = 'hd-tycoon-v3.1';
+var CACHE_NAME = 'hd-tycoon-v4.0';
 var ASSETS = [
   './',
   './index.html',
