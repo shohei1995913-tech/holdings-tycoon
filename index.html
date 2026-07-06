@@ -425,7 +425,7 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
       <div id="areaList"></div>
     </section>
     <section id="tab-sites" class="tabpane">
-      <h2 class="sec">🏢 拠点 — 座席表（着席＝配属＋任命）</h2>
+      <h2 class="sec">🏢 拠点・組織（自動任命）</h2>
       <div class="hint">部署の<b>席</b>に社員を座らせて経営。Lv1=一般席／Lv2=＋課長席（R以上）／Lv3=＋部長席（SR以上）。<b>役職席に座ると同時に就任</b>、席から外すと解任。<b class="match">⭐適正一致×1.5</b>・需要一致×1.5。</div>
       <div class="autoplace-bar"><button class="btn gold" style="flex:1;" data-act="auto-place">⚡ 全社おまかせ配置（空席のみ充填）</button></div>
       <div class="filters" id="siteChips"></div>
@@ -495,7 +495,7 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
         <div class="hint" style="margin:0 0 8px;">全ての進行状況を消して最初からはじめます。取り消せません。</div>
         <button class="btn small danger" id="btnReset">ニューゲーム（はじめから）</button>
       </div>
-      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.9<br>リバースモール Game Studio</div>
+      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.10<br>リバースモール Game Studio</div>
     </section>
   </main>
   <nav id="tabbar">
@@ -4472,7 +4472,7 @@ function renderSites(){
       }
       html += '</div></div>';
     });
-    $('siteBody').innerHTML = autoAppointDigestHTML(state) + html;
+    $('siteBody').innerHTML = autoAppointDigestHTML(state);
     refreshAffordance();
   }
   /* v5: 拠点開設シート */
@@ -6430,5 +6430,5 @@ function renderSites(){
   }
 })();
 </script>
-<style id="aa-hide">[data-act="seat-sit"],[data-act="seat-open"],[data-act="post-open"],[data-act="chief-open"],[data-act="post-set"],[data-act="post-clear"],[data-act="post-unset"],[data-act="chief-set"],[data-act="chief-unset"],[data-act="emp-assign-open"],[data-act="emp-unassign"]{display:none!important;}</style></body>
+<style id="aa-hide">[data-act="seat-sit"],[data-act="seat-open"],[data-act="post-open"],[data-act="chief-open"],[data-act="post-set"],[data-act="post-clear"],[data-act="post-unset"],[data-act="chief-set"],[data-act="chief-unset"],[data-act="emp-assign-open"],[data-act="emp-unassign"]{display:none!important;}</style><style id="aa-hide2">#tab-sites .hint,#tab-sites .autoplace-bar,#unassignedBadge{display:none!important;}</style></body>
 </html>
