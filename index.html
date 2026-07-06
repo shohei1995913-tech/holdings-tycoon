@@ -495,7 +495,7 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
         <div class="hint" style="margin:0 0 8px;">全ての進行状況を消して最初からはじめます。取り消せません。</div>
         <button class="btn small danger" id="btnReset">ニューゲーム（はじめから）</button>
       </div>
-      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.11<br>リバースモール Game Studio</div>
+      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.12<br>リバースモール Game Studio</div>
     </section>
   </main>
   <nav id="tabbar">
@@ -1661,7 +1661,7 @@ ROSTER.forEach(function(m){ RIVAL_MIDS[RIVAL_OF_MID[m.mid]].push(m.mid); });
 function rivalOf(mid){ return RIVAL_MAP[RIVAL_OF_MID[mid]] || null; }
 function rivalBelongLabel(mid){ /* 「テクノ武蔵 名古屋支社」 */
   var rv = rivalOf(mid);
-  return rv ? rv.name + ' ' + AREA_MAP[rv.home].name + '支社' : '';
+  return rv ? rv.name + ' ' + AREA_MAP[midArea(mid)].name + '支社' : '';
 }
 /* ---------- v5 pure: 初期シェア・競合状態 ---------- */
 function initAreaShare(){ var o = {player:0}; RIVALS.forEach(function(rv){ o[rv.id] = 20; }); return o; }
@@ -2140,6 +2140,8 @@ function optimizePlacement(state){
   Object.keys(state.sites).forEach(function(a){ state.sites[a].siteMgr = null; });
   state.execs.directors = [];
   state.execs.areaChiefs = {};
+  /* v5.12: LEGENDは自動で取締役に（席数まで・時給順）。以降のグリーディでは席に回さない。 */
+  state.employees.filter(function(e){ return e.rar==='LEGEND'; }).sort(function(x,y){ return empSalary(state,y)-empSalary(state,x); }).forEach(function(e){ if(state.execs.directors.length<DIRECTOR_SEATS) setDirector(state,e.id); });
   function totalPower(){ return Object.keys(state.sites).reduce(function(s, a){ return s + sitePower(state, a, b); }, 0); }
   function freeEmp(e){ return !e.assign && !findAnyPost(state, e.id); }
   /* 各役職席の「空き」を列挙。優先度は 席の価値順（director→areaChief→shishacho→bucho→kacho→staff）で
@@ -4371,8 +4373,9 @@ function openAreaSheet(areaId){
     showSpot(step);
   }
   /* ---------- v5: 拠点タブ ---------- */
-  function aaSalary(state,e){ try{ return empSalary(state,e); }catch(_){ return 0; } }
-function autoAppoint(state){ try{ if(typeof optimizePlacement==='function') optimizePlacement(state); }catch(e){} }
+  function aaSiteBadge(state,e){ try{ var p=findAnyPost(state,e.id); var a=''; if(p){ if(p.kind==='director') return '・🏛️役員会'; if(p.area) a=p.area; } if(!a && e.assign && e.assign.area) a=e.assign.area; if(!a) return ''; var nm=(AREA_MAP[a]&&AREA_MAP[a].name)?AREA_MAP[a].name:a; return '・📍'+nm; }catch(_){ return ''; } }
+function aaSalary(state,e){ try{ return empSalary(state,e); }catch(_){ return 0; } }
+function autoAppoint(state){ try{ if(state&&state.sites){ Object.keys(state.sites).forEach(function(a){ var st=state.sites[a]; if(!st.depts) st.depts={}; DEPT_IDS.forEach(function(dk){ if(!st.depts[dk]) st.depts[dk]={lv:3,kacho:null,bucho:null}; else if(st.depts[dk].lv<3) st.depts[dk].lv=3; }); }); } if(typeof optimizePlacement==='function') optimizePlacement(state); }catch(e){} }
 function aaRoleLabel(state,e){ try{ var p=findAnyPost(state,e.id); if(p){ var d=POST_DEFS[p.kind]; return d?d.name:'役職'; } }catch(_){} return e.assign?'一般':'控え'; }
 function autoAppointDigestHTML(state){ try{
   var css='<style>.aa-digest{margin:8px 0 12px;}.aa-note{font-size:11px;line-height:1.5;color:#1B2A4A;background:#FAFBFE;border:1px solid #E3E8F2;border-left:3px solid #1B2A4A;border-radius:6px;padding:8px 10px;margin-bottom:8px;}.aa-dept{border:1px solid #E3E8F2;border-radius:8px;padding:6px 8px 4px;margin-bottom:8px;background:#fff;}.aa-dh{font-weight:700;color:#1B2A4A;font-size:12px;margin-bottom:2px;}.aa-card{display:flex;align-items:center;gap:8px;padding:5px 4px;border-top:1px solid #F0F3F8;cursor:pointer;}.aa-pic{width:42px;height:42px;flex:0 0 42px;}.aa-pic img,.aa-pic svg{width:42px!important;height:42px!important;border-radius:50%;object-fit:cover;display:block;}.aa-info{flex:1;min-width:0;}.aa-nm{font-weight:700;font-size:13px;color:#1B2A4A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.aa-rar{font-size:9px;font-weight:700;padding:0 5px;border-radius:4px;border:1px solid #C7B37A;color:#8A6D1B;margin-left:4px;}.aa-sub{font-size:10px;color:#5A6B86;font-variant-numeric:tabular-nums;}.aa-role{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;border:1px solid #1B2A4A;color:#1B2A4A;flex:0 0 auto;text-align:center;}.aa-role.res{border-color:#C4CCD8;color:#98A2B3;}.aa-empty{font-size:11px;color:#98A2B3;padding:4px 0;}</style>';
@@ -4388,7 +4391,7 @@ function autoAppointDigestHTML(state){ try{
       h+='<div class="aa-card" data-act="emp-detail" data-id="'+e.id+'">'
         +'<span class="aa-pic">'+portraitHTML(e,42)+'</span>'
         +'<div class="aa-info"><div class="aa-nm">'+((e.ln||'')+(e.fn||''))+'<span class="aa-rar">'+e.rar+'</span></div>'
-        +'<div class="aa-sub">Lv'+(e.lv||1)+'・時給 ¥'+aaSalary(state,e).toLocaleString('ja-JP')+'</div></div>'
+        +'<div class="aa-sub">Lv'+(e.lv||1)+'・時給 ¥'+aaSalary(state,e).toLocaleString('ja-JP')+aaSiteBadge(state,e)+'</div></div>'
         +'<span class="aa-role'+resCls+'">'+role+'</span></div>';
     });
     h+='</div>';
@@ -6042,6 +6045,7 @@ function renderSites(){
         var soArea = el.getAttribute('data-area');
         var soRes = openSite(state, soArea);
         if (!soRes.ok){ toast(soRes.err); break; }
+        autoAppoint(state);
         save(); closeSheet();
         toast('🏗️ ' + siteLabel(soArea) + ' を開設しました！（' + fmtMoney(soRes.cost) + '）');
         curSite = soArea;
