@@ -495,7 +495,7 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
         <div class="hint" style="margin:0 0 8px;">全ての進行状況を消して最初からはじめます。取り消せません。</div>
         <button class="btn small danger" id="btnReset">ニューゲーム（はじめから）</button>
       </div>
-      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.14<br>リバースモール Game Studio</div>
+      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.15<br>リバースモール Game Studio</div>
     </section>
   </main>
   <nav id="tabbar">
@@ -4380,21 +4380,21 @@ function aaRoleLabel(state,e){ try{ var p=findAnyPost(state,e.id); if(p){ var d=
 function prefSheet(state, empId){ var e=findEmpById(state,empId); if(!e) return; var h='<div style="padding:6px 2px;"><div class="hint" style="margin-bottom:8px;">'+((e.ln||'')+(e.fn||''))+' の勤務希望地を指定すると、その拠点へ自動配属されます（拠点未開設のエリアは開設後に反映）。</div>'; h+='<button class="btn'+(!e.pref?' gold':'')+'" style="width:100%;margin-bottom:8px;" data-act="pref-set" data-id="'+empId+'" data-area="">指定なし（自動でおまかせ）</button>'; Object.keys(AREA_MAP).forEach(function(a){ var on=(e.pref===a); h+='<button class="chip'+(on?' on':'')+'" data-act="pref-set" data-id="'+empId+'" data-area="'+a+'">'+(state.sites[a]?'🏢':'📍')+AREA_MAP[a].name+'</button>'; }); h+='</div>'; showSheet('🏠 勤務希望地', h); }
 function autoAppointDigestHTML(state){ try{
   var css='<style>.aa-digest{margin:8px 0 12px;}.aa-note{font-size:11px;line-height:1.5;color:#1B2A4A;background:#FAFBFE;border:1px solid #E3E8F2;border-left:3px solid #1B2A4A;border-radius:6px;padding:8px 10px;margin-bottom:8px;}.aa-dept{border:1px solid #E3E8F2;border-radius:8px;padding:6px 8px 4px;margin-bottom:8px;background:#fff;}.aa-dh{font-weight:700;color:#1B2A4A;font-size:12px;margin-bottom:2px;}.aa-card{display:flex;align-items:center;gap:8px;padding:5px 4px;border-top:1px solid #F0F3F8;cursor:pointer;}.aa-pic{width:42px;height:42px;flex:0 0 42px;}.aa-pic img,.aa-pic svg{width:42px!important;height:42px!important;border-radius:50%;object-fit:cover;display:block;}.aa-info{flex:1;min-width:0;}.aa-nm{font-weight:700;font-size:13px;color:#1B2A4A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.aa-rar{font-size:9px;font-weight:700;padding:0 5px;border-radius:4px;border:1px solid #C7B37A;color:#8A6D1B;margin-left:4px;}.aa-sub{font-size:10px;color:#5A6B86;font-variant-numeric:tabular-nums;}.aa-role{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;border:1px solid #1B2A4A;color:#1B2A4A;flex:0 0 auto;text-align:center;}.aa-role.res{border-color:#C4CCD8;color:#98A2B3;}.aa-empty{font-size:11px;color:#98A2B3;padding:4px 0;}.aa-pref{font-size:9px;font-weight:700;border:1px solid #C7B37A;background:#fff;color:#8A6D1B;border-radius:9px;padding:2px 7px;margin-left:4px;cursor:pointer;flex:0 0 auto;}</style>';
-  var h=css+'<div class="aa-note">⚡ 任命は<b>時給の高い順</b>に自動決定されます（手動任命はできません）。<b>N社員は控え</b>（SBC・図鑑の対価向け）。カードをタップで社員情報。</div>';
+  var cur=(typeof curSite!=='undefined')?curSite:null;
+  var showAll=(!cur || cur==='__all__' || !state.sites[cur]);
+  var sn=(!showAll && AREA_MAP[cur])?AREA_MAP[cur].name:'';
+  var h=css+'<div class="aa-note">⚡ 役職は<b>給与（四半期）の高い順</b>に自動決定されます。'+(showAll?'全拠点の社員を表示中。':('📍'+sn+' の社員のみ表示中（上のフィルターで切替）。'))+' 🏠で勤務希望地を指定できます。</div>';
+  function eSite(e){ var p=findAnyPost(state,e.id); if(p){ if(p.kind==='director') return '__board__'; if(p.area) return p.area; } return (e.assign&&e.assign.area)||null; }
+  function card(e){ var role=aaRoleLabel(state,e); var resCls=(role==='控え')?' res':''; return '<div class="aa-card" data-act="emp-detail" data-id="'+e.id+'"><span class="aa-pic">'+portraitHTML(e,42)+'</span><div class="aa-info"><div class="aa-nm">'+((e.ln||'')+(e.fn||''))+'<span class="aa-rar">'+e.rar+'</span></div><div class="aa-sub">Lv'+(e.lv||1)+'・給与 ¥'+aaSalary(state,e).toLocaleString('ja-JP')+'/四半期'+aaSiteBadge(state,e)+'</div></div><span class="aa-role'+resCls+'">'+role+'</span><button class="aa-pref" data-act="pref-open" data-id="'+e.id+'">'+((e.pref&&AREA_MAP[e.pref])?('🏠'+AREA_MAP[e.pref].name):'🏠希望地')+'</button></div>'; }
   var byDept={}; DEPT_IDS.forEach(function(dk){ byDept[dk]=[]; });
-  (state.employees||[]).forEach(function(e){ if(byDept[e.job]) byDept[e.job].push(e); });
+  var board=[];
+  (state.employees||[]).forEach(function(e){ var si=eSite(e); if(si==='__board__'){ board.push(e); return; } if(!showAll && si!==cur) return; if(byDept[e.job]) byDept[e.job].push(e); });
+  if(board.length){ board.sort(function(a,b){ return aaSalary(state,b)-aaSalary(state,a); }); h+='<div class="aa-dept"><div class="aa-dh">🏛️ 役員会（取締役 '+board.length+'名）</div>'; board.forEach(function(e){ h+=card(e); }); h+='</div>'; }
   DEPT_IDS.forEach(function(dk){
     var arr=byDept[dk].slice().sort(function(a,b){ return aaSalary(state,b)-aaSalary(state,a); });
     h+='<div class="aa-dept"><div class="aa-dh">'+(DEPTS[dk]?DEPTS[dk].emoji:'')+' '+aptName(dk)+'（'+arr.length+'名）</div>';
     if(!arr.length){ h+='<div class="aa-empty">該当者なし</div></div>'; return; }
-    arr.forEach(function(e){
-      var role=aaRoleLabel(state,e); var resCls=(role==='控え')?' res':'';
-      h+='<div class="aa-card" data-act="emp-detail" data-id="'+e.id+'">'
-        +'<span class="aa-pic">'+portraitHTML(e,42)+'</span>'
-        +'<div class="aa-info"><div class="aa-nm">'+((e.ln||'')+(e.fn||''))+'<span class="aa-rar">'+e.rar+'</span></div>'
-        +'<div class="aa-sub">Lv'+(e.lv||1)+'・時給 ¥'+aaSalary(state,e).toLocaleString('ja-JP')+aaSiteBadge(state,e)+'</div></div>'
-        +'<span class="aa-role'+resCls+'">'+role+'</span>'+'<button class="aa-pref" data-act="pref-open" data-id="'+e.id+'">'+((e.pref&&AREA_MAP[e.pref])?('🏠'+AREA_MAP[e.pref].name):'🏠希望地')+'</button></div>';
-    });
+    arr.forEach(function(e){ h+=card(e); });
     h+='</div>';
   });
   return '<div class="aa-digest">'+h+'</div>';
@@ -4403,8 +4403,8 @@ function autoAppointDigestHTML(state){ try{
 function renderSites(){
     autoAppoint(state);
     var ids = Object.keys(state.sites);
-    if (ids.indexOf(curSite) < 0) curSite = ids[0] || 'marunouchi';
-    var chips = '';
+    if (curSite!=='__all__' && ids.indexOf(curSite) < 0) curSite = ids[0] || 'marunouchi';
+    var chips = '<button class="chip' + ((!state.sites[curSite]||curSite==='__all__') ? ' on' : '') + '" data-act="site-sel" data-area="__all__">🌐 全社</button>';
     ids.forEach(function(aid){
       chips += '<button class="chip' + (curSite === aid ? ' on' : '') + '" data-act="site-sel" data-area="' + aid + '">🏢 ' + siteLabel(aid) + '</button>';
     });
@@ -6005,8 +6005,8 @@ function renderSites(){
     if (!el) return;
     var act = el.getAttribute('data-act');
     if(["seat-sit","seat-open","post-open","chief-open","post-set","post-clear","post-unset","chief-set","chief-unset","emp-assign-open","emp-unassign"].indexOf(act)>=0){return;}switch(act){
-      case 'pref-open': prefSheet(state, el.getAttribute('data-id')); break;
-      case 'pref-set': { var _pe=findEmpById(state, el.getAttribute('data-id')); if(_pe){ var _par=el.getAttribute('data-area'); _pe.pref=_par||null; autoAppoint(state); save(); toast('🏠 勤務希望地を更新しました'); closeSheet(); renderCurrentTab(); } break; }
+      case 'pref-open': prefSheet(state, +el.getAttribute('data-id')); break;
+      case 'pref-set': { var _pe=findEmpById(state, +el.getAttribute('data-id')); if(_pe){ var _par=el.getAttribute('data-area'); _pe.pref=_par||null; autoAppoint(state); save(); toast('🏠 勤務希望地を更新しました'); closeSheet(); renderCurrentTab(); } break; }
 
       case 'area-scout': { var _mid=el.getAttribute('data-mid'), _area=el.getAttribute('data-area'); var _m=masterOf(_mid); if(!_m){break;} if(!areaIsPlayerTop(state,_area)){toast('このエリアはシェア1位ではありません');break;} if(findByMid(state,_mid)){toast('すでに在籍しています');break;} var _cost=scoutCost(_m,1); if(state.money<_cost){toast('資金が不足しています');break;} state.money-=_cost; acquireMaster(state,_mid,0); toast((_m.ln||'')+(_m.fn||'')+'を契約金で獲得！'); save(); closeSheet(); openAreaSheet(_area); renderHeader(); renderCurrentTab(); break; }
 
