@@ -495,7 +495,7 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
         <div class="hint" style="margin:0 0 8px;">全ての進行状況を消して最初からはじめます。取り消せません。</div>
         <button class="btn small danger" id="btnReset">ニューゲーム（はじめから）</button>
       </div>
-      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.15<br>リバースモール Game Studio</div>
+      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.16<br>リバースモール Game Studio</div>
     </section>
   </main>
   <nav id="tabbar">
@@ -3670,13 +3670,13 @@ function sbcResolveRewardMid(state, recipe, weekIdx, rng){
 }
 /* 提出（決定論）: 犠牲社員を除籍→報酬を既存入手処理(acquireMaster)に合流。
    未所持=入社NEW / 所持=覚醒最大+10 / 上限後=資金還元。図鑑(empSeen)は残す。 */
-function submitSBC(state, recipeId, empIds, rng, weekIdx){
+function submitSBC(state, recipeId, empIds, rng, weekIdx, forcedMid){
   rng = rng || Math.random;
   var chk = canSubmitSBC(state, recipeId, empIds);
   if (!chk.ok) return chk;
   var recipe = chk.recipe;
   /* 報酬midを先に確定（犠牲除籍前に決めても後でも決定論だが順序固定） */
-  var rewardMid = sbcResolveRewardMid(state, recipe, weekIdx, rng);
+  var rewardMid = forcedMid || sbcResolveRewardMid(state, recipe, weekIdx, rng);
   if (!rewardMid) return {ok:false, err:'報酬対象が見つかりません'};
   /* 犠牲消費: 配属/役職解除（自動離席）→employeesから除去。図鑑は残す。 */
   var sacrificed = chk.emps.map(function(e){
@@ -4849,7 +4849,8 @@ function renderSites(){
       var ap = a.assign ? 1 : 0, bp = b.assign ? 1 : 0;
       return ap - bp || RARS.indexOf(b.rar) - RARS.indexOf(a.rar) || a.id - b.id;
     });
-    var head = '<div class="pack-desc" style="margin-bottom:8px;">' +
+    var midPrev=''; if(weekRecipe.reward.type==='mid'){ var _tm=(weekRecipe.targetMid&&masterOf(weekRecipe.targetMid))||null; if(_tm){ midPrev='<div style="display:flex;align-items:center;gap:8px;padding:8px;border:1px solid #C7B37A;border-radius:8px;margin-bottom:8px;background:#FFFDF7;"><span style="width:48px;height:48px;flex:0 0 48px;">'+portraitHTML(_tm,48)+'</span><div><div style="font-weight:700;color:#1B2A4A;">🎯 指名確定: '+((_tm.ln||'')+(_tm.fn||''))+' <span style="font-size:10px;border:1px solid #C7B37A;color:#8A6D1B;border-radius:4px;padding:0 5px;">'+_tm.rar+'</span></div><div style="font-size:11px;color:#5A6B86;">'+aptName(_tm.job)+'</div></div></div>'; } }
+    var head = midPrev + '<div class="pack-desc" style="margin-bottom:8px;">' +
       '<b>' + sbcRewardLabel(weekRecipe) + '</b><br>' +
       '必要な犠牲（レア度別・ちょうど）：' + sbcRequireLabel(req) + '</div>';
     var progress = RARS.filter(function(k){ return req[k]; }).map(function(k){
@@ -4889,11 +4890,13 @@ function renderSites(){
     sbcSel[empId] = true;
     renderSbcSheet();
   }
-  function doSubmitSbc(){
+  function sbcGenCandidates(state, rar, k){ var pool=(ROSTER_BY_RAR[rar]||[]).slice(); var unowned=pool.filter(function(m){ return !findByMid(state,m.mid); }); var src=(unowned.length>=k)?unowned:pool; src=src.slice().sort(function(a,b){ return (midSeed(a.mid)%997)-(midSeed(b.mid)%997); }); return src.slice(0,k); }
+function sbcPickSheet(){ var recipe=sbcRecipeOf(sbcRecipeId); if(!recipe||recipe.reward.type!=='pick') return; var cands=sbcGenCandidates(state, recipe.reward.rar, 4); var h='<div style="padding:6px 2px;"><div class="hint" style="margin-bottom:8px;">'+recipe.reward.rar+'級の候補から<b>1名を指名</b>して獲得します（顔・適性を見て選べます）。</div>'; cands.forEach(function(m){ h+='<div data-act="sbc-pick" data-mid="'+m.mid+'" style="display:flex;align-items:center;gap:8px;padding:8px 6px;border:1px solid #E3E8F2;border-radius:8px;margin-bottom:6px;cursor:pointer;background:#fff;"><span style="width:44px;height:44px;flex:0 0 44px;">'+portraitHTML(m,44)+'</span><div style="flex:1;min-width:0;"><div style="font-weight:700;color:#1B2A4A;">'+((m.ln||'')+(m.fn||''))+' <span style="font-size:10px;border:1px solid #C7B37A;color:#8A6D1B;border-radius:4px;padding:0 5px;">'+m.rar+'</span></div><div style="font-size:11px;color:#5A6B86;">'+aptName(m.job)+'・'+(findByMid(state,m.mid)?'所持済→覚醒':'未所持→新規入社')+'</div></div><span class="btn small gold" style="pointer-events:none;">指名</span></div>'; }); h+='</div>'; showSheet('🎯 報酬を指名（'+recipe.reward.rar+'級）', h); }
+function doSubmitSbc(forcedMid){
     var recipe = sbcRecipeOf(sbcRecipeId);
     if (!recipe) return;
     var ids = Object.keys(sbcSel).map(Number);
-    var res = submitSBC(state, sbcRecipeId, ids, null, calWeekIndex());
+    var res = submitSBC(state, sbcRecipeId, ids, null, calWeekIndex(), forcedMid);
     if (!res.ok){ toast(res.err); return; }
     /* 報酬を既存パック演出に流す（単票） */
     if (res.reward){
@@ -6017,7 +6020,8 @@ function renderSites(){
       /* ---------- v5.5 クラスタB: SBC犠牲パック ---------- */
       case 'sbc-open': openSbcSheet(el.getAttribute('data-recipe')); break;
       case 'sbc-pick': toggleSbcPick(+el.getAttribute('data-emp')); break;
-      case 'sbc-submit': doSubmitSbc(); break;
+      case 'sbc-submit': { var _sr=sbcRecipeOf(sbcRecipeId); if(_sr && _sr.reward.type==='pick'){ var _sids=Object.keys(sbcSel).map(Number); var _sc=canSubmitSBC(state,sbcRecipeId,_sids); if(!_sc.ok){ toast(_sc.err); break; } sbcPickSheet(); } else { doSubmitSbc(); } break; }
+      case 'sbc-pick': doSubmitSbc(el.getAttribute('data-mid')); break;
       case 'daily-claim': {
         var dcRes = claimDaily(state, calDayIndex(), +el.getAttribute('data-slot'));
         if (!dcRes.ok){ toast(dcRes.err); break; }
