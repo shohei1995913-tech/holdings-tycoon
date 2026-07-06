@@ -495,7 +495,7 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
         <div class="hint" style="margin:0 0 8px;">全ての進行状況を消して最初からはじめます。取り消せません。</div>
         <button class="btn small danger" id="btnReset">ニューゲーム（はじめから）</button>
       </div>
-      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.16<br>リバースモール Game Studio</div>
+      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.17<br>リバースモール Game Studio</div>
     </section>
   </main>
   <nav id="tabbar">
@@ -3028,8 +3028,8 @@ var TRADE_OFFER_MAX = 5;         /* 差し出せる社員の上限 */
 var TRADE_DISCOUNT_K = 0.25;     /* 割引係数: 対価比 ratio=1 で契約金 -25% */
 var TRADE_DISCOUNT_CAP = 0.50;   /* 契約金割引の上限 -50% */
 var TRADE_RATE_BONUS_K = 0.20;   /* 成功率ボーナス係数: ratio=1 で +20pt */
-var TRADE_RATE_BONUS_CAP = 0.30; /* 成功率ボーナスの上限 +30pt */
-var TRADE_RATE_CAP = 0.95;       /* トレード時の成功率上限（既存90%→95%へ拡張） */
+var TRADE_RATE_BONUS_CAP = 0.70; /* 成功率ボーナスの上限 +30pt */
+var TRADE_RATE_CAP = 0.99;       /* トレード時の成功率上限（既存90%→95%へ拡張） */
 /* 差し出した社員の市場価値合計（四半期相場の合計）。在籍社員のみ計上。 */
 function tradeValue(state, offerEmpIds){
   if (!Array.isArray(offerEmpIds)) return 0;
@@ -3055,7 +3055,7 @@ function tradeRatio(state, mid, offerEmpIds){
 /* 契約金の割引率（0〜TRADE_DISCOUNT_CAP）。対価↑で単調増加（キャップまで）。 */
 function tradeDiscount(state, mid, offerEmpIds){
   var ratio = tradeRatio(state, mid, offerEmpIds);
-  return Math.min(TRADE_DISCOUNT_CAP, TRADE_DISCOUNT_K * ratio);
+  return Math.min(TRADE_DISCOUNT_CAP, TRADE_DISCOUNT_K * ratio + 0.08 * ((offerEmpIds||[]).length));
 }
 /* 割引後の契約金。対価↑で単調減少。 */
 function tradeCost(state, mid, mult, offerEmpIds){
@@ -3069,7 +3069,7 @@ function tradeCost(state, mid, mult, offerEmpIds){
 function tradeRate(state, mid, mult, offerEmpIds){
   var base = scoutRate(state, mid, mult);
   var ratio = tradeRatio(state, mid, offerEmpIds);
-  var bonus = Math.min(TRADE_RATE_BONUS_CAP, TRADE_RATE_BONUS_K * ratio);
+  var bonus = Math.min(TRADE_RATE_BONUS_CAP, TRADE_RATE_BONUS_K * ratio + 0.13 * ((offerEmpIds||[]).length));
   return Math.min(TRADE_RATE_CAP, base + bonus);
 }
 /* 差し出し社員の妥当性検証（在籍・重複なし・本人不可・上限）。純粋関数。 */
@@ -3587,16 +3587,14 @@ function radarSVG(e, avg, size){
    - 犠牲＝提出社員を clearAllPostsOf で配属/役職解除→employeesから除去（除籍）。empSeen図鑑は残す。
 ===================================================================== */
 var SBC_RECIPES = [
-  /* tier 1（易）: 軽い犠牲→軽い報酬（非特定ピック） */
-  {id:'sbc_n5',      tier:1, name:'新人整理',       desc:'ノーマル社員5名を放出し、R級の紹介1枚を得る。', require:{N:5},        reward:{type:'pick', rar:'R'}},
-  {id:'sbc_n3r1',    tier:1, name:'部門再編',       desc:'ノーマル3・R1を放出し、R級の紹介1枚を得る。',   require:{N:3, R:1},  reward:{type:'pick', rar:'R'}},
-  /* tier 2（中）: 中程度の犠牲→SRピック */
-  {id:'sbc_r4',      tier:2, name:'即戦力トレード', desc:'R級4名を放出し、SR級の紹介1枚を得る。',         require:{R:4},        reward:{type:'pick', rar:'SR'}},
-  {id:'sbc_r3sr1',   tier:2, name:'昇格プログラム', desc:'R級3・SR1を放出し、SR級の紹介1枚を得る。',      require:{R:3, SR:1}, reward:{type:'pick', rar:'SR'}},
-  {id:'sbc_sr3',     tier:2, name:'幹部候補選抜',   desc:'SR級3名を放出し、SSR級の紹介1枚を得る。',       require:{SR:3},       reward:{type:'pick', rar:'SSR'}},
-  /* tier 3（難）: 重い犠牲→個人特定ピック（狙った逸材を確定入手） */
-  {id:'sbc_mid_ssr', tier:3, name:'指名交換：エース', desc:'SR級4・SSR1を放出し、指定の逸材を確定入手する。', require:{SR:4, SSR:1}, reward:{type:'mid', rarPref:'SSR'}},
-  {id:'sbc_mid_ur',  tier:3, name:'指名交換：大物',   desc:'SSR級3名を放出し、UR級の逸材を確定入手する。',   require:{SSR:3},       reward:{type:'mid', rarPref:'UR'}}
+  {id:'sbc_n5',      tier:1, name:'新人まとめ昇格',   desc:'ノーマル5名を放出し、R級の候補から1名を指名獲得。',        require:{N:5},         reward:{type:'pick', rar:'R'}},
+  {id:'sbc_n5r1',    tier:1, name:'R級への抜擢',      desc:'ノーマル5・R1を放出し、SR級の候補から1名を指名獲得。',      require:{N:5, R:1},    reward:{type:'pick', rar:'SR'}},
+  {id:'sbc_r4',      tier:2, name:'即戦力昇格',        desc:'R級4名を放出し、SR級の候補から1名を指名獲得。',            require:{R:4},         reward:{type:'pick', rar:'SR'}},
+  {id:'sbc_r5g',     tier:2, name:'幹部候補ガチャ',    desc:'R級5名を放出し、SR以上確定(確率でSSR/UR)。候補から指名。', require:{R:5},         reward:{type:'gacha', weights:{SR:76, SSR:21, UR:3}}},
+  {id:'sbc_sr3',     tier:3, name:'幹部選抜',          desc:'SR級3名を放出し、SSR級の候補から1名を指名獲得。',          require:{SR:3},        reward:{type:'pick', rar:'SSR'}},
+  {id:'sbc_sr5g',    tier:3, name:'重役ガチャ',        desc:'SR級5名を放出し、SSR以上確定(確率でUR)。候補から指名。',   require:{SR:5},        reward:{type:'gacha', weights:{SSR:78, UR:22}}},
+  {id:'sbc_ssr3',    tier:4, name:'取締役登用',        desc:'SSR級3名を放出し、UR級の候補から1名を指名獲得。',          require:{SSR:3},       reward:{type:'pick', rar:'UR'}},
+  {id:'sbc_mid_ur',  tier:4, name:'指名交換：大物',    desc:'SSR3・SR2を放出し、指定のUR級を確定入手する。',            require:{SSR:3, SR:2}, reward:{type:'mid', rarPref:'UR'}}
 ];
 var SBC_RECIPE_MAP = {};
 SBC_RECIPES.forEach(function(r){ SBC_RECIPE_MAP[r.id] = r; });
@@ -3659,8 +3657,10 @@ function canSubmitSBC(state, recipeId, empIds){
   return {ok:true, recipe:recipe, emps:emps};
 }
 /* 報酬midの決定論解決（rng注入で再現可能）。'pick'=指定レア帯からランダム1枚 / 'mid'=特定確定。 */
+function sbcRollGachaRar(weights, rng){ rng=rng||Math.random; var keys=Object.keys(weights||{}), tot=0; keys.forEach(function(k){ tot+=weights[k]; }); if(tot<=0) return keys[0]||'R'; var r=rng()*tot, acc=0; for(var i=0;i<keys.length;i++){ acc+=weights[keys[i]]; if(r<acc) return keys[i]; } return keys[keys.length-1]; }
 function sbcResolveRewardMid(state, recipe, weekIdx, rng){
   rng = rng || Math.random;
+  if (recipe.reward.type === 'gacha'){ var gr=sbcRollGachaRar(recipe.reward.weights, rng); var gp=ROSTER_BY_RAR[gr]||[]; return gp.length? gp[Math.floor(rng()*gp.length)].mid : null; }
   if (recipe.reward.type === 'mid'){
     return recipe.targetMid || sbcTargetMid(recipe, weekIdx == null ? calWeekIndex() : weekIdx);
   }
@@ -4761,7 +4761,7 @@ function renderSites(){
       var tm = r.targetMid && masterOf(r.targetMid);
       return tm ? '🎯 指名確定：' + rarTag(tm.rar) + ' ' + tm.ln + ' ' + tm.fn : '🎯 ' + r.reward.rarPref + '級を確定入手';
     }
-    return '🎁 ' + r.reward.rar + 'ピック（' + r.reward.rar + '級からランダム1名）';
+    if (r.reward.type === 'gacha'){ var _ks=Object.keys(r.reward.weights); return '🎲 ' + _ks[0] + '以上確定 (' + _ks.slice(1).join('/') + ')'; } return '🎁 ' + r.reward.rar + '級の候補から1名を指名獲得';
   }
   function sbcRequireLabel(req){
     return RARS.filter(function(k){ return req[k]; }).map(function(k){ return '<span class="rate r' + k + '">' + k + '×' + req[k] + '</span>'; }).join('');
@@ -4891,7 +4891,7 @@ function renderSites(){
     renderSbcSheet();
   }
   function sbcGenCandidates(state, rar, k){ var pool=(ROSTER_BY_RAR[rar]||[]).slice(); var unowned=pool.filter(function(m){ return !findByMid(state,m.mid); }); var src=(unowned.length>=k)?unowned:pool; src=src.slice().sort(function(a,b){ return (midSeed(a.mid)%997)-(midSeed(b.mid)%997); }); return src.slice(0,k); }
-function sbcPickSheet(){ var recipe=sbcRecipeOf(sbcRecipeId); if(!recipe||recipe.reward.type!=='pick') return; var cands=sbcGenCandidates(state, recipe.reward.rar, 4); var h='<div style="padding:6px 2px;"><div class="hint" style="margin-bottom:8px;">'+recipe.reward.rar+'級の候補から<b>1名を指名</b>して獲得します（顔・適性を見て選べます）。</div>'; cands.forEach(function(m){ h+='<div data-act="sbc-pick" data-mid="'+m.mid+'" style="display:flex;align-items:center;gap:8px;padding:8px 6px;border:1px solid #E3E8F2;border-radius:8px;margin-bottom:6px;cursor:pointer;background:#fff;"><span style="width:44px;height:44px;flex:0 0 44px;">'+portraitHTML(m,44)+'</span><div style="flex:1;min-width:0;"><div style="font-weight:700;color:#1B2A4A;">'+((m.ln||'')+(m.fn||''))+' <span style="font-size:10px;border:1px solid #C7B37A;color:#8A6D1B;border-radius:4px;padding:0 5px;">'+m.rar+'</span></div><div style="font-size:11px;color:#5A6B86;">'+aptName(m.job)+'・'+(findByMid(state,m.mid)?'所持済→覚醒':'未所持→新規入社')+'</div></div><span class="btn small gold" style="pointer-events:none;">指名</span></div>'; }); h+='</div>'; showSheet('🎯 報酬を指名（'+recipe.reward.rar+'級）', h); }
+function sbcPickSheet(rar){ var recipe=sbcRecipeOf(sbcRecipeId); if(!recipe) return; rar=rar||recipe.reward.rar; if(!rar) return; var cands=sbcGenCandidates(state, rar, 4); var h='<div style="padding:6px 2px;"><div class="hint" style="margin-bottom:8px;">'+rar+'級の候補から<b>1名を指名</b>して獲得します（顔・適性を見て選べます）。</div>'; cands.forEach(function(m){ h+='<div data-act="sbc-pick" data-mid="'+m.mid+'" style="display:flex;align-items:center;gap:8px;padding:8px 6px;border:1px solid #E3E8F2;border-radius:8px;margin-bottom:6px;cursor:pointer;background:#fff;"><span style="width:44px;height:44px;flex:0 0 44px;">'+portraitHTML(m,44)+'</span><div style="flex:1;min-width:0;"><div style="font-weight:700;color:#1B2A4A;">'+((m.ln||'')+(m.fn||''))+' <span style="font-size:10px;border:1px solid #C7B37A;color:#8A6D1B;border-radius:4px;padding:0 5px;">'+m.rar+'</span></div><div style="font-size:11px;color:#5A6B86;">'+aptName(m.job)+'・'+(findByMid(state,m.mid)?'所持済→覚醒':'未所持→新規入社')+'</div></div><span class="btn small gold" style="pointer-events:none;">指名</span></div>'; }); h+='</div>'; showSheet('🎯 報酬を指名（'+rar+'級）', h); }
 function doSubmitSbc(forcedMid){
     var recipe = sbcRecipeOf(sbcRecipeId);
     if (!recipe) return;
@@ -6020,7 +6020,7 @@ function doSubmitSbc(forcedMid){
       /* ---------- v5.5 クラスタB: SBC犠牲パック ---------- */
       case 'sbc-open': openSbcSheet(el.getAttribute('data-recipe')); break;
       case 'sbc-pick': toggleSbcPick(+el.getAttribute('data-emp')); break;
-      case 'sbc-submit': { var _sr=sbcRecipeOf(sbcRecipeId); if(_sr && _sr.reward.type==='pick'){ var _sids=Object.keys(sbcSel).map(Number); var _sc=canSubmitSBC(state,sbcRecipeId,_sids); if(!_sc.ok){ toast(_sc.err); break; } sbcPickSheet(); } else { doSubmitSbc(); } break; }
+      case 'sbc-submit': { var _sr=sbcRecipeOf(sbcRecipeId); if(_sr && (_sr.reward.type==='pick' || _sr.reward.type==='gacha')){ var _sids=Object.keys(sbcSel).map(Number); var _sc=canSubmitSBC(state,sbcRecipeId,_sids); if(!_sc.ok){ toast(_sc.err); break; } var _rar=(_sr.reward.type==='gacha')?sbcRollGachaRar(_sr.reward.weights):_sr.reward.rar; if(_sr.reward.type==='gacha') toast('🎲 '+_rar+'級が当選！候補から指名してください'); sbcPickSheet(_rar); } else { doSubmitSbc(); } break; }
       case 'sbc-pick': doSubmitSbc(el.getAttribute('data-mid')); break;
       case 'daily-claim': {
         var dcRes = claimDaily(state, calDayIndex(), +el.getAttribute('data-slot'));
