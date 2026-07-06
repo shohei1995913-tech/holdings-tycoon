@@ -495,7 +495,7 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
         <div class="hint" style="margin:0 0 8px;">全ての進行状況を消して最初からはじめます。取り消せません。</div>
         <button class="btn small danger" id="btnReset">ニューゲーム（はじめから）</button>
       </div>
-      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.10<br>リバースモール Game Studio</div>
+      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.11<br>リバースモール Game Studio</div>
     </section>
   </main>
   <nav id="tabbar">
@@ -3938,7 +3938,28 @@ if (typeof document !== 'undefined') (function(){
     $('dailyBox').innerHTML = html;
   }
   /* v5: エリア詳細シート（シェア内訳・競合・案件・拠点） */
-  function openAreaSheet(areaId){
+  function aaHash(str){ var h=0; for(var i=0;i<str.length;i++){ h=(h*31 + str.charCodeAt(i))>>>0; } return h; }
+function midArea(mid){ var keys=Object.keys(AREA_MAP).sort(); return keys[aaHash(String(mid))%keys.length]; }
+function areaIsPlayerTop(state, areaId){ var sh=state.share&&state.share[areaId]; if(!sh) return false; var mx=0; RIVALS.forEach(function(rv){ if(sh[rv.id]>mx) mx=sh[rv.id]; }); return sh.player > mx; }
+function areaScoutHTML(state, areaId){ try{
+  var css='<style>.as-wrap{margin:10px 0 4px;}.as-h{font-weight:700;color:#1B2A4A;font-size:13px;margin-bottom:6px;}.as-lock{font-size:11px;color:#5A6B86;background:#FAFBFE;border:1px solid #E3E8F2;border-left:3px solid #C7B37A;border-radius:6px;padding:8px 10px;}.as-card{display:flex;align-items:center;gap:8px;padding:6px 4px;border-top:1px solid #F0F3F8;}.as-pic{width:42px;height:42px;flex:0 0 42px;}.as-pic img,.as-pic svg{width:42px!important;height:42px!important;border-radius:50%;object-fit:cover;display:block;}.as-info{flex:1;min-width:0;}.as-nm{font-weight:700;font-size:13px;color:#1B2A4A;}.as-rar{font-size:9px;font-weight:700;padding:0 5px;border-radius:4px;border:1px solid #C7B37A;color:#8A6D1B;margin-left:4px;}.as-sub{font-size:10px;color:#5A6B86;}</style>';
+  var top=areaIsPlayerTop(state, areaId);
+  var h=css+'<div class="as-wrap"><div class="as-h">🎯 このエリアの人材（スカウト）</div>';
+  if(!top){ h+='<div class="as-lock">このエリアで<b>シェア1位</b>になると、在籍する競合他社の社員をスカウトできます（契約金を払えば100%獲得）。</div></div>'; return h; }
+  var cands=(typeof ROSTER!=='undefined'?ROSTER:[]).filter(function(m){ return midArea(m.mid)===areaId && !findByMid(state, m.mid); });
+  cands.sort(function(a,b){ return RARS.indexOf(b.rar)-RARS.indexOf(a.rar); });
+  if(!cands.length){ h+='<div class="as-lock">スカウト可能な人材はいません（全員採用済み）。</div></div>'; return h; }
+  cands.forEach(function(m){
+    var cost=scoutCost(m,1); var rv=rivalOf(m.mid); var afford=state.money>=cost;
+    h+='<div class="as-card"><span class="as-pic">'+portraitHTML(m,42)+'</span>'
+      +'<div class="as-info"><div class="as-nm">'+(m.ln||'')+(m.fn||'')+'<span class="as-rar">'+m.rar+'</span></div>'
+      +'<div class="as-sub">在籍: '+(rv?rv.name:'—')+'</div></div>'
+      +'<button class="btn small'+(afford?' gold':'')+'" data-act="area-scout" data-mid="'+m.mid+'" data-area="'+areaId+'"'+(afford?'':' disabled')+'>契約金 '+fmtMoney(cost)+'</button></div>';
+  });
+  h+='</div>'; return h;
+}catch(e){ return ''; } }
+
+function openAreaSheet(areaId){
     var a = AREA_MAP[areaId], sh = state.share[areaId];
     var b = dexStatBonus(state);
     var html = '<div style="padding:4px 2px 12px;">';
@@ -3983,6 +4004,7 @@ if (typeof document !== 'undefined') (function(){
       html += '<button class="btn gold" style="width:100%;" data-act="site-open" data-area="' + areaId + '" data-cost="' + cost + '">🏗️ ' + a.name + 'に拠点を開設する ' + fmtMoney(cost) + '</button>';
     }
     html += '</div>';
+    html += areaScoutHTML(state, areaId);
     showSheet('🗾 ' + a.name + ' — エリア詳細', html);
     refreshAffordance();
   }
@@ -5036,7 +5058,7 @@ function renderSites(){
     RARS.forEach(function(r){
       rf += '<button class="chip' + (filterRar===r?' on':'') + '" data-act="frar" data-v="' + r + '">' + r + '</button>';
     });
-    rf += '<button class="chip' + (filterUnassigned?' on':'') + '" data-act="funassigned">🪑 未配属のみ</button>'; /* v5.5 A-1 */
+     /* v5.5 A-1 */
     $('rarFilters').innerHTML = rf;
   }
   function renderEmps(){
@@ -5979,6 +6001,8 @@ function renderSites(){
     if (!el) return;
     var act = el.getAttribute('data-act');
     if(["seat-sit","seat-open","post-open","chief-open","post-set","post-clear","post-unset","chief-set","chief-unset","emp-assign-open","emp-unassign"].indexOf(act)>=0){return;}switch(act){
+      case 'area-scout': { var _mid=el.getAttribute('data-mid'), _area=el.getAttribute('data-area'); var _m=masterOf(_mid); if(!_m){break;} if(!areaIsPlayerTop(state,_area)){toast('このエリアはシェア1位ではありません');break;} if(findByMid(state,_mid)){toast('すでに在籍しています');break;} var _cost=scoutCost(_m,1); if(state.money<_cost){toast('資金が不足しています');break;} state.money-=_cost; acquireMaster(state,_mid,0); toast((_m.ln||'')+(_m.fn||'')+'を契約金で獲得！'); save(); closeSheet(); openAreaSheet(_area); renderHeader(); renderCurrentTab(); break; }
+
       case 'buy': buyPack(el.getAttribute('data-pack')); break;
       /* ---------- v5.4 actions: 限定パック・月替わり特集・デイリー案件 ---------- */
       case 'buy-limited': buyLimitedPack(); break;
