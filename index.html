@@ -495,7 +495,7 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
         <div class="hint" style="margin:0 0 8px;">全ての進行状況を消して最初からはじめます。取り消せません。</div>
         <button class="btn small danger" id="btnReset">ニューゲーム（はじめから）</button>
       </div>
-      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.8<br>リバースモール Game Studio</div>
+      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.9<br>リバースモール Game Studio</div>
     </section>
   </main>
   <nav id="tabbar">
@@ -4353,19 +4353,22 @@ if (typeof document !== 'undefined') (function(){
 function autoAppoint(state){ try{ if(typeof optimizePlacement==='function') optimizePlacement(state); }catch(e){} }
 function aaRoleLabel(state,e){ try{ var p=findAnyPost(state,e.id); if(p){ var d=POST_DEFS[p.kind]; return d?d.name:'役職'; } }catch(_){} return e.assign?'一般':'控え'; }
 function autoAppointDigestHTML(state){ try{
-  var css='<style>.aa-digest{margin:8px 0 12px;}.aa-note{font-size:11px;line-height:1.5;color:#1B2A4A;background:#FAFBFE;border:1px solid #E3E8F2;border-left:3px solid #1B2A4A;border-radius:6px;padding:8px 10px;margin-bottom:8px;}.aa-dept{border:1px solid #E3E8F2;border-radius:8px;padding:6px 8px;margin-bottom:6px;background:#fff;}.aa-dh{font-weight:700;color:#1B2A4A;font-size:12px;margin-bottom:4px;}.aa-row{display:flex;align-items:center;gap:6px;font-size:12px;padding:2px 0;border-top:1px dashed #EEF1F7;}.aa-nm{flex:1;color:#1B2A4A;}.aa-rar{font-weight:700;font-size:10px;padding:1px 5px;border-radius:4px;border:1px solid #C7B37A;color:#8A6D1B;}.aa-sal{font-variant-numeric:tabular-nums;color:#5A6B86;min-width:64px;text-align:right;}.aa-role{font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;border:1px solid #1B2A4A;color:#1B2A4A;min-width:52px;text-align:center;}.aa-role.res{border-color:#B8C0CE;color:#98A2B3;}.aa-empty,.aa-more{font-size:11px;color:#98A2B3;padding:2px 0;}</style>';
-  var h=css+'<div class="aa-note">⚡ 任命は<b>時給の高い順</b>に自動決定されます（手動配置は不要）。<b>N社員は控え</b>（今後SBC・図鑑の対価に使えます）。</div>';
+  var css='<style>.aa-digest{margin:8px 0 12px;}.aa-note{font-size:11px;line-height:1.5;color:#1B2A4A;background:#FAFBFE;border:1px solid #E3E8F2;border-left:3px solid #1B2A4A;border-radius:6px;padding:8px 10px;margin-bottom:8px;}.aa-dept{border:1px solid #E3E8F2;border-radius:8px;padding:6px 8px 4px;margin-bottom:8px;background:#fff;}.aa-dh{font-weight:700;color:#1B2A4A;font-size:12px;margin-bottom:2px;}.aa-card{display:flex;align-items:center;gap:8px;padding:5px 4px;border-top:1px solid #F0F3F8;cursor:pointer;}.aa-pic{width:42px;height:42px;flex:0 0 42px;}.aa-pic img,.aa-pic svg{width:42px!important;height:42px!important;border-radius:50%;object-fit:cover;display:block;}.aa-info{flex:1;min-width:0;}.aa-nm{font-weight:700;font-size:13px;color:#1B2A4A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.aa-rar{font-size:9px;font-weight:700;padding:0 5px;border-radius:4px;border:1px solid #C7B37A;color:#8A6D1B;margin-left:4px;}.aa-sub{font-size:10px;color:#5A6B86;font-variant-numeric:tabular-nums;}.aa-role{font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;border:1px solid #1B2A4A;color:#1B2A4A;flex:0 0 auto;text-align:center;}.aa-role.res{border-color:#C4CCD8;color:#98A2B3;}.aa-empty{font-size:11px;color:#98A2B3;padding:4px 0;}</style>';
+  var h=css+'<div class="aa-note">⚡ 任命は<b>時給の高い順</b>に自動決定されます（手動任命はできません）。<b>N社員は控え</b>（SBC・図鑑の対価向け）。カードをタップで社員情報。</div>';
   var byDept={}; DEPT_IDS.forEach(function(dk){ byDept[dk]=[]; });
   (state.employees||[]).forEach(function(e){ if(byDept[e.job]) byDept[e.job].push(e); });
   DEPT_IDS.forEach(function(dk){
     var arr=byDept[dk].slice().sort(function(a,b){ return aaSalary(state,b)-aaSalary(state,a); });
     h+='<div class="aa-dept"><div class="aa-dh">'+(DEPTS[dk]?DEPTS[dk].emoji:'')+' '+aptName(dk)+'（'+arr.length+'名）</div>';
     if(!arr.length){ h+='<div class="aa-empty">該当者なし</div></div>'; return; }
-    arr.slice(0,8).forEach(function(e){
+    arr.forEach(function(e){
       var role=aaRoleLabel(state,e); var resCls=(role==='控え')?' res':'';
-      h+='<div class="aa-row"><span class="aa-nm">'+((e.ln||'')+(e.fn||''))+'</span><span class="aa-rar">'+e.rar+'</span><span class="aa-sal">¥'+aaSalary(state,e).toLocaleString('ja-JP')+'</span><span class="aa-role'+resCls+'">'+role+'</span></div>';
+      h+='<div class="aa-card" data-act="emp-detail" data-id="'+e.id+'">'
+        +'<span class="aa-pic">'+portraitHTML(e,42)+'</span>'
+        +'<div class="aa-info"><div class="aa-nm">'+((e.ln||'')+(e.fn||''))+'<span class="aa-rar">'+e.rar+'</span></div>'
+        +'<div class="aa-sub">Lv'+(e.lv||1)+'・時給 ¥'+aaSalary(state,e).toLocaleString('ja-JP')+'</div></div>'
+        +'<span class="aa-role'+resCls+'">'+role+'</span></div>';
     });
-    if(arr.length>8) h+='<div class="aa-more">ほか '+(arr.length-8)+' 名</div>';
     h+='</div>';
   });
   return '<div class="aa-digest">'+h+'</div>';
@@ -5975,7 +5978,7 @@ function renderSites(){
     var el = ev.target.closest('[data-act]');
     if (!el) return;
     var act = el.getAttribute('data-act');
-    switch(act){
+    if(["seat-sit","seat-open","post-open","chief-open","post-set","post-clear","post-unset","chief-set","chief-unset","emp-assign-open","emp-unassign"].indexOf(act)>=0){return;}switch(act){
       case 'buy': buyPack(el.getAttribute('data-pack')); break;
       /* ---------- v5.4 actions: 限定パック・月替わり特集・デイリー案件 ---------- */
       case 'buy-limited': buyLimitedPack(); break;
@@ -6427,5 +6430,5 @@ function renderSites(){
   }
 })();
 </script>
-</body>
+<style id="aa-hide">[data-act="seat-sit"],[data-act="seat-open"],[data-act="post-open"],[data-act="chief-open"],[data-act="post-set"],[data-act="post-clear"],[data-act="post-unset"],[data-act="chief-set"],[data-act="chief-unset"],[data-act="emp-assign-open"],[data-act="emp-unassign"]{display:none!important;}</style></body>
 </html>
