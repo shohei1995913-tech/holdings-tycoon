@@ -495,7 +495,7 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
         <div class="hint" style="margin:0 0 8px;">全ての進行状況を消して最初からはじめます。取り消せません。</div>
         <button class="btn small danger" id="btnReset">ニューゲーム（はじめから）</button>
       </div>
-      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.6<br>リバースモール Game Studio</div>
+      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.8<br>リバースモール Game Studio</div>
     </section>
   </main>
   <nav id="tabbar">
@@ -4349,7 +4349,30 @@ if (typeof document !== 'undefined') (function(){
     showSpot(step);
   }
   /* ---------- v5: 拠点タブ ---------- */
-  function renderSites(){
+  function aaSalary(state,e){ try{ return empSalary(state,e); }catch(_){ return 0; } }
+function autoAppoint(state){ try{ if(typeof optimizePlacement==='function') optimizePlacement(state); }catch(e){} }
+function aaRoleLabel(state,e){ try{ var p=findAnyPost(state,e.id); if(p){ var d=POST_DEFS[p.kind]; return d?d.name:'役職'; } }catch(_){} return e.assign?'一般':'控え'; }
+function autoAppointDigestHTML(state){ try{
+  var css='<style>.aa-digest{margin:8px 0 12px;}.aa-note{font-size:11px;line-height:1.5;color:#1B2A4A;background:#FAFBFE;border:1px solid #E3E8F2;border-left:3px solid #1B2A4A;border-radius:6px;padding:8px 10px;margin-bottom:8px;}.aa-dept{border:1px solid #E3E8F2;border-radius:8px;padding:6px 8px;margin-bottom:6px;background:#fff;}.aa-dh{font-weight:700;color:#1B2A4A;font-size:12px;margin-bottom:4px;}.aa-row{display:flex;align-items:center;gap:6px;font-size:12px;padding:2px 0;border-top:1px dashed #EEF1F7;}.aa-nm{flex:1;color:#1B2A4A;}.aa-rar{font-weight:700;font-size:10px;padding:1px 5px;border-radius:4px;border:1px solid #C7B37A;color:#8A6D1B;}.aa-sal{font-variant-numeric:tabular-nums;color:#5A6B86;min-width:64px;text-align:right;}.aa-role{font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;border:1px solid #1B2A4A;color:#1B2A4A;min-width:52px;text-align:center;}.aa-role.res{border-color:#B8C0CE;color:#98A2B3;}.aa-empty,.aa-more{font-size:11px;color:#98A2B3;padding:2px 0;}</style>';
+  var h=css+'<div class="aa-note">⚡ 任命は<b>時給の高い順</b>に自動決定されます（手動配置は不要）。<b>N社員は控え</b>（今後SBC・図鑑の対価に使えます）。</div>';
+  var byDept={}; DEPT_IDS.forEach(function(dk){ byDept[dk]=[]; });
+  (state.employees||[]).forEach(function(e){ if(byDept[e.job]) byDept[e.job].push(e); });
+  DEPT_IDS.forEach(function(dk){
+    var arr=byDept[dk].slice().sort(function(a,b){ return aaSalary(state,b)-aaSalary(state,a); });
+    h+='<div class="aa-dept"><div class="aa-dh">'+(DEPTS[dk]?DEPTS[dk].emoji:'')+' '+aptName(dk)+'（'+arr.length+'名）</div>';
+    if(!arr.length){ h+='<div class="aa-empty">該当者なし</div></div>'; return; }
+    arr.slice(0,8).forEach(function(e){
+      var role=aaRoleLabel(state,e); var resCls=(role==='控え')?' res':'';
+      h+='<div class="aa-row"><span class="aa-nm">'+((e.ln||'')+(e.fn||''))+'</span><span class="aa-rar">'+e.rar+'</span><span class="aa-sal">¥'+aaSalary(state,e).toLocaleString('ja-JP')+'</span><span class="aa-role'+resCls+'">'+role+'</span></div>';
+    });
+    if(arr.length>8) h+='<div class="aa-more">ほか '+(arr.length-8)+' 名</div>';
+    h+='</div>';
+  });
+  return '<div class="aa-digest">'+h+'</div>';
+}catch(err){ return ''; } }
+
+function renderSites(){
+    autoAppoint(state);
     var ids = Object.keys(state.sites);
     if (ids.indexOf(curSite) < 0) curSite = ids[0] || 'marunouchi';
     var chips = '';
@@ -4359,7 +4382,7 @@ if (typeof document !== 'undefined') (function(){
     chips += '<button class="chip" data-act="site-new">＋ 拠点開設</button>';
     $('siteChips').innerHTML = chips;
     var site = state.sites[curSite];
-    if (!site){ $('siteBody').innerHTML = ''; return; }
+    if (!site){ $('siteBody').innerHTML = autoAppointDigestHTML(state); return; }
     var a = AREA_MAP[curSite];
     var b = dexStatBonus(state);
     var html = '<div class="sitepow">📍 ' + a.name + '（' + DEPTS[a.demand].emoji + aptName(a.demand) + '需要×1.5・市場' + a.size + '）— 拠点戦力 <b>' +
@@ -4446,7 +4469,7 @@ if (typeof document !== 'undefined') (function(){
       }
       html += '</div></div>';
     });
-    $('siteBody').innerHTML = html;
+    $('siteBody').innerHTML = autoAppointDigestHTML(state) + html;
     refreshAffordance();
   }
   /* v5: 拠点開設シート */
