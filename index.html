@@ -495,7 +495,7 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
         <div class="hint" style="margin:0 0 8px;">全ての進行状況を消して最初からはじめます。取り消せません。</div>
         <button class="btn small danger" id="btnReset">ニューゲーム（はじめから）</button>
       </div>
-      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.17<br>リバースモール Game Studio</div>
+      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.18<br>リバースモール Game Studio</div>
     </section>
   </main>
   <nav id="tabbar">
@@ -4891,7 +4891,7 @@ function renderSites(){
     renderSbcSheet();
   }
   function sbcGenCandidates(state, rar, k){ var pool=(ROSTER_BY_RAR[rar]||[]).slice(); var unowned=pool.filter(function(m){ return !findByMid(state,m.mid); }); var src=(unowned.length>=k)?unowned:pool; src=src.slice().sort(function(a,b){ return (midSeed(a.mid)%997)-(midSeed(b.mid)%997); }); return src.slice(0,k); }
-function sbcPickSheet(rar){ var recipe=sbcRecipeOf(sbcRecipeId); if(!recipe) return; rar=rar||recipe.reward.rar; if(!rar) return; var cands=sbcGenCandidates(state, rar, 4); var h='<div style="padding:6px 2px;"><div class="hint" style="margin-bottom:8px;">'+rar+'級の候補から<b>1名を指名</b>して獲得します（顔・適性を見て選べます）。</div>'; cands.forEach(function(m){ h+='<div data-act="sbc-pick" data-mid="'+m.mid+'" style="display:flex;align-items:center;gap:8px;padding:8px 6px;border:1px solid #E3E8F2;border-radius:8px;margin-bottom:6px;cursor:pointer;background:#fff;"><span style="width:44px;height:44px;flex:0 0 44px;">'+portraitHTML(m,44)+'</span><div style="flex:1;min-width:0;"><div style="font-weight:700;color:#1B2A4A;">'+((m.ln||'')+(m.fn||''))+' <span style="font-size:10px;border:1px solid #C7B37A;color:#8A6D1B;border-radius:4px;padding:0 5px;">'+m.rar+'</span></div><div style="font-size:11px;color:#5A6B86;">'+aptName(m.job)+'・'+(findByMid(state,m.mid)?'所持済→覚醒':'未所持→新規入社')+'</div></div><span class="btn small gold" style="pointer-events:none;">指名</span></div>'; }); h+='</div>'; showSheet('🎯 報酬を指名（'+rar+'級）', h); }
+function sbcPickSheet(rar){ var recipe=sbcRecipeOf(sbcRecipeId); if(!recipe) return; rar=rar||recipe.reward.rar; if(!rar) return; var cands=sbcGenCandidates(state, rar, 4); var h='<div style="padding:6px 2px;"><div class="hint" style="margin-bottom:8px;">'+rar+'級の候補から<b>1名を指名</b>して獲得します（顔・適性を見て選べます）。</div>'; cands.forEach(function(m){ h+='<div data-act="sbc-reward-pick" data-mid="'+m.mid+'" style="display:flex;align-items:center;gap:8px;padding:8px 6px;border:1px solid #E3E8F2;border-radius:8px;margin-bottom:6px;cursor:pointer;background:#fff;"><span style="width:44px;height:44px;flex:0 0 44px;">'+portraitHTML(m,44)+'</span><div style="flex:1;min-width:0;"><div style="font-weight:700;color:#1B2A4A;">'+((m.ln||'')+(m.fn||''))+' <span style="font-size:10px;border:1px solid #C7B37A;color:#8A6D1B;border-radius:4px;padding:0 5px;">'+m.rar+'</span></div><div style="font-size:11px;color:#5A6B86;">'+aptName(m.job)+'・'+(findByMid(state,m.mid)?'所持済→覚醒':'未所持→新規入社')+'</div></div><span class="btn small gold" style="pointer-events:none;">指名</span></div>'; }); h+='</div>'; showSheet('🎯 報酬を指名（'+rar+'級）', h); }
 function doSubmitSbc(forcedMid){
     var recipe = sbcRecipeOf(sbcRecipeId);
     if (!recipe) return;
@@ -6021,7 +6021,7 @@ function doSubmitSbc(forcedMid){
       case 'sbc-open': openSbcSheet(el.getAttribute('data-recipe')); break;
       case 'sbc-pick': toggleSbcPick(+el.getAttribute('data-emp')); break;
       case 'sbc-submit': { var _sr=sbcRecipeOf(sbcRecipeId); if(_sr && (_sr.reward.type==='pick' || _sr.reward.type==='gacha')){ var _sids=Object.keys(sbcSel).map(Number); var _sc=canSubmitSBC(state,sbcRecipeId,_sids); if(!_sc.ok){ toast(_sc.err); break; } var _rar=(_sr.reward.type==='gacha')?sbcRollGachaRar(_sr.reward.weights):_sr.reward.rar; if(_sr.reward.type==='gacha') toast('🎲 '+_rar+'級が当選！候補から指名してください'); sbcPickSheet(_rar); } else { doSubmitSbc(); } break; }
-      case 'sbc-pick': doSubmitSbc(el.getAttribute('data-mid')); break;
+      case 'sbc-reward-pick': doSubmitSbc(el.getAttribute('data-mid')); break;
       case 'daily-claim': {
         var dcRes = claimDaily(state, calDayIndex(), +el.getAttribute('data-slot'));
         if (!dcRes.ok){ toast(dcRes.err); break; }
