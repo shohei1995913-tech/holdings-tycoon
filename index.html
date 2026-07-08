@@ -453,6 +453,9 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
       <div id="empDexBox" class="hidden"></div>
     </section>
     <section id="tab-misc" class="tabpane">
+      <h2 class="sec">🌏 野望 — 世界へ、そして金の先へ</h2>
+      <div class="hint">国内で稼いだ資金を、世界進出→宇宙進出→頂点へ注ぎ込む。余った金の使い道と、経営の"行き着く先"。</div>
+      <div id="ambitionBox"></div>
       <h2 class="sec">🏛️ 役員会</h2>
       <div class="hint">取締役は<b>LEGEND限定・3席</b>（適正不問・1人につき全社戦力+8%）。エリア統括は<b>UR以上・拠点3箇所ごとに1枠</b>（担当拠点戦力+10%・任命は拠点タブから）。</div>
       <div id="boardBox"></div>
@@ -495,7 +498,7 @@ nav button.on::after{content:"";width:26px;height:3px;border-radius:2px;backgrou
         <div class="hint" style="margin:0 0 8px;">全ての進行状況を消して最初からはじめます。取り消せません。</div>
         <button class="btn small danger" id="btnReset">ニューゲーム（はじめから）</button>
       </div>
-      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.19<br>リバースモール Game Studio</div>
+      <div class="hint" style="text-align:center;margin-top:14px;">ホールディングス・タイクーン v5.20<br>リバースモール Game Studio</div>
     </section>
   </main>
   <nav id="tabbar">
@@ -1311,7 +1314,8 @@ function calcDerived(state, now){
   var buffInc  = buffMult(state, 'income', now);          // v2: バフ系アイテム
   var dexInc   = dexComplete(state, 'all') ? 1.1 : 1;     // v2: 全アイテム図鑑コンプで売上+10%
   var edexInc  = empDexMult(state);                       // v3: 社員図鑑コンプ報酬（25/50/75/100名で+2/4/6/10%重複加算）
-  var income   = salesSum * devMult * mktMult * stage.mult * buffInc * dexInc * edexInc;
+  var ambMult  = (typeof ambitionMult==='function')?ambitionMult(state):1;
+  var income   = salesSum * devMult * mktMult * stage.mult * buffInc * dexInc * edexInc * ambMult;
   var ppMult   = limitedProdPowerMult(state);             // v5.4: 限定アビリティ（デプロイの女神=プロダクト力蓄積+30%）
   return {salesSum:salesSum, devSum:devSum, mktSum:mktSum, hrSum:hrSum, accSum:accSum,
           devMult:devMult, mktMult:mktMult, hrDisc:hrDisc, offRate:offRate,
@@ -5427,7 +5431,36 @@ function doSubmitSbc(forcedMid){
   }
 
   /* ---------- misc tab ---------- */
-  function renderMisc(){
+  var AMBITION_STAGES = [
+  {id:'asia',    ico:'🌏', name:'アジア進出',        desc:'海外へ初進出。アジア市場を押さえ、全社売上に永続×1.15。', cost:5e8,  mult:1.15},
+  {id:'america', ico:'🌎', name:'北米進出',          desc:'世界最大の市場・北米へ本格展開。永続×1.25。',           cost:5e9,  mult:1.25},
+  {id:'europe',  ico:'🌍', name:'欧州進出',          desc:'欧州を制し、真の世界企業へ。永続×1.4。',                cost:5e10, mult:1.4},
+  {id:'global',  ico:'🏢', name:'グローバル本社設立', desc:'多国籍コングロマリット完成。世界制覇。永続×1.6。',       cost:5e11, mult:1.6},
+  {id:'orbit',   ico:'🛰️', name:'軌道拠点建設',       desc:'地球を越え、低軌道に企業ステーション。永続×2.0。',       cost:5e12, mult:2.0},
+  {id:'moon',    ico:'🌕', name:'月面都市開発',       desc:'月に企業都市を建設。地球外経済圏の誕生。永続×2.5。',     cost:5e13, mult:2.5},
+  {id:'mars',    ico:'🚀', name:'火星コロニー',       desc:'火星移住を実現。星間コングロマリットへ。永続×3.0。',     cost:5e14, mult:3.0},
+  {id:'legacy',  ico:'🏛️', name:'頂点：金の先へ',     desc:'すべてを手にした先で、あなたは何を遺すか。',            cost:5e15, mult:1.0, peak:true}
+];
+function ambitionMult(state){ try{ var lv=(state&&state.ambition)||0; var m=1; for(var i=0;i<lv && i<AMBITION_STAGES.length;i++){ m*=AMBITION_STAGES[i].mult; } return m; }catch(_){ return 1; } }
+function ambitionPanelHTML(state){ try{
+  var lv=(state&&state.ambition)||0;
+  var css='<style>.amb-wrap{margin:6px 0 10px;}.amb-note{font-size:11px;line-height:1.5;color:#1B2A4A;background:#FAFBFE;border:1px solid #E3E8F2;border-left:3px solid #C7B37A;border-radius:6px;padding:8px 10px;margin-bottom:8px;}.amb-stage{display:flex;gap:8px;align-items:flex-start;border:1px solid #E3E8F2;border-radius:8px;padding:8px 10px;margin-bottom:6px;background:#fff;}.amb-stage.amb-done{opacity:.6;}.amb-stage.amb-cur{border-color:#C7B37A;box-shadow:0 0 0 2px rgba(199,179,122,.25);}.amb-stage.amb-lock{opacity:.5;}.amb-ico{font-size:20px;flex:0 0 auto;}.amb-body{flex:1;min-width:0;}.amb-nm{font-weight:700;color:#1B2A4A;font-size:13px;}.amb-desc{font-size:11px;color:#5A6B86;margin:2px 0 6px;}.amb-peak{display:flex;flex-direction:column;gap:6px;}.amb-ending{margin-top:8px;padding:12px;border:1px solid #C7B37A;border-radius:8px;background:#FFFDF7;color:#1B2A4A;font-weight:700;text-align:center;line-height:1.6;}</style>';
+  var h=css+'<div class="amb-note">稼いだ資金を注ぎ込み、国内→<b>世界</b>→<b>宇宙</b>へ規模を上げ、頂点で「金の先」に到達します。各段は<b>永続の全社売上倍率</b>をくれます。現在の永続倍率 <b>×'+ambitionMult(state).toFixed(2)+'</b>。</div>';
+  AMBITION_STAGES.forEach(function(st,i){
+    var done=i<lv, current=(i===lv);
+    var cls=done?'amb-done':(current?'amb-cur':'amb-lock');
+    h+='<div class="amb-stage '+cls+'"><span class="amb-ico">'+(done?'✅':st.ico)+'</span><div class="amb-body"><div class="amb-nm">'+st.name+(done?'（達成）':'')+'</div><div class="amb-desc">'+st.desc+'</div>';
+    if(current){
+      if(st.peak){ h+='<div class="amb-peak"><button class="btn'+(state.money>=st.cost?' gold':'')+'" data-act="ambition-peak" data-choice="foundation"'+(state.money>=st.cost?'':' disabled')+'>🏛️ 世界を変える財団を設立 '+fmtMoney(st.cost)+'</button><button class="btn'+(state.money>=st.cost?' gold':'')+'" data-act="ambition-peak" data-choice="nation"'+(state.money>=st.cost?'':' disabled')+'>🏳️ 独立国家を建国 '+fmtMoney(st.cost)+'</button></div>'; }
+      else { var afford=state.money>=st.cost; h+='<button class="btn'+(afford?' gold':'')+'" style="width:100%;" data-act="ambition-advance"'+(afford?'':' disabled')+'>'+st.ico+' 進出する（永続×'+st.mult+'） '+fmtMoney(st.cost)+'</button>'; }
+    }
+    h+='</div></div>';
+  });
+  if(lv>=AMBITION_STAGES.length){ h+='<div class="amb-ending">'+(state.ambitionEnding==='nation'?'🏳️ あなたは独立国家を建国した。<br>経営の物語は、国家の物語へと続く。':'🏛️ あなたは財団を通じて世界を変えた。<br>金の先にある“意味”に、あなたは到達した。')+'</div>'; }
+  return '<div class="amb-wrap">'+h+'</div>';
+}catch(e){ return ''; } }
+function renderMisc(){
+    try{ if($('ambitionBox')) $('ambitionBox').innerHTML = ambitionPanelHTML(state); }catch(_){}
     renderBoard(); /* v5.1: 役員会＋給与一括設定 */
     var html = '';
     var unlocked = 0;
@@ -6009,6 +6042,9 @@ function doSubmitSbc(forcedMid){
     if (!el) return;
     var act = el.getAttribute('data-act');
     if(["seat-sit","seat-open","post-open","chief-open","post-set","post-clear","post-unset","chief-set","chief-unset","emp-assign-open","emp-unassign"].indexOf(act)>=0){return;}switch(act){
+      case 'ambition-advance': { var _al=(state.ambition||0); var _as=AMBITION_STAGES[_al]; if(!_as||_as.peak) break; if(state.money<_as.cost){ toast('資金が足りません'); break; } state.money-=_as.cost; state.ambition=_al+1; save(); toast(_as.ico+' '+_as.name+'を達成！全社売上 永続×'+_as.mult); renderCurrentTab(); renderHeader(); break; }
+      case 'ambition-peak': { var _pl=(state.ambition||0); var _ps=AMBITION_STAGES[_pl]; if(!_ps||!_ps.peak) break; if(state.money<_ps.cost){ toast('資金が足りません'); break; } state.money-=_ps.cost; state.ambitionEnding=el.getAttribute('data-choice'); state.ambition=_pl+1; save(); toast(state.ambitionEnding==='nation'?'🏳️ 独立国家を建国しました！':'🏛️ 世界を変える財団を設立しました！'); renderCurrentTab(); renderHeader(); break; }
+
       case 'pref-open': prefSheet(state, +el.getAttribute('data-id')); break;
       case 'pref-set': { var _pe=findEmpById(state, +el.getAttribute('data-id')); if(_pe){ var _par=el.getAttribute('data-area'); _pe.pref=_par||null; autoAppoint(state); save(); toast('🏠 勤務希望地を更新しました'); closeSheet(); renderCurrentTab(); } break; }
 
